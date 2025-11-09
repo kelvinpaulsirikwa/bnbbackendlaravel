@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class RoomType extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'description',
+        'createdby'
+    ];
+
+    // Relationship with BnbUser (creator)
+    public function creator()
+    {
+        return $this->belongsTo(BnbUser::class, 'createdby');
+    }
+}
