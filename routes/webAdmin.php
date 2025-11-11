@@ -18,7 +18,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::prefix('adminpages')->name('adminpages.')->middleware('auth')->group(function () {
+Route::prefix('adminpages')->name('adminpages.')->middleware(['auth', 'role:bnbadmin'])->group(function () {
     Route::resource('users', App\Http\Controllers\Admin\BnbUserController::class);
     Route::resource('countries', App\Http\Controllers\Admin\CountryController::class);
     Route::resource('regions', App\Http\Controllers\Admin\RegionController::class);

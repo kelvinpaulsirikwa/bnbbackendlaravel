@@ -1,4 +1,4 @@
-@extends('bnbowner.layouts.app')
+@extends('layouts.owner')
 
 @section('content')
 <div class="container-fluid py-4">
@@ -31,37 +31,7 @@
         </div>
     @endif
 
-    <div class="card mb-4">
-        <div class="card-body">
-            <form method="GET" class="row gy-3 gx-3 align-items-end">
-                <div class="col-md-4">
-                    <label for="motel_id" class="form-label fw-semibold">Motel</label>
-                    <select name="motel_id" id="motel_id" class="form-select">
-                        <option value="">All motels</option>
-                        @foreach ($availableMotels as $motel)
-                            <option value="{{ $motel->id }}" {{ (string) $selectedMotelId === (string) $motel->id ? 'selected' : '' }}>
-                                {{ $motel->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label for="status" class="form-label fw-semibold">Chat status</label>
-                    <select name="status" id="status" class="form-select">
-                        <option value="">Any status</option>
-                        <option value="active" {{ $status === 'active' ? 'selected' : '' }}>Active</option>
-                        <option value="closed" {{ $status === 'closed' ? 'selected' : '' }}>Closed</option>
-                    </select>
-                </div>
-                <div class="col-md-3 d-flex align-items-end gap-2">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bx bx-search me-1"></i> Filter
-                    </button>
-                    <a href="{{ route('bnbowner.chats.index') }}" class="btn btn-outline-secondary">Reset</a>
-                </div>
-            </form>
-        </div>
-    </div>
+    
 
     <div class="card">
         <div class="card-body p-0">
@@ -70,8 +40,7 @@
                     <thead class="table-light">
                         <tr>
                             <th scope="col">Guest</th>
-                            <th scope="col">Motel</th>
-                            <th scope="col">Booking</th>
+                             <th scope="col">Booking</th>
                             <th scope="col">Last message</th>
                             <th scope="col">Updated</th>
                             <th scope="col" class="text-end">Actions</th>
@@ -84,9 +53,7 @@
                                     <div class="fw-semibold">{{ $chat['customer']->username ?? 'Guest' }}</div>
                                     <div class="text-muted small">{{ $chat['customer']->useremail ?? 'No email' }}</div>
                                 </td>
-                                <td>
-                                    <div class="fw-semibold">{{ $chat['motel']['name'] ?? 'Unknown motel' }}</div>
-                                </td>
+                               
                                 <td>
                                     @if ($chat['booking'])
                                         <div class="text-muted small">

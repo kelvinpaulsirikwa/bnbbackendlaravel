@@ -2,17 +2,16 @@
 
 @php
     use Illuminate\Support\Facades\Auth;
-    use Illuminate\Support\Facades\Storage;
-
     $user = Auth::user();
     $role = $user->role ?? '';
     $email = $user->useremail ?? 'noemail';
     
     // Check if user has profile image and if the file actually exists
-    $avatar = asset('images/static_files/nodp.png'); // Default fallback
+    $defaultAvatarPath = 'images/static_file/nodp.png';
+    $avatar = asset($defaultAvatarPath); // Default fallback
     
     if ($user && $user->profileimage) {
-        $imagePath = 'storage/' . $user->profileimage;
+        $imagePath = 'storage/' . ltrim($user->profileimage, '/');
         $fullPath = public_path($imagePath);
         
         // Check if the file actually exists
@@ -33,7 +32,7 @@
              alt="User" 
              class="rounded-circle me-3" 
              style="width: 50px; height: 50px; object-fit: cover;"
-             onerror="handleImageError(this)">
+             onerror="this.onerror=null;this.src='{{ asset($defaultAvatarPath) }}';">
 
         <!-- User Details -->
         <ul class="list-unstyled mb-0">
@@ -51,7 +50,7 @@
             </a>
         </li>
         <li>
-            <a href="#">
+            <a href="{{ route('website.home') }}">
                 <i class="bx bxs-home icon"></i>
                 Website Home
             </a>

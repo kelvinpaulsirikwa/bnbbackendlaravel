@@ -1,11 +1,23 @@
-@extends('bnbowner.layouts.app')
-
+@extends('layouts.owner')
+    
 @section('content')
 <div class="container-fluid py-4">
-    <div class="mb-3">
-        <a href="{{ route('bnbowner.chats.index') }}" class="btn btn-link px-0">
+<div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-4">
+        <div>
+            <h2 class="fw-bold mb-1"> All Guest Chats</h2>
+            <a href="{{ route('bnbowner.chats.index') }}" class="btn btn-link px-0">
             <i class="bx bx-chevron-left"></i> Back to chats
-        </a>
+        </a>        </div>
+       
+            <div class="card border-0 shadow-sm">
+                <div class="card-body py-2 px-3">
+                    <div class="small text-muted">Currently viewing</div>
+                    <div class="fw-semibold">Chat</div>
+                </div>
+            </div>
+       
+    </div>
+   
     </div>
 
     <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">

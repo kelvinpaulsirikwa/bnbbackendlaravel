@@ -10,7 +10,7 @@ use App\Http\Controllers\BnBOwner\StaffManagementController;
 use App\Http\Controllers\BnBOwner\ChatController;
 
 // BnB Owner Routes
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'role:bnbowner,bnbonwner'])->group(function () {
     // Dashboard Routes
     Route::get('/bnbowner/motel-selection', [DashboardController::class, 'motelSelection'])->name('bnbowner.motel-selection');
     Route::get('/bnbowner/dashboard', [DashboardController::class, 'index'])->name('bnbowner.dashboard');

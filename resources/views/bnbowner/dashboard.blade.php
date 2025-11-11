@@ -6,9 +6,7 @@
 <div class="container-fluid py-4" style="background-color: white; min-height: 100vh;">
        
 
-        <!-- Main content -->
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2">{{ $selectedMotel->name }} Dashboard</h1>
                 <div class="btn-toolbar mb-2 mb-md-0">
                     <div class="btn-group me-2">
@@ -74,95 +72,8 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Quick Stats -->
-            <div class="row mb-4">
-                <div class="col-md-3">
-                    <div class="card text-white bg-primary">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h4 class="card-title">{{ $allMotels->count() }}</h4>
-                                    <p class="card-text">Total Motels</p>
-                                </div>
-                                <div class="align-self-center">
-                                    <i class="fas fa-hotel fa-2x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card text-white bg-success">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h4 class="card-title">0</h4>
-                                    <p class="card-text">Active Bookings</p>
-                                </div>
-                                <div class="align-self-center">
-                                    <i class="fas fa-calendar-check fa-2x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card text-white bg-warning">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h4 class="card-title">0</h4>
-                                    <p class="card-text">Total Rooms</p>
-                                </div>
-                                <div class="align-self-center">
-                                    <i class="fas fa-bed fa-2x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card text-white bg-info">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h4 class="card-title">$0</h4>
-                                    <p class="card-text">Total Revenue</p>
-                                </div>
-                                <div class="align-self-center">
-                                    <i class="fas fa-dollar-sign fa-2x"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Motel Amenities -->
-            @if($selectedMotel->amenities && $selectedMotel->amenities->count() > 0)
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">
-                            <i class="fas fa-star"></i> Motel Amenities
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            @foreach($selectedMotel->amenities as $amenity)
-                                <div class="col-md-3 mb-2">
-                                    <span class="badge bg-secondary me-1">
-                                        <i class="fas fa-check"></i> {{ $amenity->amenity->name ?? 'Amenity' }}
-                                    </span>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-            @endif
-
-            <!-- All Motels Quick Access -->
-            @if($allMotels->count() > 1)
+          <!-- All Motels Quick Access -->
+          @if($allMotels->count() > 1)
                 <div class="card mb-4">
                     <div class="card-header">
                         <h5 class="card-title mb-0">
@@ -198,18 +109,6 @@
                 </div>
             @endif
 
-            <!-- Recent Activity -->
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">
-                        <i class="fas fa-clock"></i> Recent Activity - {{ $selectedMotel->name }}
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <p class="text-muted">No recent activity to display for this motel.</p>
-                </div>
-            </div>
-        </main>
     </div>
 </div>
 
