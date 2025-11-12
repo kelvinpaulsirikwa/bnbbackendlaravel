@@ -9,15 +9,12 @@
 <head>
     <meta charset="UTF-8">
     <title> BnB | Choose {{ $pageTitle ?? 'Dashboard' }}</title>
-    <link rel="icon" href="{{ asset('/images/static_files/heslblogos.png') }}" type="image/png">
+    <link rel="icon" href="{{ asset('/images/static_file/applogo.png') }}" type="image/png">
 
     <!-- Bootstrap CSS (Online) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-..." crossorigin="anonymous">
 
-    <!-- Boxicons (optional, already included) -->
-    <link rel="stylesheet" href="{{ asset('css/adminlogin.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/adminsidebar.css') }}">
-
+   
     <!-- Optional Bootstrap JS (requires Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-..." crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-..." crossorigin="anonymous"></script>

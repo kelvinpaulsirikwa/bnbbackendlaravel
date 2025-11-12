@@ -11,7 +11,7 @@
                 <h1 class="display-4 text-primary">
                     <i class="fas fa-hotel"></i> Welcome, {{ $user->username }}!
                 </h1>
-                <p class="lead text-muted">Select a motel to manage your BnB business</p>
+                <p class="lead text-muted">Select a your BnB to manage your business</p>
                 <hr class="my-4">
             </div>
 

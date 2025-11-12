@@ -8,6 +8,7 @@ use App\Http\Controllers\BnBOwner\RoomItemController;
 use App\Http\Controllers\BnBOwner\RoomImageController;
 use App\Http\Controllers\BnBOwner\StaffManagementController;
 use App\Http\Controllers\BnBOwner\ChatController;
+use App\Http\Controllers\BnBOwner\ProfileController;
 
 // BnB Owner Routes
 Route::middleware(['auth', 'role:bnbowner,bnbonwner'])->group(function () {
@@ -58,4 +59,10 @@ Route::middleware(['auth', 'role:bnbowner,bnbonwner'])->group(function () {
     Route::get('/bnbowner/chats', [ChatController::class, 'index'])->name('bnbowner.chats.index');
     Route::get('/bnbowner/chats/{chat}', [ChatController::class, 'show'])->name('bnbowner.chats.show');
     Route::post('/bnbowner/chats/{chat}/send', [ChatController::class, 'sendMessage'])->name('bnbowner.chats.send');
+
+    // Profile Management
+    Route::get('/bnbowner/profile', [ProfileController::class, 'edit'])->name('bnbowner.profile.edit');
+    Route::post('/bnbowner/profile', [ProfileController::class, 'updateProfile'])->name('bnbowner.profile.update');
+    Route::post('/bnbowner/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('bnbowner.profile.update-avatar');
+    Route::post('/bnbowner/profile/password', [ProfileController::class, 'updatePassword'])->name('bnbowner.profile.update-password');
 });

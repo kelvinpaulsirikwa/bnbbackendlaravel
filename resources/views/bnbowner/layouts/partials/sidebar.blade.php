@@ -55,7 +55,14 @@
                 Website Home
             </a>
         </li>
+        <li class="divider" data-text="Finance Management"></li>
 
+<li>
+    <a href="#">
+        <i class="bx bxs-report icon"></i>
+        Finance Reports
+    </a>
+</li>
       
         <li class="divider" data-text="Hotel Management"></li>
 
@@ -67,14 +74,7 @@
             </a>
         </li>
 
-        <li class="divider" data-text="Guest Messaging"></li>
-
-        <li>
-            <a href="{{ route('bnbowner.chats.index') }}">
-                <i class="bx bxs-message-detail icon"></i>
-                Guest Chats
-            </a>
-        </li>
+       
 
         <li class="divider" data-text="Room Management"></li>
 
@@ -94,28 +94,27 @@
             </a>
         </li>
 
-        <li class="divider" data-text="Room Items & Images"></li>
+        <li class="divider" data-text="Guest Messaging"></li>
 
-        <li>
-            <a href="#" onclick="alert('Please select a room first from Room Management')">
-                <i class="bx bxs-box icon"></i>
-                Room Items
-            </a>
-        </li>
-
-        <li>
-            <a href="#" onclick="alert('Please select a room first from Room Management')">
-                <i class="bx bxs-image icon"></i>
-                Room Images
-            </a>
-        </li>
+<li>
+    <a href="{{ route('bnbowner.chats.index') }}">
+        <i class="bx bxs-message-detail icon"></i>
+        Guest Chats
+    </a>
+</li>
+       
      
 
         <li class="divider" data-text=" Account Management"></li>
         <li>
             <a href="{{ route('bnbowner.switch-account') }}">
-                <i class="bx bxs-switch icon"></i>
+                <i class="bx bx-transfer icon"></i>
                 Switch Account
+            </a>
+        </li>  <li>
+            <a href="{{ route('bnbowner.profile.edit') }}">
+                <i class="bx bxs-user-detail icon"></i>
+                Profile Management
             </a>
         </li>
 

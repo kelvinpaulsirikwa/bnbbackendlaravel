@@ -133,8 +133,14 @@
                 User Management
             </a>
         </li>
+        <li class="divider" data-text="Account Management"></li>
         <li>
-    
+            <a href="{{ route('adminpages.profile.edit') }}">
+                <i class="bx bxs-user-circle icon"></i>
+                Profile Management
+            </a>
+        </li>
+
 
         <!-- Logout -->
         <div class="ads">

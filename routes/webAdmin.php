@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Admin\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,12 @@ Route::prefix('adminpages')->name('adminpages.')->middleware(['auth', 'role:bnba
     Route::get('/chats', [App\Http\Controllers\Admin\ChatController::class, 'index'])->name('chats.index');
     Route::get('/chats/{chat}', [App\Http\Controllers\Admin\ChatController::class, 'show'])->name('chats.show');
     Route::post('/chats/{chat}/send', [App\Http\Controllers\Admin\ChatController::class, 'sendMessage'])->name('chats.send');
+
+    // Profile Management
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/profile', [ProfileController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.update-avatar');
+    Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.update-password');
 });
 
 // Authentication routes
