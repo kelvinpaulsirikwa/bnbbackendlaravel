@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use App\Models\Motel;
 use App\Models\BnbUser;
 
@@ -141,18 +142,12 @@ class StaffManagementController extends Controller
         $request->validate([
             'username' => 'required|string|max:255',
             'useremail' => 'required|email|unique:bnb_users,useremail,' . $id . ',id|max:255',
-            'password' => 'nullable|string|min:6|confirmed',
             'telephone' => 'nullable|string|max:20',
             'role' => 'required|in:bnbreceiptionist,bnbsecurity,bnbchef',
             'profileimage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
         
         $data = $request->only(['username', 'useremail', 'telephone', 'role']);
-        
-        // Update password only if provided
-        if ($request->filled('password')) {
-            $data['password'] = Hash::make($request->password);
-        }
         
         // Handle profile image upload
         if ($request->hasFile('profileimage')) {
@@ -169,6 +164,36 @@ class StaffManagementController extends Controller
         
         return redirect()->route('bnbowner.staff-management.index')
                        ->with('success', 'Staff member updated successfully.');
+    }
+
+    public function resetPassword($id)
+    {
+        $user = Auth::user();
+        $selectedMotelId = session('selected_motel_id');
+
+        $motel = Motel::where('id', $selectedMotelId)
+                     ->where('owner_id', $user->id)
+                     ->first();
+
+        if (!$motel) {
+            return redirect()->back()->with('error', 'Motel not found.');
+        }
+
+        $staff = BnbUser::where('id', $id)
+                       ->where('motel_id', $motel->id)
+                       ->first();
+
+        if (!$staff) {
+            return redirect()->back()->with('error', 'Staff member not found.');
+        }
+
+        $newPassword = Str::random(10);
+        $staff->update(['password' => Hash::make($newPassword)]);
+
+        return redirect()
+            ->route('bnbowner.staff-management.edit', $staff->id)
+            ->with('success', 'Password reset successfully. Share the new password securely.')
+            ->with('reset_password', $newPassword);
     }
     
     public function toggleStatus($id)

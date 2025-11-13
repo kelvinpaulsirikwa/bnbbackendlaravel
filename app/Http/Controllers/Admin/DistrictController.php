@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\District;
-
 use App\Models\Region;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Website\HomeController;
 
 class DistrictController extends Controller
 {
@@ -59,10 +60,18 @@ class DistrictController extends Controller
         $data = $request->validate([
             'regionid' => 'required|integer|exists:regions,id',
             'name' => 'required|string|max:255',
-            'createdby' => 'nullable|string',
         ]);
 
+        $data['createdby'] = optional(Auth::user())->username
+            ?? optional(Auth::user())->useremail
+            ?? optional(Auth::user())->name
+            ?? 'System';
+
         District::create($data);
+        
+        // Clear statistics cache
+        HomeController::clearStatisticsCache();
+        
         return redirect()->route('adminpages.districts.index')->with('success', 'District created');
     }
 
@@ -79,15 +88,30 @@ class DistrictController extends Controller
         $data = $request->validate([
             'regionid' => 'required|integer|exists:regions,id',
             'name' => 'required|string|max:255',
-            'createdby' => 'nullable|string',
         ]);
         $district->update($data);
+        
+        // Clear statistics cache
+        HomeController::clearStatisticsCache();
+        
         return redirect()->route('adminpages.districts.index')->with('success', 'District updated');
     }
 
     public function destroy($id)
     {
-        District::findOrFail($id)->delete();
+        $district = District::withCount('motels')->findOrFail($id);
+
+        if ($district->motels_count > 0) {
+            return redirect()
+                ->route('adminpages.districts.index')
+                ->with('error', 'District cannot be deleted while motels are associated with it.');
+        }
+
+        $district->delete();
+        
+        // Clear statistics cache
+        HomeController::clearStatisticsCache();
+        
         return redirect()->route('adminpages.districts.index')->with('success', 'District deleted');
     }
 }

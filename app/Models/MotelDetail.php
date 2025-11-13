@@ -13,11 +13,17 @@ class MotelDetail extends Model
 
     protected $fillable = [
         'motel_id',
+        'street_address',
+        'district_id',
+        'latitude',
+        'longitude',
+        'front_image',
         'contact_phone',
         'contact_email',
         'total_rooms',
         'available_rooms',
-        'status'
+        'status',
+        'rate',
     ];
 
     // Relationship with Motel

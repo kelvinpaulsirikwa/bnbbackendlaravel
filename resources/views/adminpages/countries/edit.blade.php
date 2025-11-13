@@ -60,22 +60,15 @@
 
                             <!-- Created By -->
                             <div class="mb-4">
-                                <label for="createby" class="form-label fw-semibold text-dark">
+                                <label class="form-label fw-semibold text-dark">
                                     <i class="fas fa-user me-2 text-primary"></i>Created By
                                 </label>
-                                <input type="text" 
-                                       name="createby" 
-                                       id="createby"
-                                       class="form-control @error('createby') is-invalid @enderror" 
-                                       placeholder="Enter creator name (optional)"
-                                       value="{{ old('createby', $country->createby) }}">
-                                @error('createby')
-                                    <div class="invalid-feedback">
-                                        <i class="fas fa-exclamation-circle me-1"></i>{{ $message }}
-                                    </div>
-                                @enderror
+                                <input type="text"
+                                       class="form-control"
+                                       value="{{ $country->createby ?? 'System' }}"
+                                       readonly>
                                 <div class="form-text text-muted">
-                                    <i class="fas fa-info-circle me-1"></i>Optional: Name of the person creating this record
+                                    <i class="fas fa-info-circle me-1"></i>This value reflects who originally created the record.
                                 </div>
                             </div>
 

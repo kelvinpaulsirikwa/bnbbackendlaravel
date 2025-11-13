@@ -26,6 +26,13 @@
                 </div>
             @endif
 
+            @if(session('reset_password'))
+                <div class="alert alert-info">
+                    <strong>New Password:</strong> {{ session('reset_password') }}
+                    <p class="mb-0 small text-muted">Share this password securely with the staff member. They should change it after logging in.</p>
+                </div>
+            @endif
+
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     <div class="card">
@@ -35,6 +42,14 @@
                             </h5>
                         </div>
                         <div class="card-body">
+                            <div class="d-flex justify-content-end mb-4">
+                                <form method="POST" action="{{ route('bnbowner.staff-management.reset-password', $staff->id) }}">
+                                    @csrf
+                                    <button type="submit" class="btn btn-warning">
+                                        <i class="fas fa-sync-alt"></i> Reset Password
+                                    </button>
+                                </form>
+                            </div>
                             <form method="POST" action="{{ route('bnbowner.staff-management.update', $staff->id) }}" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
@@ -52,24 +67,6 @@
                                             <label for="useremail" class="form-label">Email</label>
                                             <input type="email" class="form-control" id="useremail" name="useremail" 
                                                    value="{{ old('useremail', $staff->useremail) }}" required>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="password" class="form-label">New Password (Optional)</label>
-                                            <input type="password" class="form-control" id="password" name="password" 
-                                                   placeholder="Leave blank to keep current password">
-                                            <small class="text-muted">Leave blank to keep current password</small>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="password_confirmation" class="form-label">Confirm New Password</label>
-                                            <input type="password" class="form-control" id="password_confirmation" 
-                                                   name="password_confirmation">
                                         </div>
                                     </div>
                                 </div>

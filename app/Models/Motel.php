@@ -24,6 +24,14 @@ class Motel extends Model
         'created_by'
     ];
 
+    protected $appends = [
+        'contact_phone',
+        'contact_email',
+        'total_rooms',
+        'available_rooms',
+        'status',
+    ];
+
     // Relationship with BnbUser (owner)
     public function owner()
     {
@@ -76,5 +84,30 @@ class Motel extends Model
     public function chats()
     {
         return $this->hasMany(BnbChat::class, 'motel_id');
+    }
+
+    public function getContactPhoneAttribute()
+    {
+        return $this->details->contact_phone ?? null;
+    }
+
+    public function getContactEmailAttribute()
+    {
+        return $this->details->contact_email ?? null;
+    }
+
+    public function getTotalRoomsAttribute()
+    {
+        return $this->details->total_rooms ?? null;
+    }
+
+    public function getAvailableRoomsAttribute()
+    {
+        return $this->details->available_rooms ?? null;
+    }
+
+    public function getStatusAttribute()
+    {
+        return $this->details->status ?? null;
     }
 }

@@ -10,9 +10,12 @@ use App\Models\MotelType;
 use App\Models\Region;
 use App\Models\RoomType;
 use App\Models\Motel;
+use App\Models\District;
+use App\Models\Customer;
 use Illuminate\Support\Str;
 use App\Support\Concerns\ResolvesImageUrls;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View as ViewResponse;
 
 class HomeController extends Controller
@@ -60,6 +63,15 @@ class HomeController extends Controller
             'footerRoomTypes' => $footerRoomTypes,
             'companyInfo' => config('companyinfo'),
         ]);
+    }
+
+    /**
+     * Clear the cached website statistics.
+     * Call this method when countries, regions, districts, motels, or customers are created/updated/deleted.
+     */
+    public static function clearStatisticsCache(): void
+    {
+        Cache::forget('website_statistics');
     }
 
     /**
@@ -144,11 +156,23 @@ class HomeController extends Controller
                 ];
             });
 
+        // Get statistics with caching (cache for 1 hour to improve performance)
+        $statistics = Cache::remember('website_statistics', 3600, function () {
+            return [
+                'total_countries' => Country::count(),
+                'total_regions' => Region::count(),
+                'total_districts' => District::count(),
+                'total_motels' => Motel::count(),
+                'total_customers' => Customer::count(),
+            ];
+        });
+
         return view('websitepages.home', [
             'propertyTypes' => $propertyTypes,
             'featuredGallery' => $featuredGallery,
             'featuredAmenities' => $featuredAmenities,
             'spotlightMotels' => $spotlightMotels,
+            'statistics' => $statistics,
         ]);
     }
 
@@ -165,7 +189,44 @@ class HomeController extends Controller
      */
     public function services(): ViewResponse
     {
-        return view('websitepages.services');
+        // Get all BNB types (MotelTypes)
+        $bnbTypes = MotelType::query()
+            ->orderBy('name')
+            ->get(['id', 'name']);
+
+        // Get all Room types
+        $roomTypes = RoomType::query()
+            ->orderBy('name')
+            ->get(['id', 'name', 'description']);
+
+        // Get countries with their regions and districts (hierarchical)
+        $countries = Country::with(['regions.districts'])
+            ->orderBy('name')
+            ->get()
+            ->map(function (Country $country) {
+                return [
+                    'id' => $country->id,
+                    'name' => $country->name,
+                    'regions' => $country->regions->map(function ($region) {
+                        return [
+                            'id' => $region->id,
+                            'name' => $region->name,
+                            'districts' => $region->districts->map(function ($district) {
+                                return [
+                                    'id' => $district->id,
+                                    'name' => $district->name,
+                                ];
+                            })->values(),
+                        ];
+                    })->values(),
+                ];
+            });
+
+        return view('websitepages.services', [
+            'bnbTypes' => $bnbTypes,
+            'roomTypes' => $roomTypes,
+            'countries' => $countries,
+        ]);
     }
 
     /**

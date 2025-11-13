@@ -27,6 +27,12 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         @endif
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
 
         <!-- Search and Filter Card -->
         <div class="card shadow-sm mb-4">
@@ -150,15 +156,21 @@
                                                    class="btn btn-sm btn-outline-warning" title="Edit">
                                                     <i class="bx bx-edit"></i>
                                                 </a>
-                                                <form action="{{ route('adminpages.users.destroy', $user->id) }}" 
-                                                      method="POST" class="d-inline" 
-                                                      onsubmit="return confirm('Are you sure you want to delete this user?')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
-                                                        <i class="bx bx-trash"></i>
+                                                @if($user->id !== auth()->id())
+                                                    <form action="{{ route('adminpages.users.update-status', $user->id) }}" 
+                                                          method="POST" class="d-inline">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <input type="hidden" name="status" value="{{ $user->status === 'active' ? 'unactive' : 'active' }}">
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="{{ $user->status === 'active' ? 'Deactivate' : 'Activate' }}">
+                                                            <i class="bx bx-power-off"></i>
+                                                        </button>
+                                                    </form>
+                                                @else
+                                                    <button class="btn btn-sm btn-outline-secondary" title="You cannot change your own status" disabled>
+                                                        <i class="bx bx-lock"></i>
                                                     </button>
-                                                </form>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>

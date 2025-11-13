@@ -57,7 +57,7 @@
                 display: flex;
                 align-items: center;
                 gap: 2rem;
-                padding: 1.1rem 4vw;
+                padding: 1.35rem 4vw 1.35rem 2vw;
                 max-width: 1240px;
                 margin: 0 auto;
             }
@@ -72,7 +72,13 @@
                 text-transform: capitalize;
             }
 
-            .nav-brand span {
+            .nav-brand-text {
+                display: inline-flex;
+                align-items: baseline;
+                gap: 0;
+            }
+
+            .nav-brand .nav-brand-dotcom {
                 color: var(--text-dark);
                 font-weight: 600;
             }
@@ -173,18 +179,8 @@
         <header>
             <div class="nav">
                 <a class="nav-brand" href="{{ route('website.home') }}">
-                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                        <rect width="36" height="36" rx="11" fill="url(#logoGradient)"/>
-                        <path d="M11 19.5L17.25 13.5L24 19.5" stroke="#F9FAFB" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M13.5 17.25V25.5H21.75V17.25" stroke="#F9FAFB" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        <defs>
-                            <linearGradient id="logoGradient" x1="5" y1="5" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#2B70F7"/>
-                                <stop offset="1" stop-color="#1F54BB"/>
-                            </linearGradient>
-                        </defs>
-                    </svg>
-                    bnbStay<span>.com</span>
+                    <img src="{{ asset('images/static_file/applogo.png') }}" alt="bnbStay logo" width="36" height="36">
+                    <span class="nav-brand-text">bnb<span class="nav-brand-dotcom">.com</span></span>
                 </a>
                 <nav class="nav-links">
                     <a href="{{ route('website.home') }}">Home</a>
@@ -201,7 +197,6 @@
         <main>
             @yield('content')
         </main>
-        @include('websitepages.components.contact-section')
         @include('websitepages.components.footer')
         @stack('scripts')
     </body>

@@ -29,7 +29,8 @@ Route::prefix('adminpages')->name('adminpages.')->middleware(['auth', 'role:bnba
     Route::resource('motel-types', App\Http\Controllers\Admin\MotelTypeController::class);
     Route::resource('room-types', App\Http\Controllers\Admin\RoomTypeController::class);
     Route::resource('motels', App\Http\Controllers\Admin\MotelController::class);
-    Route::resource('motel-details', App\Http\Controllers\Admin\MotelDetailController::class);
+    Route::patch('/motels/{motel}/status', [App\Http\Controllers\Admin\MotelController::class, 'updateStatus'])->name('motels.update-status');
+    Route::patch('/users/{user}/status', [App\Http\Controllers\Admin\BnbUserController::class, 'updateStatus'])->name('users.update-status');
     Route::resource('contact-messages', App\Http\Controllers\Admin\ContactMessageController::class)->only(['index', 'show', 'destroy']);
     Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/chats', [App\Http\Controllers\Admin\ChatController::class, 'index'])->name('chats.index');

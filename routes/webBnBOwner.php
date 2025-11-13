@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BnBOwner\DashboardController;
 use App\Http\Controllers\BnBOwner\HotelManagementController;
+use App\Http\Controllers\BnBOwner\HotelImageController;
+use App\Http\Controllers\BnBOwner\AmenityManagementController;
 use App\Http\Controllers\BnBOwner\RoomManagementController;
 use App\Http\Controllers\BnBOwner\RoomItemController;
 use App\Http\Controllers\BnBOwner\RoomImageController;
@@ -22,6 +24,19 @@ Route::middleware(['auth', 'role:bnbowner,bnbonwner'])->group(function () {
     Route::get('/bnbowner/hotel-management', [HotelManagementController::class, 'index'])->name('bnbowner.hotel-management.index');
     Route::put('/bnbowner/hotel-management/motel', [HotelManagementController::class, 'updateMotel'])->name('bnbowner.hotel-management.update-motel');
     Route::put('/bnbowner/hotel-management/details', [HotelManagementController::class, 'updateMotelDetails'])->name('bnbowner.hotel-management.update-details');
+    
+    // Hotel Facilities (Amenities) Management
+    Route::get('/bnbowner/hotel-facilities', [AmenityManagementController::class, 'index'])->name('bnbowner.hotel-facilities.index');
+    Route::post('/bnbowner/hotel-facilities', [AmenityManagementController::class, 'store'])->name('bnbowner.hotel-facilities.store');
+    Route::delete('/bnbowner/hotel-facilities/{amenity}', [AmenityManagementController::class, 'destroy'])->name('bnbowner.hotel-facilities.destroy');
+    Route::get('/bnbowner/hotel-facilities/{amenity}/images', [AmenityManagementController::class, 'images'])->name('bnbowner.hotel-facilities.images');
+    Route::post('/bnbowner/hotel-facilities/{amenity}/images', [AmenityManagementController::class, 'uploadImage'])->name('bnbowner.hotel-facilities.images.store');
+    Route::delete('/bnbowner/hotel-facilities/{amenity}/images/{image}', [AmenityManagementController::class, 'destroyImage'])->name('bnbowner.hotel-facilities.images.destroy');
+
+    // Hotel Images Management
+    Route::get('/bnbowner/hotel-images', [HotelImageController::class, 'index'])->name('bnbowner.hotel-images.index');
+    Route::post('/bnbowner/hotel-images', [HotelImageController::class, 'store'])->name('bnbowner.hotel-images.store');
+    Route::delete('/bnbowner/hotel-images/{image}', [HotelImageController::class, 'destroy'])->name('bnbowner.hotel-images.destroy');
     
     // Room Management Routes
     Route::get('/bnbowner/room-management', [RoomManagementController::class, 'index'])->name('bnbowner.room-management.index');
@@ -53,6 +68,7 @@ Route::middleware(['auth', 'role:bnbowner,bnbonwner'])->group(function () {
     Route::post('/bnbowner/staff-management', [StaffManagementController::class, 'store'])->name('bnbowner.staff-management.store');
     Route::get('/bnbowner/staff-management/{id}/edit', [StaffManagementController::class, 'edit'])->name('bnbowner.staff-management.edit');
     Route::put('/bnbowner/staff-management/{id}', [StaffManagementController::class, 'update'])->name('bnbowner.staff-management.update');
+    Route::post('/bnbowner/staff-management/{id}/reset-password', [StaffManagementController::class, 'resetPassword'])->name('bnbowner.staff-management.reset-password');
     Route::patch('/bnbowner/staff-management/{id}/toggle-status', [StaffManagementController::class, 'toggleStatus'])->name('bnbowner.staff-management.toggle-status');
 
     // Guest Chat Routes

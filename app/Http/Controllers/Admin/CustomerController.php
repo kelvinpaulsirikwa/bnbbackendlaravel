@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Customer;
+use App\Http\Controllers\Website\HomeController;
 
 class CustomerController extends Controller
 {
@@ -23,6 +24,10 @@ class CustomerController extends Controller
         ]);
 
         $customer = Customer::create($data);
+        
+        // Clear statistics cache
+        HomeController::clearStatisticsCache();
+        
         return response()->json($customer, 201);
     }
 
@@ -47,6 +52,10 @@ class CustomerController extends Controller
     public function destroy($id)
     {
         Customer::findOrFail($id)->delete();
+        
+        // Clear statistics cache
+        HomeController::clearStatisticsCache();
+        
         return response()->json(null, 204);
     }
 }

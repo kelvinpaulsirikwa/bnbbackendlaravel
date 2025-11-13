@@ -24,6 +24,19 @@
             </div>
         </div>
 
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
         <!-- Details Card -->
         <div class="row justify-content-center">
             <div class="col-lg-8">
@@ -192,15 +205,21 @@
                                class="btn btn-warning">
                                 <i class="bx bx-edit"></i> Edit User
                             </a>
-                            <form action="{{ route('adminpages.users.destroy', $user->id) }}" 
-                                  method="POST" class="d-inline" 
-                                  onsubmit="return confirm('Are you sure you want to delete this user?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger">
-                                    <i class="bx bx-trash"></i> Delete User
+                            @if($user->id !== auth()->id())
+                                <form action="{{ route('adminpages.users.update-status', $user->id) }}"
+                                      method="POST" class="d-inline">
+                                    @csrf
+                                    @method('PATCH')
+                                    <input type="hidden" name="status" value="{{ $user->status === 'active' ? 'unactive' : 'active' }}">
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="bx bx-power-off"></i> {{ $user->status === 'active' ? 'Deactivate User' : 'Activate User' }}
+                                    </button>
+                                </form>
+                            @else
+                                <button class="btn btn-secondary" disabled>
+                                    <i class="bx bx-lock"></i> You cannot change your own status
                                 </button>
-                            </form>
+                            @endif
                         </div>
                     </div>
                 </div>

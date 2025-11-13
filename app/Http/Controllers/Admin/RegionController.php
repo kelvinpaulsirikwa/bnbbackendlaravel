@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Region;
-
 use App\Models\Country;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Website\HomeController;
 
 class RegionController extends Controller
 {
@@ -48,10 +49,18 @@ class RegionController extends Controller
         $data = $request->validate([
             'countryid' => 'required|integer|exists:countries,id',
             'name' => 'required|string|max:255',
-            'createdby' => 'nullable|string',
         ]);
 
+        $data['createdby'] = optional(Auth::user())->username
+            ?? optional(Auth::user())->useremail
+            ?? optional(Auth::user())->name
+            ?? 'System';
+
         Region::create($data);
+        
+        // Clear statistics cache
+        HomeController::clearStatisticsCache();
+        
         return redirect()->route('adminpages.regions.index')->with('success', 'Region created');
     }
 
@@ -68,15 +77,30 @@ class RegionController extends Controller
         $data = $request->validate([
             'countryid' => 'required|integer|exists:countries,id',
             'name' => 'required|string|max:255',
-            'createdby' => 'nullable|string',
         ]);
         $region->update($data);
+        
+        // Clear statistics cache
+        HomeController::clearStatisticsCache();
+        
         return redirect()->route('adminpages.regions.index')->with('success', 'Region updated');
     }
 
     public function destroy($id)
     {
-        Region::findOrFail($id)->delete();
+        $region = Region::withCount('districts')->findOrFail($id);
+
+        if ($region->districts_count > 0) {
+            return redirect()
+                ->route('adminpages.regions.index')
+                ->with('error', 'Region cannot be deleted while districts are associated with it.');
+        }
+
+        $region->delete();
+        
+        // Clear statistics cache
+        HomeController::clearStatisticsCache();
+        
         return redirect()->route('adminpages.regions.index')->with('success', 'Region deleted');
     }
 }

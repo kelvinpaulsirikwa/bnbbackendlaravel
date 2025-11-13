@@ -57,20 +57,32 @@
         </li>
         <li class="divider" data-text="Finance Management"></li>
 
-<li>
-    <a href="#">
-        <i class="bx bxs-report icon"></i>
-        Finance Reports
-    </a>
-</li>
+        <li>
+            <a href="#">
+                <i class="bx bx-bar-chart-alt icon"></i>
+                Finance Reports
+            </a>
+        </li>
       
         <li class="divider" data-text="Hotel Management"></li>
 
         
         <li>
             <a href="{{ route('bnbowner.hotel-management.index') }}">
-                <i class="bx bxs-flag icon"></i>
+                <i class="bx bxs-info-circle icon"></i>
                 Hotel Information
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('bnbowner.hotel-facilities.index') }}">
+                <i class="bx bxs-cog icon"></i>
+                Hotel Facilities
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('bnbowner.hotel-images.index') }}">
+                <i class="bx bx-image-alt icon"></i>
+                Hotel Images
             </a>
         </li>
 
@@ -103,7 +115,6 @@
     </a>
 </li>
        
-     
 
         <li class="divider" data-text=" Account Management"></li>
         <li>

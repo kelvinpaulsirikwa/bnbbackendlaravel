@@ -56,6 +56,14 @@ class RoomManagementController extends Controller
         }
         
         $roomTypes = RoomType::all();
+        $totalRooms = optional($motel->details)->total_rooms;
+        $currentRooms = BnbRoom::where('motelid', $motel->id)->count();
+
+        if (!is_null($totalRooms) && $currentRooms >= (int) $totalRooms) {
+            return redirect()
+                ->route('bnbowner.room-management.index')
+                ->with('error', 'You have reached the maximum number of rooms allowed for this motel.');
+        }
         
         return view('bnbowner.room-management.create', compact('motel', 'roomTypes'))->with('selectedMotel', $motel);
     }
@@ -73,6 +81,15 @@ class RoomManagementController extends Controller
             return redirect()->back()->with('error', 'Motel not found.');
         }
         
+        $totalRooms = optional($motel->details)->total_rooms;
+        $currentRooms = BnbRoom::where('motelid', $motel->id)->count();
+
+        if (!is_null($totalRooms) && $currentRooms >= (int) $totalRooms) {
+            return redirect()
+                ->route('bnbowner.room-management.index')
+                ->with('error', 'You cannot add more rooms than the total allowed for this motel.');
+        }
+
         $request->validate([
             'room_number' => 'required|string|max:50',
             'room_type_id' => 'required|exists:room_types,id',

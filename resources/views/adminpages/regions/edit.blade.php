@@ -84,27 +84,6 @@
                                 </div>
                             </div>
 
-                            <!-- Created By -->
-                            <div class="mb-4">
-                                <label for="createdby" class="form-label fw-semibold text-dark">
-                                    Created By
-                                </label>
-                                <input type="text" 
-                                       name="createdby" 
-                                       id="createdby"
-                                       class="form-control @error('createdby') is-invalid @enderror" 
-                                       placeholder="Enter creator name (optional)"
-                                       value="{{ old('createdby', $region->createdby) }}">
-                                @error('createdby')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                                <div class="form-text text-muted">
-                                    Optional: Name of the person creating this record
-                                </div>
-                            </div>
-
                             <!-- Form Actions -->
                             <div class="d-flex justify-content-between align-items-center pt-3 border-top">
                                 <a href="{{ route('adminpages.regions.index') }}" class="btn btn-outline-secondary">

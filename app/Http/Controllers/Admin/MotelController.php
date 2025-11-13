@@ -9,6 +9,9 @@ use App\Models\MotelDetail;
 use App\Models\BnbUser;
 use App\Models\MotelType;
 use App\Models\District;
+use App\Models\Country;
+use App\Models\Region;
+use App\Http\Controllers\Website\HomeController;
 
 class MotelController extends Controller
 {
@@ -53,8 +56,10 @@ class MotelController extends Controller
         $owners = BnbUser::whereIn('role', ['bnbowner', 'bnbadmin'])->orderBy('username')->get();
         $motelTypes = MotelType::orderBy('name')->get();
         $districts = District::orderBy('name')->get();
+        $regions = Region::orderBy('name')->get();
+        $countries = Country::orderBy('name')->get();
         
-        return view('adminpages.motels.create', compact('owners', 'motelTypes', 'districts'));
+        return view('adminpages.motels.create', compact('owners', 'motelTypes', 'districts', 'regions', 'countries'));
     }
 
     public function store(Request $request)
@@ -78,15 +83,27 @@ class MotelController extends Controller
             'available_rooms' => 'nullable|integer|min:0',
             'status' => 'required|in:active,inactive,closed',
         ]);
-
-        // Set created_by to authenticated user ID
+        
         $motelData['created_by'] = auth()->id();
 
         $motel = Motel::create($motelData);
         
-        // Create motel details
-        $detailsData['motel_id'] = $motel->id;
-        MotelDetail::create($detailsData);
+        // Persist motel details if provided
+        $detailsPayload = array_filter([
+            'contact_phone' => $detailsData['contact_phone'] ?? null,
+            'contact_email' => $detailsData['contact_email'] ?? null,
+            'total_rooms' => $detailsData['total_rooms'] ?? null,
+            'available_rooms' => $detailsData['available_rooms'] ?? null,
+            'status' => $detailsData['status'],
+        ], static fn($value) => !is_null($value));
+
+        if (!empty($detailsPayload)) {
+            $detailsPayload['motel_id'] = $motel->id;
+            MotelDetail::create($detailsPayload);
+        }
+        
+        // Clear statistics cache
+        HomeController::clearStatisticsCache();
         
         return redirect()->route('adminpages.motels.index')
                         ->with('success', 'Motel created successfully.');
@@ -100,12 +117,14 @@ class MotelController extends Controller
 
     public function edit($id)
     {
-        $motel = Motel::with('details')->findOrFail($id);
+        $motel = Motel::with(['details', 'district'])->findOrFail($id);
         $owners = BnbUser::whereIn('role', ['bnbowner', 'bnbadmin'])->orderBy('username')->get();
         $motelTypes = MotelType::orderBy('name')->get();
         $districts = District::orderBy('name')->get();
+        $regions = Region::orderBy('name')->get();
+        $countries = Country::orderBy('name')->get();
         
-        return view('adminpages.motels.edit', compact('motel', 'owners', 'motelTypes', 'districts'));
+        return view('adminpages.motels.edit', compact('motel', 'owners', 'motelTypes', 'districts', 'regions', 'countries'));
     }
 
     public function update(Request $request, $id)
@@ -134,24 +153,65 @@ class MotelController extends Controller
         
         $motel->update($motelData);
         
-        // Update or create motel details
+        // Sync motel details record
+        $detailsPayload = array_filter([
+            'contact_phone' => $detailsData['contact_phone'] ?? null,
+            'contact_email' => $detailsData['contact_email'] ?? null,
+            'total_rooms' => $detailsData['total_rooms'] ?? null,
+            'available_rooms' => $detailsData['available_rooms'] ?? null,
+            'status' => $detailsData['status'],
+        ], static fn($value) => !is_null($value));
+        
         if ($motel->details) {
-            $motel->details->update($detailsData);
-        } else {
-            $detailsData['motel_id'] = $motel->id;
-            MotelDetail::create($detailsData);
+            $motel->details->update($detailsPayload);
+        } elseif (!empty($detailsPayload)) {
+            $detailsPayload['motel_id'] = $motel->id;
+            MotelDetail::create($detailsPayload);
         }
+        
+        // Clear statistics cache
+        HomeController::clearStatisticsCache();
         
         return redirect()->route('adminpages.motels.index')
                         ->with('success', 'Motel updated successfully.');
     }
 
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:active,inactive,closed',
+        ]);
+
+        $motel = Motel::with('details')->findOrFail($id);
+        $newStatus = $request->input('status');
+
+        // Persist status directly on detail record (fallback create if missing)
+        if ($motel->details) {
+            $motel->details->update(['status' => $newStatus]);
+        } else {
+            MotelDetail::create([
+                'motel_id' => $motel->id,
+                'status' => $newStatus,
+            ]);
+        }
+
+        return redirect()->back()
+            ->with('success', "Motel status updated to {$newStatus}.");
+    }
+
     public function destroy($id)
     {
         $motel = Motel::findOrFail($id);
-        $motel->delete();
-        
-        return redirect()->route('adminpages.motels.index')
-                        ->with('success', 'Motel deleted successfully.');
+        if ($motel->details) {
+            $motel->details()->update(['status' => 'inactive']);
+        } else {
+            MotelDetail::create([
+                'motel_id' => $motel->id,
+                'status' => 'inactive',
+            ]);
+        }
+
+        return redirect()->back()
+            ->with('success', 'Motel has been set to inactive.');
     }
 }

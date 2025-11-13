@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Website\HomeController;
 
 
 class LoginUserByGoogleController extends Controller
@@ -54,6 +55,11 @@ class LoginUserByGoogleController extends Controller
             $customer->username = $username;
         }
         $customer->save();
+        
+        // Clear statistics cache if a new customer was created
+        if ($customer->wasRecentlyCreated) {
+            HomeController::clearStatisticsCache();
+        }
 
         // Create Sanctum token
         $token = $customer->createToken('mobile-app')->plainTextToken;

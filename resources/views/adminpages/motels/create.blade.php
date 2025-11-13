@@ -70,6 +70,120 @@
                                     @enderror
                                 </div>
 
+                                <!-- Street Address Field -->
+                                <div class="col-12">
+                                    <label for="street_address" class="form-label">
+                                        Street Address
+                                    </label>
+                                    <input type="text"
+                                           class="form-control @error('street_address') is-invalid @enderror"
+                                           id="street_address"
+                                           name="street_address"
+                                           value="{{ old('street_address') }}"
+                                           placeholder="Enter street address">
+                                    @error('street_address')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+
+                                <!-- Location Selection -->
+                                <div class="col-md-4">
+                                    <label for="country_id" class="form-label">
+                                        Country
+                                    </label>
+                                    <select class="form-select" id="country_id" name="country_id">
+                                        <option value="">Select Country</option>
+                                        @foreach($countries as $country)
+                                            <option value="{{ $country->id }}" {{ old('country_id') == $country->id ? 'selected' : '' }}>
+                                                {{ $country->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="region_id" class="form-label">
+                                        Region
+                                    </label>
+                                    <select class="form-select" id="region_id" name="region_id" data-selected="{{ old('region_id') }}">
+                                        <option value="">Select Region</option>
+                                        @foreach($regions as $region)
+                                            <option value="{{ $region->id }}"
+                                                    data-country="{{ $region->countryid }}"
+                                                    {{ old('region_id') == $region->id ? 'selected' : '' }}>
+                                                {{ $region->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="district_id" class="form-label">
+                                        District
+                                    </label>
+                                    <select class="form-select @error('district_id') is-invalid @enderror"
+                                            id="district_id"
+                                            name="district_id"
+                                            data-selected="{{ old('district_id') }}">
+                                        <option value="">Select District</option>
+                                        @foreach($districts as $district)
+                                            <option value="{{ $district->id }}"
+                                                    data-region="{{ $district->regionid }}"
+                                                    {{ old('district_id') == $district->id ? 'selected' : '' }}>
+                                                {{ $district->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('district_id')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+
+                                <!-- Latitude and Longitude -->
+                                <div class="col-md-6">
+                                    <label for="latitude" class="form-label">
+                                        Latitude
+                                    </label>
+                                    <input type="number"
+                                           class="form-control @error('latitude') is-invalid @enderror"
+                                           id="latitude"
+                                           name="latitude"
+                                           value="{{ old('latitude') }}"
+                                           step="0.000001"
+                                           min="-90"
+                                           max="90"
+                                           placeholder="Enter latitude">
+                                    @error('latitude')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="longitude" class="form-label">
+                                        Longitude
+                                    </label>
+                                    <input type="number"
+                                           class="form-control @error('longitude') is-invalid @enderror"
+                                           id="longitude"
+                                           name="longitude"
+                                           value="{{ old('longitude') }}"
+                                           step="0.000001"
+                                           min="-180"
+                                           max="180"
+                                           placeholder="Enter longitude">
+                                    @error('longitude')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+
                                 <!-- Owner Field -->
                                 <div class="col-md-6">
                                     <label for="owner_id" class="form-label">
@@ -151,6 +265,46 @@
                                     @enderror
                                 </div>
 
+                                <!-- Total Rooms -->
+                                <div class="col-md-6">
+                                    <label for="total_rooms" class="form-label">
+                                        Total Rooms <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="number"
+                                           class="form-control @error('total_rooms') is-invalid @enderror"
+                                           id="total_rooms"
+                                           name="total_rooms"
+                                           value="{{ old('total_rooms') }}"
+                                           min="0"
+                                           placeholder="Enter total rooms"
+                                           required>
+                                    @error('total_rooms')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+
+                                <!-- Available Rooms -->
+                                <div class="col-md-6">
+                                    <label for="available_rooms" class="form-label">
+                                        Available Rooms <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="number"
+                                           class="form-control @error('available_rooms') is-invalid @enderror"
+                                           id="available_rooms"
+                                           name="available_rooms"
+                                           value="{{ old('available_rooms') }}"
+                                           min="0"
+                                           placeholder="Enter available rooms"
+                                           required>
+                                    @error('available_rooms')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+
                                 <!-- Status Field -->
                                 <div class="col-md-6">
                                     <label for="status" class="form-label">
@@ -193,4 +347,117 @@
             </div>
         </div>
     </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const countrySelect = document.getElementById('country_id');
+        const regionSelect = document.getElementById('region_id');
+        const districtSelect = document.getElementById('district_id');
+
+        if (!countrySelect || !regionSelect || !districtSelect) {
+            return;
+        }
+
+        function deriveRegionFromDistrict() {
+            if (!regionSelect.dataset.selected && districtSelect.dataset.selected) {
+                const matchingDistrict = Array.from(districtSelect.options).find(option => option.value === districtSelect.dataset.selected);
+                if (matchingDistrict) {
+                    regionSelect.dataset.selected = matchingDistrict.dataset.region || '';
+                }
+            }
+        }
+
+        function deriveCountryFromRegion() {
+            if (!countrySelect.value && regionSelect.dataset.selected) {
+                const matchingRegion = Array.from(regionSelect.options).find(option => option.value === regionSelect.dataset.selected);
+                if (matchingRegion) {
+                    countrySelect.value = matchingRegion.dataset.country || '';
+                }
+            }
+        }
+
+        function filterRegions() {
+            const selectedCountry = countrySelect.value;
+            let regionPreserved = false;
+
+            Array.from(regionSelect.options).forEach(option => {
+                if (option.value === '') {
+                    option.hidden = false;
+                    return;
+                }
+
+                const matches = !selectedCountry || option.dataset.country === selectedCountry;
+                option.hidden = !matches;
+
+                if (!matches && option.selected) {
+                    option.selected = false;
+                }
+
+                if (matches && option.value === regionSelect.dataset.selected) {
+                    option.selected = true;
+                    regionPreserved = true;
+                }
+            });
+
+            if (!regionPreserved && selectedCountry) {
+                regionSelect.selectedIndex = 0;
+                regionSelect.dataset.selected = '';
+            } else {
+                regionSelect.dataset.selected = regionSelect.value;
+            }
+
+            filterDistricts();
+        }
+
+        function filterDistricts() {
+            const selectedRegion = regionSelect.value;
+            let districtPreserved = false;
+
+            Array.from(districtSelect.options).forEach(option => {
+                if (option.value === '') {
+                    option.hidden = false;
+                    return;
+                }
+
+                const matches = !selectedRegion || option.dataset.region === selectedRegion;
+                option.hidden = !matches;
+
+                if (!matches && option.selected) {
+                    option.selected = false;
+                }
+
+                if (matches && option.value === districtSelect.dataset.selected) {
+                    option.selected = true;
+                    districtPreserved = true;
+                }
+            });
+
+            if (!districtPreserved && selectedRegion) {
+                districtSelect.selectedIndex = 0;
+                districtSelect.dataset.selected = '';
+            } else {
+                districtSelect.dataset.selected = districtSelect.value;
+            }
+        }
+
+        countrySelect.addEventListener('change', () => {
+            regionSelect.dataset.selected = '';
+            districtSelect.dataset.selected = '';
+            filterRegions();
+        });
+
+        regionSelect.addEventListener('change', () => {
+            regionSelect.dataset.selected = regionSelect.value;
+            districtSelect.dataset.selected = '';
+            filterDistricts();
+        });
+
+        districtSelect.addEventListener('change', () => {
+            districtSelect.dataset.selected = districtSelect.value;
+        });
+
+        deriveRegionFromDistrict();
+        deriveCountryFromRegion();
+        filterRegions();
+    });
+</script>
 @endsection

@@ -57,6 +57,25 @@
             </a>
         </li>
 
+        <li class="divider" data-text="Finance Management"></li>
+        <li>
+            <a href="#">
+                <i class="bx bx-transfer icon"></i>
+                Finance Transactions
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <i class="bx bx-bar-chart-square icon"></i>
+                Finance Reports
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <i class="bx bx-buildings icon"></i>
+                Specific BnB
+            </a>
+        </li>
       
         <li class="divider" data-text="Location Management"></li>
 
@@ -118,12 +137,6 @@
     <a href="{{ route('adminpages.motels.index') }}">
         <i class="bx bx-home icon"></i>
         Motels
-    </a>
-</li>
-<li>
-    <a href="{{ route('adminpages.motel-details.index') }}">
-        <i class="bx bx-detail icon"></i>
-        Motel Details
     </a>
 </li>
         <li class="divider" data-text="User Management"></li>

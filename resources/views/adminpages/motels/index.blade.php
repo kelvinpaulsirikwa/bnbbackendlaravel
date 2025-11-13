@@ -149,13 +149,13 @@
                                                    class="btn btn-sm btn-outline-warning" title="Edit">
                                                     <i class="bx bx-edit"></i>
                                                 </a>
-                                                <form action="{{ route('adminpages.motels.destroy', $motel->id) }}" 
-                                                      method="POST" class="d-inline" 
-                                                      onsubmit="return confirm('Are you sure you want to delete this motel?')">
+                                                <form action="{{ route('adminpages.motels.update-status', $motel->id) }}" 
+                                                      method="POST" class="d-inline">
                                                     @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
-                                                        <i class="bx bx-trash"></i>
+                                                    @method('PATCH')
+                                                    <input type="hidden" name="status" value="{{ $motel->status === 'active' ? 'inactive' : 'active' }}">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Make {{ $motel->status === 'active' ? 'Inactive' : 'Active' }}">
+                                                        <i class="bx bx-power-off"></i>
                                                     </button>
                                                 </form>
                                             </div>

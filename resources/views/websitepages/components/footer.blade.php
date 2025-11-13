@@ -99,6 +99,34 @@
             font-size: 0.92rem;
         }
 
+        .site-footer__subheading {
+            margin-top: 1.5rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .site-footer__pill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .site-footer__pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.35rem 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
         .site-footer__social {
             display: flex;
             gap: 0.65rem;
@@ -221,6 +249,15 @@
                         <span>Coming soon</span>
                     @endforelse
                 </div>
+
+                @if(($footerRoomTypes ?? collect())->isNotEmpty())
+                    <div class="site-footer__subheading">Room Types</div>
+                    <div class="site-footer__pill-list">
+                        @foreach(($footerRoomTypes ?? collect())->take(8) as $roomType)
+                            <span class="site-footer__pill">{{ $roomType }}</span>
+                        @endforeach
+                    </div>
+                @endif
             </div>
 
             <div class="site-footer__col">

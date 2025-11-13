@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Country;
+use App\Http\Controllers\Website\HomeController;
 
 class CountryController extends Controller
 {
@@ -16,17 +18,26 @@ class CountryController extends Controller
 
     public function create()
     {
-        return view('adminpages.countries.create');
+        $user = Auth::user();
+
+        return view('adminpages.countries.create', compact('user'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
-            'createby' => 'nullable|string',
         ]);
 
+        $data['createby'] = optional(Auth::user())->username
+            ?? optional(Auth::user())->useremail
+            ?? optional(Auth::user())->name
+            ?? 'System';
+
         Country::create($data);
+        
+        // Clear statistics cache
+        HomeController::clearStatisticsCache();
 
         return redirect()->route('adminpages.countries.index')->with('success', 'Country created');
     }
@@ -42,15 +53,31 @@ class CountryController extends Controller
         $country = Country::findOrFail($id);
         $data = $request->validate([
             'name' => 'required|string|max:255',
-            'createby' => 'nullable|string',
         ]);
+
         $country->update($data);
+        
+        // Clear statistics cache
+        HomeController::clearStatisticsCache();
+        
         return redirect()->route('adminpages.countries.index')->with('success', 'Country updated');
     }
 
     public function destroy($id)
     {
-        Country::findOrFail($id)->delete();
+        $country = Country::withCount('regions')->findOrFail($id);
+
+        if ($country->regions_count > 0) {
+            return redirect()
+                ->route('adminpages.countries.index')
+                ->with('error', 'Country cannot be deleted while regions are associated with it.');
+        }
+
+        $country->delete();
+        
+        // Clear statistics cache
+        HomeController::clearStatisticsCache();
+
         return redirect()->route('adminpages.countries.index')->with('success', 'Country deleted');
     }
 }

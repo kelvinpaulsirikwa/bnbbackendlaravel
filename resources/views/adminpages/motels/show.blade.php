@@ -192,40 +192,34 @@
                 </div>
 
                 <!-- Motel Details Card -->
-                @if($motel->details)
-                    <div class="card shadow-sm mt-4">
-                        <div class="card-header bg-white border-0 py-3">
-                            <h5 class="card-title mb-0">
-                                <i class="bx bx-detail me-2"></i>
-                                Motel Details
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row g-4">
-                                <div class="col-md-6">
-                                    <h6 class="text-muted">Address</h6>
-                                    <p class="fw-semibold">{{ $motel->details->street_address ?: 'N/A' }}</p>
-                                </div>
-                                <div class="col-md-6">
-                                    <h6 class="text-muted">District</h6>
-                                    <p class="fw-semibold">{{ $motel->details->district->name ?? 'N/A' }}</p>
-                                </div>
-                                <div class="col-md-6">
-                                    <h6 class="text-muted">Total Rooms</h6>
-                                    <p class="fw-semibold">{{ $motel->details->total_rooms }}</p>
-                                </div>
-                                <div class="col-md-6">
-                                    <h6 class="text-muted">Available Rooms</h6>
-                                    <p class="fw-semibold">{{ $motel->details->available_rooms }}</p>
-                                </div>
-                                <div class="col-md-6">
-                                    <h6 class="text-muted">Rate</h6>
-                                    <p class="fw-semibold">${{ number_format($motel->details->rate, 2) }}</p>
-                                </div>
+                <div class="card shadow-sm mt-4">
+                    <div class="card-header bg-white border-0 py-3">
+                        <h5 class="card-title mb-0">
+                            <i class="bx bx-detail me-2"></i>
+                            Motel Details
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <h6 class="text-muted">Address</h6>
+                                <p class="fw-semibold">{{ $motel->street_address ?: 'N/A' }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="text-muted">District</h6>
+                                <p class="fw-semibold">{{ optional($motel->district)->name ?? 'N/A' }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="text-muted">Total Rooms</h6>
+                                <p class="fw-semibold">{{ $motel->total_rooms ?? 'N/A' }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="text-muted">Available Rooms</h6>
+                                <p class="fw-semibold">{{ $motel->available_rooms ?? 'N/A' }}</p>
                             </div>
                         </div>
                     </div>
-                @endif
+                </div>
 
                 <!-- Actions Card -->
                 <div class="card shadow-sm mt-4">
@@ -241,24 +235,13 @@
                                class="btn btn-warning">
                                 <i class="bx bx-edit"></i> Edit Motel
                             </a>
-                            @if($motel->details)
-                                <a href="{{ route('adminpages.motel-details.edit', $motel->details->id) }}" 
-                                   class="btn btn-info">
-                                    <i class="bx bx-detail"></i> Edit Details
-                                </a>
-                            @else
-                                <a href="{{ route('adminpages.motel-details.create') }}?motel_id={{ $motel->id }}" 
-                                   class="btn btn-success">
-                                    <i class="bx bx-plus"></i> Add Details
-                                </a>
-                            @endif
-                            <form action="{{ route('adminpages.motels.destroy', $motel->id) }}" 
-                                  method="POST" class="d-inline" 
-                                  onsubmit="return confirm('Are you sure you want to delete this motel?')">
+                            <form action="{{ route('adminpages.motels.update-status', $motel->id) }}"
+                                  method="POST" class="d-inline">
                                 @csrf
-                                @method('DELETE')
+                                @method('PATCH')
+                                <input type="hidden" name="status" value="{{ $motel->status === 'active' ? 'inactive' : 'active' }}">
                                 <button type="submit" class="btn btn-danger">
-                                    <i class="bx bx-trash"></i> Delete Motel
+                                    <i class="bx bx-power-off"></i> {{ $motel->status === 'active' ? 'Deactivate' : 'Activate' }}
                                 </button>
                             </form>
                         </div>

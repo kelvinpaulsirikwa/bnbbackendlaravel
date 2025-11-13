@@ -5,274 +5,541 @@
 
 @push('styles')
     <style>
-        .hero-about {
-            background: linear-gradient(135deg, rgba(43, 112, 247, 0.12), rgba(31, 84, 187, 0.18));
-            border-radius: 24px;
-            padding: 4rem clamp(1.75rem, 5vw, 4rem);
-            margin: 4rem auto 3rem;
-            max-width: 1100px;
+        :root {
+            --about-gradient: linear-gradient(135deg, rgba(43, 112, 247, 0.12), rgba(31, 84, 187, 0.18));
+            --about-accent: #b4550f;
+            --about-surface: #ffffff;
+            --about-border: rgba(15, 23, 42, 0.08);
+        }
+
+        .about-container {
+            display: grid;
+            gap: 4rem;
+        }
+
+        .about-hero {
+            background: var(--about-gradient);
+            border-radius: 28px;
+            padding: clamp(2.5rem, 6vw, 4.5rem);
+            display: grid;
+            gap: clamp(2rem, 4vw, 3rem);
+            box-shadow: 0 30px 60px rgba(17, 24, 39, 0.12);
+            overflow: hidden;
+        }
+
+        .about-hero-inner {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: clamp(2rem, 4vw, 3rem);
+            align-items: center;
+        }
+
+        .about-hero-copy {
             display: grid;
             gap: 1.25rem;
-            text-align: center;
         }
 
-        .hero-about h1 {
+        .about-hero-copy h1 {
             margin: 0;
-            font-size: clamp(2.2rem, 4vw, 3rem);
-            line-height: 1.2;
+            font-size: clamp(2.4rem, 4.5vw, 3.4rem);
+            line-height: 1.15;
         }
 
-        .hero-about p {
-            margin: 0 auto;
+        .about-hero-copy p {
+            margin: 0;
             color: var(--text-muted);
-            max-width: 700px;
+            line-height: 1.8;
+            max-width: 600px;
+        }
+
+        .about-hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .about-stat {
+            background: var(--about-surface);
+            border-radius: 20px;
+            padding: 1.75rem 1.5rem;
+            display: grid;
+            gap: 0.4rem;
+            text-align: left;
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.1);
+        }
+
+        .about-stat .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .about-stat .label {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        .about-stories {
+            display: grid;
+            gap: clamp(1.75rem, 3vw, 2.5rem);
+            padding: 0 clamp(1.5rem, 5vw, 3rem);
+        }
+
+        .about-stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .about-card {
+            background: var(--about-surface);
+            border-radius: 22px;
+            padding: 2.25rem;
+            box-shadow: 0 24px 50px rgba(15, 23, 42, 0.12);
+            border: 1px solid var(--about-border);
+            display: grid;
+            gap: 1rem;
+        }
+
+        .about-card .card-heading {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-size: 0.75rem;
+            color: var(--primary);
+        }
+
+        .about-card p {
+            margin: 0;
+            color: var(--text-muted);
             line-height: 1.7;
         }
 
-        .grid-two {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2.5rem;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .story-card {
-            background: var(--white);
-            border-radius: 20px;
-            padding: 2.25rem;
-            box-shadow: 0 22px 45px rgba(21, 42, 79, 0.14);
-            display: grid;
-            gap: 1.1rem;
-        }
-
-        .story-card h3 {
-            margin: 0;
-            font-size: 1.35rem;
-        }
-
-        .timeline {
-            max-width: 680px;
-            margin: 4rem auto;
+        .about-journey {
             display: grid;
             gap: 2rem;
         }
 
-        .timeline-item {
+        .about-journey-header {
             display: grid;
-            grid-template-columns: auto 1fr;
-            gap: 1.25rem;
-            align-items: start;
+            gap: 0.75rem;
+            text-align: center;
+            max-width: 680px;
+            margin: 0 auto;
         }
 
-        .timeline-bullet {
-            width: 48px;
-            height: 48px;
+        .about-journey-header h2 {
+            margin: 0;
+            font-size: clamp(2rem, 3vw, 2.6rem);
+        }
+
+        .about-journey-header p {
+            margin: 0;
+            color: var(--text-muted);
+        }
+
+        .about-timeline {
+            position: relative;
+            display: grid;
+            gap: 1.5rem;
+            padding-left: clamp(1rem, 4vw, 2.75rem);
+        }
+
+        .about-timeline::before {
+            content: '';
+            position: absolute;
+            left: clamp(0.35rem, 1.5vw, 0.75rem);
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, rgba(43, 112, 247, 0.2), transparent);
+        }
+
+        .timeline-step {
+            display: grid;
+            gap: 0.75rem;
+            padding: 1.75rem 1.75rem 1.75rem clamp(1.75rem, 4vw, 3rem);
+            background: var(--about-surface);
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
+            border: 1px solid var(--about-border);
+            position: relative;
+        }
+
+        .timeline-step::before {
+            content: attr(data-year);
+            position: absolute;
+            left: clamp(-1.1rem, -1vw, -0.9rem);
+            top: 50%;
+            transform: translate(-50%, -50%);
+            min-width: 58px;
+            height: 58px;
             border-radius: 50%;
             display: grid;
             place-items: center;
-            background: rgba(43, 112, 247, 0.1);
+            background: #ffffff;
             color: var(--primary);
-            font-weight: 600;
+            font-weight: 700;
+            box-shadow: 0 10px 25px rgba(43, 112, 247, 0.18);
         }
 
-        .principles {
-            max-width: 1100px;
-            margin: 0 auto;
+        .timeline-step h3 {
+            margin: 0;
+            font-size: 1.35rem;
+        }
+
+        .timeline-step p {
+            margin: 0;
+            color: var(--text-muted);
+            line-height: 1.75;
+        }
+
+        .about-values {
+            background: #f5f7ff;
+            border-radius: 28px;
+            padding: clamp(2.5rem, 6vw, 4rem);
             display: grid;
-            gap: 1.25rem;
+            gap: 2rem;
         }
 
-        .principles-grid {
+        .about-values-header {
+            display: grid;
+            gap: 0.75rem;
+            text-align: center;
+            max-width: 760px;
+            margin: 0 auto;
+        }
+
+        .about-values-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 1.5rem;
         }
 
-        .principle {
+        .about-value {
+            background: var(--about-surface);
+            border-radius: 20px;
             padding: 1.75rem;
-            border-radius: 18px;
-            background: var(--white);
-            border: 1px solid rgba(43, 112, 247, 0.08);
             display: grid;
             gap: 0.75rem;
+            border: 1px solid rgba(99, 102, 241, 0.12);
+            box-shadow: 0 18px 32px rgba(15, 23, 42, 0.08);
         }
 
-        .team-card {
-            border-radius: 18px;
-            overflow: hidden;
-            background: var(--white);
-            box-shadow: 0 18px 35px rgba(25, 39, 78, 0.14);
+        .about-value h4 {
+            margin: 0;
+            font-size: 1.1rem;
         }
 
-        .team-photo {
-            height: 220px;
-            background-size: cover;
-            background-position: center;
+        .about-value p {
+            margin: 0;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.7;
         }
 
-        .team-content {
-            padding: 1.75rem;
+        .about-team {
             display: grid;
-            gap: 0.6rem;
+            gap: 2.5rem;
         }
 
-        .team-grid {
+        .about-team-header {
+            display: grid;
+            gap: 0.75rem;
+            text-align: center;
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        .about-team-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1.5rem;
-            max-width: 1100px;
-            margin: 3rem auto 0;
+            gap: 1.75rem;
+        }
+
+        .about-team-card {
+            background: var(--about-surface);
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 24px 50px rgba(15, 23, 42, 0.12);
+            display: flex;
+            flex-direction: column;
+            min-height: 100%;
+        }
+
+        .about-team-photo {
+            position: relative;
+            aspect-ratio: 3/2;
+            overflow: hidden;
+            background: #e2e8f0;
+        }
+
+        .about-team-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .about-team-content {
+            padding: 1.75rem;
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .about-team-role {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .about-team-content p {
+            margin: 0;
+            color: var(--text-muted);
+            line-height: 1.65;
+        }
+
+        @media (max-width: 768px) {
+            .about-container {
+                gap: 3rem;
+            }
+
+            .about-hero-stats {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .timeline-step::before {
+                left: clamp(-1.25rem, -2vw, -1rem);
+            }
         }
 
         @media (max-width: 640px) {
-            .timeline-item {
-                grid-template-columns: 1fr;
+            .about-hero {
+                border-radius: 22px;
             }
 
-            .timeline-bullet {
-                justify-self: start;
+            .about-hero-stats {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .about-timeline {
+                padding-left: 0;
+            }
+
+            .about-timeline::before {
+                display: none;
+            }
+
+            .timeline-step {
+                padding: 1.5rem;
+            }
+
+            .timeline-step::before {
+                position: static;
+                transform: none;
+                margin-bottom: 0.75rem;
+                justify-self: flex-start;
             }
         }
     </style>
 @endpush
 
 @section('content')
-    <section class="hero-about shadow">
-        <span class="badge" style="justify-self: center;">Our Story</span>
-        <h1>bnbStay began with one spare guest room and a desire to host with heart.</h1>
-        <p>
-            What started as a single listing created by two hospitality geeks in 2012 has grown into a global collection
-            of carefully curated stays. We believe travel is most meaningful when it’s personal, thoughtful, and rooted
-            in the communities we visit.
-        </p>
+    @php
+        $headlineStats = [
+            ['value' => '480+', 'label' => 'Boutique stays with soul'],
+            ['value' => '65', 'label' => 'Destinations & districts'],
+            ['value' => '1.2K', 'label' => 'Hosts & creative partners'],
+            ['value' => '98%', 'label' => 'Guests who plan a return trip'],
+        ];
+
+        $pillars = [
+            [
+                'heading' => 'Mission',
+                'title' => 'Curate restorative spaces that feel human.',
+                'description' => 'Every stay is crafted around slow moments, purposeful design, and service that anticipates your needs before you arrive.',
+            ],
+            [
+                'heading' => 'How we build',
+                'title' => 'We co-create with local hosts & makers.',
+                'description' => 'From indigenous artisans in Oaxaca to botanical designers in Bali, each experience is rooted in the people who call it home.',
+            ],
+            [
+                'heading' => 'Promise',
+                'title' => 'Travel that feels bespoke and grounded.',
+                'description' => 'We pair handpicked properties with concierge support so you can focus on connection, not logistics.',
+            ],
+        ];
+
+        $timeline = [
+            [
+                'year' => '2012',
+                'title' => 'A guest room with a bigger vision',
+                'description' => 'bnbStay began in a San Francisco loft shared with traveling designers. The joy of hosting sparked a community-first approach to hospitality.',
+            ],
+            [
+                'year' => '2016',
+                'title' => 'Collections take shape',
+                'description' => 'We expanded across five countries and introduced curated Collections—Coastal Escapes, Urban Atelier, Mountain Retreats, and Wellness Havens.',
+            ],
+            [
+                'year' => '2020',
+                'title' => 'Designing for wellbeing',
+                'description' => 'Amid global pause, we aligned with wellness practitioners to bring sound baths, slow dining, and digital detox itineraries into every stay.',
+            ],
+            [
+                'year' => 'Today',
+                'title' => 'A growing circle of curious travelers',
+                'description' => 'With 480+ listings and new cultural residencies every quarter, we continue to champion travel that is intentional, local, and beautifully human.',
+            ],
+        ];
+
+        $values = [
+            [
+                'title' => 'Intentional design',
+                'copy' => 'Spaces are imagined with local architects, heritage artisans, and biophilic designers to feel rooted in place.',
+            ],
+            [
+                'title' => 'Sustainable hospitality',
+                'copy' => 'We invest in circular materials, renewable energy, and low-impact operations across our partner network.',
+            ],
+            [
+                'title' => 'Community enrichment',
+                'copy' => 'A portion of every booking funds micro-grants for cultural programs, youth arts, and conservation projects.',
+            ],
+            [
+                'title' => 'Seamless care',
+                'copy' => 'Dedicated concierges learn your rituals, plan immersive itineraries, and stay with you throughout the journey.',
+            ],
+        ];
+
+        $team = [
+            [
+                'name' => 'Lina Ortega',
+                'role' => 'Co-founder & Chief Curator',
+                'bio' => 'Design-led strategist blending architecture, art, and storytelling into each stay experience.',
+                'image' => 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=960&q=80',
+            ],
+            [
+                'name' => 'Mateo Silva',
+                'role' => 'Co-founder & Experiential Lead',
+                'bio' => 'Culinary explorer and hospitality partner who co-designs resident chef programs with local hosts.',
+                'image' => 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=960&q=80',
+            ],
+            [
+                'name' => 'Shanice Cole',
+                'role' => 'Head of Guest Experience',
+                'bio' => 'Leads our Rituals team to translate traveler preferences into unforgettable, heartfelt itineraries.',
+                'image' => 'https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=960&q=80',
+            ],
+            [
+                'name' => 'Arjun Dhillon',
+                'role' => 'Director of Host Partnerships',
+                'bio' => 'Works across continents to mentor hosts, elevate service rituals, and keep stays feeling distinctly bnbStay.',
+                'image' => 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&w=960&q=80',
+            ],
+        ];
+    @endphp
+
+    <div class="about-container">
+        <section class="about-hero">
+            <div class="about-hero-inner">
+                <div class="about-hero-copy">
+                    <span class="badge">Our Story</span>
+                    <h1>bnbStay was born from one spare room and a commitment to heartfelt hosting.</h1>
+                    <p>
+                        The project started in 2012 when two hospitality enthusiasts opened their loft to designers passing
+                        through San Francisco. That humble experience taught us that the best stays are a collaboration between
+                        thoughtful hosts, inspired places, and travelers who crave more than a bed for the night.
+                    </p>
+                </div>
+                <div class="about-hero-stats">
+                    @foreach($headlineStats as $stat)
+                        <div class="about-stat">
+                            <span class="value">{{ $stat['value'] }}</span>
+                            <span class="label">{{ $stat['label'] }}</span>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
     </section>
 
-    <section class="grid-two">
-        <article class="story-card">
-            <div class="badge" style="width: fit-content;">Our Mission</div>
-            <h3>Curate restorative spaces that feel human, not corporate.</h3>
-            <p style="margin: 0; color: var(--text-muted); line-height: 1.7;">
-                Every stay is designed to help you slow down, connect, and feel at home—no matter where you are.
-                We champion independent hosts, celebrate design with purpose, and deliver service that anticipates your needs.
+        <section class="about-stories">
+            <div class="section-title" style="text-align: center; margin: 0 auto;">How we build the bnbStay experience</div>
+            <p class="section-subtitle" style="text-align: center; max-width: 680px; margin: 0 auto;">
+                Every stay is a collaboration. We pair purpose-led hosts with designers, wellness experts, and local guides to
+                create journeys that feel intentional from the first welcome to the last goodbye.
             </p>
-        </article>
-        <article class="story-card">
-            <div class="badge" style="width: fit-content;">What sets us apart</div>
-            <h3>We co-create with local hosts & artisans.</h3>
-            <p style="margin: 0; color: var(--text-muted); line-height: 1.7;">
-                Our hosts are restaurateurs, designers, guides, and storytellers. Together we build experiences—from wild
-                foraging in the Nordics to gallery tours in Marrakech—that reflect the soul of each destination.
-            </p>
-        </article>
-    </section>
 
-    <section class="timeline">
-        <div class="timeline-item">
-            <div class="timeline-bullet">2012</div>
-            <div>
-                <h3 style="margin: 0 0 0.2rem;">The guest room that started it all</h3>
-                <p style="margin: 0; color: var(--text-muted); line-height: 1.7;">
-                    Our founders, Lina and Mateo, offered their San Francisco loft to traveling creatives. Their guests became friends,
-                    and together they crafted itineraries that sparked a bigger idea.
-                </p>
+            <div class="about-stories-grid">
+                @foreach($pillars as $pillar)
+                    <article class="about-card">
+                        <span class="card-heading">{{ $pillar['heading'] }}</span>
+                        <h3 style="margin: 0;">{{ $pillar['title'] }}</h3>
+                        <p>{{ $pillar['description'] }}</p>
+                    </article>
+                @endforeach
             </div>
-        </div>
-        <div class="timeline-item">
-            <div class="timeline-bullet">2016</div>
-            <div>
-                <h3 style="margin: 0 0 0.2rem;">Expanding into curated collections</h3>
-                <p style="margin: 0; color: var(--text-muted); line-height: 1.7;">
-                    We partnered with independent hosts across five countries, introducing the first bnbStay Collections:
-                    Coastal Escapes, Urban Atelier, Mountain Retreats.
-                </p>
-            </div>
-        </div>
-        <div class="timeline-item">
-            <div class="timeline-bullet">2020</div>
-            <div>
-                <h3 style="margin: 0 0 0.2rem;">Designing for wellbeing</h3>
-                <p style="margin: 0; color: var(--text-muted); line-height: 1.7%;">
-                    We launched wellness-led amenities—sound baths, in-room botanicals, meditation itineraries—to help guests recharge.
-                    Remote stays thrived, and our virtual concierge expanded worldwide.
-                </p>
-            </div>
-        </div>
-        <div class="timeline-item">
-            <div class="timeline-bullet">Today</div>
-            <div>
-                <h3 style="margin: 0 0 0.2rem;">A global community of curious travelers</h3>
-                <p style="margin: 0; color: var(--text-muted); line-height: 1.7%;">
-                    With over 480 curated listings in 65 destinations, we continue shaping journeys that feel bespoke, rooted, and deeply connected.
-                </p>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="principles">
-        <div class="section-title" style="margin-bottom: 0.5rem;">Our guiding principles</div>
-        <p class="section-subtitle" style="margin-bottom: 1.75rem;">
-            The bnbStay framework keeps every stay intentional and meaningful—for guests, hosts, and communities.
-        </p>
-        <div class="principles-grid">
-            <article class="principle shadow">
-                <h4 style="margin: 0;">Intentional design</h4>
-                <p style="margin: 0; color: var(--text-muted); line-height: 1.7;">
-                    Spaces shaped by local architects, artists, and craftspeople for a sense of place.
-                </p>
-            </article>
-            <article class="principle shadow">
-                <h4 style="margin: 0;">Sustainable hospitality</h4>
-                <p style="margin: 0; color: var(--text-muted); line-height: 1.7%;">
-                    We prioritize low-impact materials, renewable energy, and partnerships with eco-minded hosts.
-                </p>
-            </article>
-            <article class="principle shadow">
-                <h4 style="margin: 0;">Community enrichment</h4>
-                <p style="margin: 0; color: var(--text-muted); line-height: 1.7%;">
-                    A portion of every stay reinvests in local initiatives—from youth arts to environmental projects.
-                </p>
-            </article>
-            <article class="principle shadow">
-                <h4 style="margin: 0;">Seamless care</h4>
-                <p style="margin: 0; color: var(--text-muted); line-height: 1.7%;">
-                    Dedicated concierges who know your preferences, and hosts equipped to deliver heartfelt service.
-                </p>
-            </article>
-        </div>
-    </section>
+        <section class="about-journey">
+            <div class="about-journey-header">
+                <span class="badge" style="justify-self: center;">Journey</span>
+                <h2>The evolution of a people-first stay company</h2>
+                <p>From a single guest room to a global network of handcrafted stays, here are the milestones that shaped the project.</p>
+            </div>
 
-    <section class="team-grid">
-        <article class="team-card">
-            <div class="team-photo" style="background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=800&q=80');"></div>
-            <div class="team-content">
-                <strong>Lina Ortega</strong>
-                <span style="color: var(--primary); font-weight: 500;">Co-founder & Chief Curator</span>
-                <p style="margin: 0; color: var(--text-muted); line-height: 1.7;">
-                    Design-led strategist focused on blending architecture, art, and storytelling into each stay.
-                </p>
+            <div class="about-timeline">
+                @foreach($timeline as $event)
+                    <article class="timeline-step" data-year="{{ $event['year'] }}">
+                        <h3>{{ $event['title'] }}</h3>
+                        <p>{{ $event['description'] }}</p>
+                    </article>
+                @endforeach
             </div>
-        </article>
-        <article class="team-card">
-            <div class="team-photo" style="background-image: url('https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80');"></div>
-            <div class="team-content">
-                <strong>Mateo Silva</strong>
-                <span style="color: var(--primary); font-weight: 500;">Co-founder & Experiential Lead</span>
-                <p style="margin: 0; color: var(--text-muted); line-height: 1.7%;">
-                    Culinary explorer and hospitality guru who crafts immersive itineraries with local hosts.
-                </p>
+        </section>
+
+        <section class="about-values">
+            <div class="about-values-header">
+                <h2>Our guiding principles</h2>
+                <p>These are the promises we make to every guest, host, and community we collaborate with on the bnbStay journey.</p>
             </div>
-        </article>
-        <article class="team-card">
-            <div class="team-photo" style="background-image: url('https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=800&q=80');"></div>
-            <div class="team-content">
-                <strong>Shanice Cole</strong>
-                <span style="color: var(--primary); font-weight: 500;">Head of Guest Experience</span>
-                <p style="margin: 0; color: var(--text-muted); line-height: 1.7%;">
-                    Ensures every traveler’s profile is heard, celebrated, and translated into bespoke experiences.
-                </p>
+
+            <div class="about-values-grid">
+                @foreach($values as $value)
+                    <article class="about-value">
+                        <h4>{{ $value['title'] }}</h4>
+                        <p>{{ $value['copy'] }}</p>
+                    </article>
+                @endforeach
             </div>
-        </article>
-    </section>
+        </section>
+
+        <section class="about-team">
+            <div class="about-team-header">
+                <span class="badge" style="justify-self: center;">Team</span>
+                <h2>Hosts, curators, and storytellers at your service</h2>
+                <p>Meet the team that ensures every bnbStay experience feels naturally luxurious and full of heart.</p>
+            </div>
+
+            <div class="about-team-grid">
+                @foreach($team as $member)
+                    <article class="about-team-card">
+                        <div class="about-team-photo">
+                            <img src="{{ $member['image'] }}" alt="{{ $member['name'] }} portrait">
+                        </div>
+                        <div class="about-team-content">
+                            <strong>{{ $member['name'] }}</strong>
+                            <span class="about-team-role">{{ $member['role'] }}</span>
+                            <p>{{ $member['bio'] }}</p>
+                        </div>
+                    </article>
+                @endforeach
+            </div>
+        </section>
+    </div>
 @endsection
 

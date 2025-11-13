@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\BnbUser;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class BnbUserController extends Controller
 {
@@ -126,15 +127,33 @@ class BnbUserController extends Controller
     public function destroy($id)
     {
         $user = BnbUser::findOrFail($id);
-        
-        // Delete profile image if exists
-        if ($user->profileimage && file_exists(public_path($user->profileimage))) {
-            unlink(public_path($user->profileimage));
+
+        if ($user->id === Auth::id()) {
+            return redirect()->back()->with('error', 'You cannot deactivate your own account.');
         }
-        
-        $user->delete();
+
+        $user->status = 'unactive';
+        $user->save();
         
         return redirect()->route('adminpages.users.index')
-                        ->with('success', 'User deleted successfully.');
+                        ->with('success', 'User deactivated successfully.');
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:active,unactive',
+        ]);
+
+        $user = BnbUser::findOrFail($id);
+
+        if ($user->id === Auth::id()) {
+            return redirect()->back()->with('error', 'You cannot change your own status.');
+        }
+
+        $user->status = $request->input('status');
+        $user->save();
+
+        return redirect()->back()->with('success', 'User status updated successfully.');
     }
 }
