@@ -43,7 +43,7 @@
 
         .hppt-property-card {
             flex: 0 0 auto;
-            width: 340px;
+            width: clamp(200px, calc((100vw - 160px) / 5), 260px);
             scroll-snap-align: start;
             background: #ffffff;
             border-radius: 24px;
@@ -52,6 +52,10 @@
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
             position: relative;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: inherit;
         }
 
         .hppt-property-card::before {
@@ -77,43 +81,19 @@
         .hppt-property-image-wrapper {
             position: relative;
             width: 100%;
-            height: 240px;
+            height: 180px;
             overflow: hidden;
-            background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
+            background: linear-gradient(135deg, rgba(43, 112, 247, 0.12) 0%, rgba(178, 86, 13, 0.12) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .hppt-property-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .hppt-property-card:hover .hppt-property-image {
-            transform: scale(1.1);
-        }
-
-        .hppt-property-badge {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 0.5rem 1rem;
-            border-radius: 100px;
-            font-size: 0.75rem;
+        .hppt-property-initial {
+            font-size: 3rem;
             font-weight: 700;
-            color: var(--primary, #6366f1);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
-            z-index: 2;
-            opacity: 0;
-            transform: translateY(-10px);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .hppt-property-card:hover .hppt-property-badge {
-            opacity: 1;
-            transform: translateY(0);
+            color: #0f172a;
+            letter-spacing: -0.03em;
         }
 
         .hppt-property-content {
@@ -124,6 +104,7 @@
             background: #ffffff;
             position: relative;
             z-index: 2;
+            flex: 1;
         }
 
         .hppt-property-title {
@@ -137,13 +118,6 @@
 
         .hppt-property-card:hover .hppt-property-title {
             color: var(--primary, #6366f1);
-        }
-
-        .hppt-property-description {
-            font-size: 0.9375rem;
-            color: var(--text-secondary, #64748b);
-            line-height: 1.6;
-            margin: 0;
         }
 
         .hppt-property-footer {
@@ -162,7 +136,6 @@
             font-size: 0.875rem;
             font-weight: 600;
             color: var(--primary, #6366f1);
-            text-decoration: none;
             transition: gap 0.3s ease;
         }
 
@@ -258,11 +231,11 @@
         /* Enhanced Responsive Design */
         @media (max-width: 1024px) {
             .hppt-property-card {
-                width: 300px;
+                width: clamp(200px, calc((100vw - 180px) / 4), 240px);
             }
 
             .hppt-property-image-wrapper {
-                height: 220px;
+                height: 160px;
             }
 
             .hppt-property-title {
@@ -290,11 +263,11 @@
             }
 
             .hppt-property-card {
-                width: 280px;
+                width: clamp(220px, calc((100vw - 140px) / 2), 260px);
             }
 
             .hppt-property-image-wrapper {
-                height: 200px;
+                height: 150px;
             }
 
             .hppt-property-content {
@@ -316,11 +289,11 @@
 
         @media (max-width: 480px) {
             .hppt-property-card {
-                width: 260px;
+                width: 220px;
             }
 
             .hppt-property-image-wrapper {
-                height: 180px;
+                height: 140px;
             }
 
             .hppt-property-content {
@@ -380,7 +353,7 @@
 @if(isset($propertyTypes) && $propertyTypes->isNotEmpty())
     <section class="section property-types-section">
         <div class="section-header">
-            <h2 class="section-title">Browse by Property Type</h2>
+            <h2 class="section-title">BnB Category</h2>
             <p class="section-subtitle">
                 Discover a stay style that mirrors your mood—from boutique motels to design-led apartments and coastal resorts.
             </p>
@@ -403,47 +376,42 @@
 
             <div class="hppt-carousel-container" id="hpptCarousel">
                 @foreach($propertyTypes as $index => $propertyType)
-                    <article class="hppt-property-card">
+                    @php
+                        $initial = mb_strtoupper(mb_substr($propertyType['name'], 0, 1));
+                    @endphp
+                    <a class="hppt-property-card"
+                       href="{{ route('website.motels.index', ['motel_type' => $propertyType['id']]) }}"
+                       aria-label="Explore {{ $propertyType['name'] }} stays">
                         <div class="hppt-property-image-wrapper">
-                            <img 
-                                class="hppt-property-image" 
-                                src="{{ $propertyType['image'] }}" 
-                                alt="{{ $propertyType['name'] }} stay"
-                                loading="lazy"
-                            >
-                            <div class="hppt-property-badge">Featured</div>
+                            <span class="hppt-property-initial">{{ $initial }}</span>
                         </div>
                         <div class="hppt-property-content">
                             <h4 class="hppt-property-title">{{ $propertyType['name'] }}</h4>
-                            <p class="hppt-property-description">
-                                Thoughtfully hosted experiences curated for this property style.
-                            </p>
                             <div class="hppt-property-footer">
-                                <a class="hppt-property-link" href="#">
+                                <span class="hppt-property-link">
                                     Explore stays
-                                    <svg 
-                                        class="hppt-property-link-icon" 
-                                        xmlns="http://www.w3.org/2000/svg" 
-                                        fill="none" 
-                                        viewBox="0 0 24 24" 
-                                        stroke="currentColor" 
+                                    <svg
+                                        class="hppt-property-link-icon"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
                                         stroke-width="2.5"
                                     >
-                                        <path 
-                                            stroke-linecap="round" 
-                                            stroke-linejoin="round" 
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
                                             d="M13 7l5 5m0 0l-5 5m5-5H6"
                                         />
                                     </svg>
-                                </a>
+                                </span>
                             </div>
                         </div>
-                    </article>
+                    </a>
                 @endforeach
             </div>
         </div>
 
-        <!-- Scroll Indicators -->
         <div class="hppt-scroll-indicator" id="hpptScrollIndicator"></div>
     </section>
 

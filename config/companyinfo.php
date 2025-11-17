@@ -25,8 +25,8 @@ return [
             'label' => 'Email',
             'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="m20.25 4.5-8.25 6.375L3.75 4.5h16.5Zm0 1.8-6.03 4.66L20.25 16.2V6.3Zm-16.5 0v9.9l6.03-5.94L3.75 6.3Zm.9 11.4h14.7L12 13.05 4.65 17.7Z"/></svg>',
             'lines' => [
-                'info@luxehaven.com',
-                'kelvinanders@gmail.com',
+                'fbc.tanzania@gmail.com',
+                'kelvinpaul374@gmail.com',
             ],
         ],
         [

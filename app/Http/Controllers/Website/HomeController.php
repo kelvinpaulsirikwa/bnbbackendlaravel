@@ -22,22 +22,6 @@ class HomeController extends Controller
 {
     use ResolvesImageUrls;
 
-    /**
-     * Property type imagery lookup table.
-     *
-     * @var array<string, string>
-     */
-    protected array $propertyTypeImages = [
-        'hotel' => 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=900&q=80',
-        'motel' => 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80',
-        'apartment' => 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=900&q=80',
-        'resort' => 'https://images.unsplash.com/photo-1505692794403-55b39f3100ca?auto=format&fit=crop&w=900&q=80',
-        'villa' => 'https://images.unsplash.com/photo-1505691723518-36a5ac3be353?auto=format&fit=crop&w=900&q=80',
-        'lodge' => 'https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=900&q=80',
-        'guest house' => 'https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=900&q=80',
-        'inn' => 'https://images.unsplash.com/photo-1528909514045-2fa4ac7a08ba?auto=format&fit=crop&w=900&q=80',
-    ];
-
     public function __construct()
     {
         $footerMotelTypes = MotelType::query()
@@ -83,15 +67,11 @@ class HomeController extends Controller
             ->orderBy('name')
             ->get()
             ->map(function (MotelType $type) {
-                $key = strtolower($type->name);
-                $candidateImage = $type->image
-                    ?? $type->image_path
-                    ?? $this->propertyTypeImages[$key]
-                    ?? null;
+                
 
                 return [
+                    'id' => $type->id,
                     'name' => $type->name,
-                    'image' => $this->resolveImageUrl($candidateImage),
                 ];
             });
 
@@ -130,7 +110,7 @@ class HomeController extends Controller
         $spotlightMotels = Motel::with(['rooms', 'amenities.amenity', 'images'])
             ->withCount('rooms')
             ->inRandomOrder()
-            ->take(3)
+            ->take(15)
             ->get()
             ->map(function (Motel $motel) {
                 $primaryImage = $this->resolveImageUrl(
@@ -174,14 +154,6 @@ class HomeController extends Controller
             'spotlightMotels' => $spotlightMotels,
             'statistics' => $statistics,
         ]);
-    }
-
-    /**
-     * Display the about page.
-     */
-    public function about(): ViewResponse
-    {
-        return view('websitepages.about');
     }
 
     /**

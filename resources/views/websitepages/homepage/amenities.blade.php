@@ -1,139 +1,150 @@
 @push('styles')
     <style>
-        /* Premium Amenities - Dynamic Grid */
-        .hpa-amenities-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1.75rem;
-            padding: 1rem 0;
+        :root {
+            --uas-primary: #6366f1;
+            --uas-primary-dark: #4f46e5;
+            --uas-secondary: #8b5cf6;
+            --uas-text-dark: #1e293b;
+            --uas-text-light: #64748b;
+            --uas-text-muted: #94a3b8;
+            --uas-bg-light: #f8fafc;
+            --uas-bg-white: #ffffff;
+            --uas-border: #e2e8f0;
+            --uas-shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08);
+            --uas-shadow-md: 0 4px 12px rgba(15, 23, 42, 0.1);
+            --uas-shadow-hover: 0 8px 24px rgba(15, 23, 42, 0.12);
         }
 
-        .hpa-amenity-item {
-            background: linear-gradient(135deg, #ffffff 0%, #fafbff 100%);
-            border-radius: 24px;
-            padding: 2.25rem 1.75rem;
+        /* Main Container */
+        .uas-amenities-section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 5rem 2rem;
+            background: var(--uas-bg-light);
+        }
+
+        /* Section Header */
+        .uas-section-header {
             text-align: center;
-            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
-            border: 2px solid transparent;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.25rem;
+            max-width: 800px;
+            margin: 0 auto 4rem;
+        }
+
+        .uas-section-title {
+            font-size: clamp(2rem, 4vw, 2.75rem);
+            font-weight: 800;
+            color: var(--uas-text-dark);
+            margin: 0 0 1rem 0;
+            letter-spacing: -0.025em;
+            line-height: 1.2;
+        }
+
+        .uas-section-subtitle {
+            font-size: clamp(1rem, 2vw, 1.125rem);
+            color: var(--uas-text-light);
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        /* Grid Layout - 4 columns */
+        .uas-amenities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Card Design */
+        .uas-amenity-card {
+            background: var(--uas-bg-white);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--uas-shadow-sm);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .uas-amenity-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--uas-shadow-hover);
+        }
+
+        /* Card Number Badge */
+        .uas-card-number {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--uas-text-muted);
+            background: var(--uas-bg-white);
+            padding: 0.375rem 0.75rem;
+            border-radius: 8px;
+            z-index: 2;
+            box-shadow: var(--uas-shadow-sm);
+        }
+
+        /* Image Container */
+        .uas-image-container {
+            width: 100%;
+            height: 240px;
             position: relative;
             overflow: hidden;
+            background: linear-gradient(135deg, #f0f4ff, #e8eeff);
         }
 
-        .hpa-amenity-item::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
-            transform: scale(0);
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 0;
-        }
-
-        .hpa-amenity-item:hover::before {
-            transform: scale(1);
-        }
-
-        .hpa-amenity-item:hover {
-            transform: translateY(-12px) scale(1.02);
-            box-shadow: 0 20px 48px rgba(99, 102, 241, 0.15);
-            border-color: rgba(99, 102, 241, 0.3);
-            background: linear-gradient(135deg, #ffffff 0%, #f0f4ff 100%);
-        }
-
-        .hpa-amenity-icon-wrapper {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-            color: #ffffff;
-            font-size: 2.25rem;
-            box-shadow: 0 12px 28px rgba(99, 102, 241, 0.3);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            z-index: 1;
-        }
-
-        .hpa-amenity-item:hover .hpa-amenity-icon-wrapper {
-            transform: rotate(360deg) scale(1.1);
-            box-shadow: 0 16px 40px rgba(99, 102, 241, 0.4);
-        }
-
-        .hpa-amenity-icon-wrapper::after {
-            content: '';
-            position: absolute;
-            inset: -8px;
-            border-radius: 50%;
-            border: 2px solid rgba(99, 102, 241, 0.2);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-
-        .hpa-amenity-item:hover .hpa-amenity-icon-wrapper::after {
-            opacity: 1;
-            animation: hpa-pulse 2s infinite;
-        }
-
-        @keyframes hpa-pulse {
-            0%, 100% {
-                transform: scale(1);
-                opacity: 0.5;
-            }
-            50% {
-                transform: scale(1.1);
-                opacity: 0.8;
-            }
-        }
-
-        .hpa-amenity-icon-wrapper img {
+        .uas-image-container img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 50%;
+            transition: transform 0.4s ease;
         }
 
-        .hpa-amenity-icon-wrapper svg {
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        .uas-amenity-card:hover .uas-image-container img {
+            transform: scale(1.08);
         }
 
-        .hpa-amenity-item:hover .hpa-amenity-icon-wrapper svg {
-            transform: scale(1.2);
-        }
-
-        .hpa-amenity-label {
-            font-weight: 700;
-            color: var(--text-dark, #1e293b);
-            font-size: 1.0625rem;
-            letter-spacing: -0.01em;
-            position: relative;
-            z-index: 1;
-            transition: color 0.3s ease;
-        }
-
-        .hpa-amenity-item:hover .hpa-amenity-label {
-            color: var(--primary, #4f46e5);
-        }
-
-        .hpa-amenities-cta {
+        /* Fallback Icon for no image */
+        .uas-fallback-icon {
+            width: 100%;
+            height: 100%;
             display: flex;
-            justify-content: center;
             align-items: center;
-            margin-top: 3.5rem;
-            padding-top: 2.5rem;
-            border-top: 2px solid rgba(99, 102, 241, 0.1);
+            justify-content: center;
+            font-size: 4rem;
+            color: var(--uas-primary);
+            background: linear-gradient(135deg, #f0f4ff, #e8eeff);
         }
 
-        .hpa-amenities-link {
+        /* Card Content */
+        .uas-card-content {
+            padding: 2rem 1.5rem;
+        }
+
+        .uas-amenity-name {
+            font-size: 1.375rem;
+            font-weight: 700;
+            color: var(--uas-text-dark);
+            margin: 0 0 0.75rem 0;
+            letter-spacing: -0.02em;
+            line-height: 1.3;
+        }
+
+        .uas-amenity-description {
+            font-size: 0.9375rem;
+            color: var(--uas-text-light);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* CTA Section */
+        .uas-cta-section {
+            text-align: center;
+            padding-top: 2.5rem;
+        }
+
+        .uas-cta-button {
             display: inline-flex;
             align-items: center;
             gap: 0.75rem;
@@ -141,192 +152,162 @@
             font-size: 1.0625rem;
             font-weight: 700;
             color: #ffffff;
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            background: linear-gradient(135deg, var(--uas-primary), var(--uas-secondary));
             border: none;
-            border-radius: 16px;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 12px;
             text-decoration: none;
-            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
 
-        .hpa-amenities-link::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
-            opacity: 0;
-            transition: opacity 0.4s ease;
+        .uas-cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
         }
 
-        .hpa-amenities-link:hover::before {
-            opacity: 1;
-        }
-
-        .hpa-amenities-link:hover {
-            transform: translateY(-4px) scale(1.05);
-            box-shadow: 0 16px 40px rgba(99, 102, 241, 0.4);
-        }
-
-        .hpa-amenities-link-text {
-            position: relative;
-            z-index: 1;
-        }
-
-        .hpa-amenities-link-icon {
+        .uas-cta-icon {
             width: 20px;
             height: 20px;
-            position: relative;
-            z-index: 1;
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .hpa-amenities-link:hover .hpa-amenities-link-icon {
-            transform: translateX(6px);
-        }
-
-        .hpa-amenities-inline-link {
-            color: var(--primary, #6366f1);
-            text-decoration: none;
-            font-weight: 600;
-            position: relative;
-            transition: color 0.3s ease;
-        }
-
-        .hpa-amenities-inline-link::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-            transform: scaleX(0);
-            transform-origin: right;
             transition: transform 0.3s ease;
         }
 
-        .hpa-amenities-inline-link:hover {
-            color: var(--primary-dark, #4f46e5);
+        .uas-cta-button:hover .uas-cta-icon {
+            transform: translateX(4px);
         }
 
-        .hpa-amenities-inline-link:hover::after {
-            transform: scaleX(1);
-            transform-origin: left;
+        /* Inline Link */
+        .uas-inline-link {
+            color: var(--uas-primary);
+            text-decoration: none;
+            font-weight: 700;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.3s ease;
         }
 
-        /* Staggered Animation on Load */
-        .hpa-amenity-item {
-            animation: hpa-fade-in 0.6s ease forwards;
-            opacity: 0;
+        .uas-inline-link:hover {
+            border-bottom-color: var(--uas-primary);
         }
 
-        @keyframes hpa-fade-in {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .hpa-amenity-item:nth-child(1) { animation-delay: 0.1s; }
-        .hpa-amenity-item:nth-child(2) { animation-delay: 0.2s; }
-        .hpa-amenity-item:nth-child(3) { animation-delay: 0.3s; }
-        .hpa-amenity-item:nth-child(4) { animation-delay: 0.4s; }
-        .hpa-amenity-item:nth-child(5) { animation-delay: 0.5s; }
-        .hpa-amenity-item:nth-child(6) { animation-delay: 0.6s; }
-        .hpa-amenity-item:nth-child(n+7) { animation-delay: 0.7s; }
-
-        /* Enhanced Responsive Design */
+        /* Responsive Design */
         @media (max-width: 1200px) {
-            .hpa-amenities-container {
-                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-                gap: 1.5rem;
-            }
-
-            .hpa-amenity-icon-wrapper {
-                width: 80px;
-                height: 80px;
-                font-size: 2rem;
+            .uas-amenities-grid {
+                grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+                gap: 1.75rem;
             }
         }
 
         @media (max-width: 768px) {
-            .hpa-amenities-container {
-                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            .uas-amenities-section {
+                padding: 4rem 1.5rem;
+            }
+
+            .uas-amenities-grid {
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                gap: 1.5rem;
+            }
+
+            .uas-image-container {
+                height: 200px;
+            }
+
+            .uas-card-content {
+                padding: 1.5rem 1.25rem;
+            }
+
+            .uas-amenity-name {
+                font-size: 1.25rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .uas-amenities-section {
+                padding: 3rem 1rem;
+            }
+
+            .uas-section-header {
+                margin-bottom: 2.5rem;
+            }
+
+            .uas-amenities-grid {
+                grid-template-columns: 1fr;
                 gap: 1.25rem;
             }
 
-            .hpa-amenity-item {
-                padding: 1.75rem 1.25rem;
-                gap: 1rem;
+            .uas-image-container {
+                height: 180px;
             }
 
-            .hpa-amenity-icon-wrapper {
-                width: 70px;
-                height: 70px;
-                font-size: 1.75rem;
+            .uas-card-number {
+                top: 1rem;
+                left: 1rem;
+                font-size: 0.8125rem;
+                padding: 0.25rem 0.625rem;
             }
 
-            .hpa-amenity-label {
-                font-size: 0.9375rem;
+            .uas-card-content {
+                padding: 1.25rem 1rem;
             }
 
-            .hpa-amenities-cta {
-                margin-top: 2.5rem;
-                padding-top: 2rem;
+            .uas-amenity-name {
+                font-size: 1.125rem;
             }
 
-            .hpa-amenities-link {
+            .uas-amenity-description {
+                font-size: 0.875rem;
+            }
+
+            .uas-cta-button {
+                width: 100%;
+                justify-content: center;
                 padding: 0.875rem 2rem;
                 font-size: 1rem;
             }
         }
 
-        @media (max-width: 480px) {
-            .hpa-amenities-container {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1rem;
+        /* Dark Mode Support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --uas-text-dark: #f1f5f9;
+                --uas-text-light: #cbd5e1;
+                --uas-text-muted: #94a3b8;
+                --uas-bg-light: #0f172a;
+                --uas-bg-white: #1e293b;
+                --uas-border: #334155;
+                --uas-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+                --uas-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+                --uas-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.5);
             }
 
-            .hpa-amenity-item {
-                padding: 1.5rem 1rem;
-                border-radius: 20px;
-            }
-
-            .hpa-amenity-icon-wrapper {
-                width: 64px;
-                height: 64px;
-                font-size: 1.5rem;
-            }
-
-            .hpa-amenity-label {
-                font-size: 0.875rem;
-            }
-
-            .hpa-amenities-link {
-                width: 100%;
-                justify-content: center;
-                padding: 1rem 1.5rem;
-            }
-
-            .hpa-amenities-cta {
-                display: none;
+            .uas-fallback-icon {
+                background: linear-gradient(135deg, #1e293b, #334155);
             }
         }
 
-        /* Accessibility */
+        /* Reduced Motion */
         @media (prefers-reduced-motion: reduce) {
-            .hpa-amenity-item,
-            .hpa-amenity-icon-wrapper,
-            .hpa-amenities-link {
-                animation: none;
-                transition: none;
+            .uas-amenity-card,
+            .uas-amenity-card:hover,
+            .uas-image-container img,
+            .uas-cta-button,
+            .uas-cta-icon,
+            .uas-inline-link {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .uas-cta-section {
+                display: none;
+            }
+
+            .uas-amenity-card {
+                break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid var(--uas-border);
             }
         }
     </style>
@@ -334,35 +315,62 @@
 
 <!-- Premium Amenities Section -->
 @if(isset($featuredAmenities) && $featuredAmenities->isNotEmpty())
-    <section class="section">
-        <div class="section-header">
-            <h2 class="section-title">World-Class Amenities</h2>
-            <p class="section-subtitle">
-                Signature comforts and thoughtful touches available across our curated selection of motels. 
-                <a class="hpa-amenities-inline-link" href="{{ route('website.amenities') }}">View all amenities</a> 
-                to discover more.
-            </p>
-        </div>
+    <section class="uas-amenities-section" aria-labelledby="uas-amenities-title">
+        <!-- Header -->
+
+        <h2 id="uas-amenities-title" 
+    style="text-align:center; font-size:2.2rem; font-weight:800; margin-bottom:12px; 
+           color:#1e3a8a; letter-spacing:1px;">
+    What We Offer
+</h2>
+
+<p style="text-align:center; font-size:1.1rem; line-height:1.7; 
+          color:#475569; max-width:750px; margin:0 auto 25px; font-weight:500;">
+    Signature comforts and thoughtful touches available across our curated selection of motels. 
+    <a href="{{ route('website.amenities') }}" 
+       style="color:#dc2626; font-weight:700; text-decoration:none; border-bottom:2px solid #dc2626;">
+        View all amenities
+    </a> 
+    to discover more.
+</p>
+
+<br>
+       
         
-        <div class="hpa-amenities-container">
-            @foreach($featuredAmenities as $amenity)
-                <article class="hpa-amenity-item">
-                    <div class="hpa-amenity-icon-wrapper">
+        <!-- Amenities Grid -->
+        <div class="uas-amenities-grid" role="list">
+            @foreach($featuredAmenities as $index => $amenity)
+                <article class="uas-amenity-card" role="listitem">
+                    <!-- Card Number Badge -->
+                    <div class="uas-card-number">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</div>
+                    
+                    <!-- Image Container -->
+                    <div class="uas-image-container">
                         @if($amenity['icon_is_image'] ?? false)
-                            <img src="{{ $amenity['icon'] }}" alt="{{ $amenity['name'] }} icon">
-                        @elseif(!empty($amenity['icon']))
-                            <span>{{ $amenity['icon'] }}</span>
+                            <img src="{{ $amenity['icon'] }}" alt="{{ $amenity['name'] }}" loading="lazy">
+                        @elseif(!empty($amenity['icon']) && !($amenity['icon_is_image'] ?? false))
+                            <div class="uas-fallback-icon" aria-hidden="true">
+                                <span>{{ $amenity['icon'] }}</span>
+                            </div>
                         @else
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="16" cy="16" r="14"/>
-                                <path d="m11 16 3 3 7-7"/>
-                            </svg>
+                            <div class="uas-fallback-icon" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="m9 12 2 2 4-4"/>
+                                </svg>
+                            </div>
                         @endif
                     </div>
-                    <div class="hpa-amenity-label">{{ $amenity['name'] }}</div>
+                    
+                    <!-- Card Content -->
+                    <div class="uas-card-content">
+                        <h3 class="uas-amenity-name">{{ $amenity['name'] }}</h3>
+                        @if(!empty($amenity['description']))
+                            <p class="uas-amenity-description">{{ $amenity['description'] }}</p>
+                        @endif
+                    </div>
                 </article>
             @endforeach
         </div>
-     
     </section>
 @endif

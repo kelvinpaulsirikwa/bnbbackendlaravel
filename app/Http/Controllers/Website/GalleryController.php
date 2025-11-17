@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Website;
 
 use App\Http\Controllers\Controller;
 use App\Models\BnbImage;
+use App\Models\Motel;
 use App\Support\Concerns\ResolvesImageUrls;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -22,9 +23,12 @@ class GalleryController extends Controller
             ->paginate(12);
 
         $images->getCollection()->transform(function (BnbImage $image) {
+            $motel = $image->motel;
+
             return [
                 'id' => $image->id,
-                'motel_name' => $image->motel->name ?? 'Unnamed motel',
+                'motel_id' => optional($motel)->id,
+                'motel_name' => optional($motel)->name ?? 'Unnamed motel',
                 'url' => $this->resolveImageUrl($image->filepath),
                 'created_at' => $image->created_at,
             ];
@@ -32,6 +36,23 @@ class GalleryController extends Controller
 
         return view('websitepages.gallery', [
             'images' => $images,
+        ]);
+    }
+
+    public function motelGallery(Motel $motel): View
+    {
+        $motel->load('images');
+        
+        $gallery = collect([$motel->front_image])
+            ->merge($motel->images->pluck('filepath'))
+            ->filter()
+            ->unique()
+            ->map(fn ($path) => $this->resolveImageUrl($path))
+            ->values();
+
+        return view('websitepages.motels.gallery', [
+            'motel' => $motel,
+            'gallery' => $gallery,
         ]);
     }
 }

@@ -3,8 +3,10 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>@yield('title', 'bnbStay')</title>
+        <title>@yield('title', 'BnB Stay')</title>
         <meta name="description" content="@yield('meta_description', 'Discover welcoming stays and curated experiences with bnbStay.')">
+        <link rel="icon" href="{{ asset('images/static_file/applogo.png') }}" type="image/png">
+        <link rel="apple-touch-icon" href="{{ asset('images/static_file/applogo.png') }}">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -180,11 +182,10 @@
             <div class="nav">
                 <a class="nav-brand" href="{{ route('website.home') }}">
                     <img src="{{ asset('images/static_file/applogo.png') }}" alt="bnbStay logo" width="36" height="36">
-                    <span class="nav-brand-text">bnb<span class="nav-brand-dotcom">.com</span></span>
+                    <span class="nav-brand-text">BnB<span class="nav-brand-dotcom">.com</span></span>
                 </a>
                 <nav class="nav-links">
                     <a href="{{ route('website.home') }}">Home</a>
-                    <a href="{{ route('website.about') }}">About</a>
                     <a href="{{ route('website.gallery') }}">Gallery</a>
                     <a href="{{ route('website.motels.index') }}">Motels</a>
                     <a href="{{ route('website.amenities') }}">Amenities</a>

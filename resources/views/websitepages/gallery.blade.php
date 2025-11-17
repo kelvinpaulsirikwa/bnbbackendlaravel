@@ -107,8 +107,19 @@
             background: #ffffff;
             box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
+            cursor: default;
             animation: fadeInUp 0.5s ease both;
+        }
+
+        .gallery-item.has-link {
+            cursor: pointer;
+        }
+
+        .gallery-item-link-wrapper {
+            display: block;
+            color: inherit;
+            text-decoration: none;
+            height: 100%;
         }
 
         .gallery-item:nth-child(1) { animation-delay: 0.05s; }
@@ -403,16 +414,31 @@
     @if($images->count() > 0)
         <section class="gallery-grid">
             @foreach($images as $image)
-                <article class="gallery-item">
-                    <img src="{{ $image['url'] }}" alt="{{ $image['motel_name'] }}" loading="lazy">
-                    <div class="gallery-overlay">
-                        <div>
-                            <strong>{{ $image['motel_name'] }}</strong>
-                            @if(!empty($image['created_at']))
-                                <div style="font-size: 0.85rem; opacity: 0.85;">Captured {{ $image['created_at']->diffForHumans() }}</div>
-                            @endif
+                @php
+                    $motelLink = !empty($image['motel_id']) ? route('website.motels.show', $image['motel_id']) : null;
+                @endphp
+                <article class="gallery-item {{ $motelLink ? 'has-link' : '' }}">
+                    @if($motelLink)
+                        <a href="{{ $motelLink }}"
+                           class="gallery-item-link-wrapper"
+                           aria-label="View {{ $image['motel_name'] }} details">
+                    @else
+                        <div class="gallery-item-link-wrapper">
+                    @endif
+                            <img src="{{ $image['url'] }}" alt="{{ $image['motel_name'] }}" loading="lazy">
+                            <div class="gallery-overlay">
+                                <div>
+                                    <strong>{{ $image['motel_name'] }}</strong>
+                                    @if(!empty($image['created_at']))
+                                        <div style="font-size: 0.85rem; opacity: 0.85;">Captured {{ $image['created_at']->diffForHumans() }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                    @if($motelLink)
+                        </a>
+                    @else
                         </div>
-                    </div>
+                    @endif
                 </article>
             @endforeach
         </section>

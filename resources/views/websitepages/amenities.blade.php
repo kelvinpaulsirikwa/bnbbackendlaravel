@@ -274,6 +274,8 @@
             overflow: hidden;
             cursor: pointer;
             border: 2px solid transparent;
+            text-decoration: none;
+            color: inherit;
         }
 
         .amenity-card::before {
@@ -627,27 +629,12 @@
 @endphp
 
 @section('content')
-    <section class="amenities-hero">
-        <h1>World-Class Amenities</h1>
-        <p> Amenities that found in FBC products  are</p>
-    </section>
+    
 
     <div class="amenities-container">
         @if($amenities->isNotEmpty())
-            <div class="amenities-stats">
-                <div class="stat-card">
-                    <span class="stat-number">{{ $amenities->count() }}+</span>
-                    <span class="stat-label">Premium Amenities</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-number">100%</span>
-                    <span class="stat-label">Quality Assured</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-number">24/7</span>
-                    <span class="stat-label">Available Services</span>
-                </div>
-            </div>
+            <br>
+            <br>
 
             <section class="amenities-grid">
                 @foreach($amenities as $amenity)
@@ -662,7 +649,10 @@
                             $category = 'luxury';
                         }
                     @endphp
-                    <article class="amenity-card" data-category="{{ $category }}">
+                    <a class="amenity-card"
+                       data-category="{{ $category }}"
+                       href="{{ route('website.amenities.show', $amenity['id']) }}"
+                       aria-label="View motels with {{ $amenity['name'] }}">
                         <div class="amenity-icon">
                             @if($treatAsImage)
                                 <img src="{{ $icon }}" alt="{{ $amenity['name'] }} icon">
@@ -678,7 +668,7 @@
                         <div class="amenity-description">
                             Available at select properties for your comfort and convenience
                         </div>
-                    </article>
+                    </a>
                 @endforeach
             </section>
         @else

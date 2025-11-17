@@ -41,8 +41,8 @@
             max-width: 1240px;
             margin: 0 auto;
             display: grid;
-            gap: 1.75rem;
-            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+            gap: 1.5rem;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
         }
 
         .motels-card {
@@ -152,11 +152,65 @@
             justify-content: center;
         }
 
-        .motels-pagination nav {
+        .motels-pagination-inner {
             background: #ffffff;
-            padding: 0.75rem 1.25rem;
             border-radius: 999px;
             box-shadow: 0 14px 28px rgba(19, 37, 74, 0.16);
+            padding: 0.65rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .motels-pagination-summary {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .motels-pagination-list {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0;
+            margin: 0;
+        }
+
+        .motels-pagination-list li {
+            margin: 0;
+        }
+
+        .motels-page-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .motels-page-btn:hover {
+            background: rgba(178, 86, 13, 0.12);
+            color: #b2560d;
+        }
+
+        .motels-page-btn--disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .motels-page-btn--active {
+            background: #b2560d;
+            color: #ffffff;
+            box-shadow: 0 8px 16px rgba(178, 86, 13, 0.3);
         }
 
         .motels-empty {
@@ -167,6 +221,35 @@
             padding: 3rem;
             text-align: center;
             box-shadow: 0 20px 42px rgba(17, 31, 60, 0.12);
+        }
+        @media (max-width: 1600px) {
+            .motels-grid {
+                grid-template-columns: repeat(5, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 1400px) {
+            .motels-grid {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 1100px) {
+            .motels-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 900px) {
+            .motels-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 640px) {
+            .motels-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 @endpush
@@ -206,22 +289,10 @@
                         @endif
                         <h3 class="motels-title">{{ $motel['name'] }}</h3>
                         <p class="motels-description">{{ $motel['description'] }}</p>
-                        <div class="motels-features">
-                            @forelse($motel['amenities'] as $feature)
-                                <span>{{ $feature }}</span>
-                            @empty
-                                <span>Concierge guidance available</span>
-                            @endforelse
-                        </div>
+                      
                     </div>
                     <div class="motels-footer">
-                        <div class="motels-price">
-                            @if($motel['starting_price'])
-                                ${{ number_format($motel['starting_price'], 0) }} <span>/night</span>
-                            @else
-                                <span style="color: var(--text-muted); font-weight:500;">Contact for rates</span>
-                            @endif
-                        </div>
+                       
                         <a class="motels-button" href="{{ route('website.motels.show', $motel['id']) }}">
                             View Details
                         </a>
@@ -231,7 +302,7 @@
         </section>
 
         <div class="motels-pagination">
-            {{ $motels->links() }}
+            {{ $motels->onEachSide(1)->links('components.pagination.motels') }}
         </div>
     @else
         <div class="motels-empty">

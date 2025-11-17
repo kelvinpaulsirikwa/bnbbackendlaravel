@@ -5,39 +5,37 @@
 
 @push('styles')
     <style>
+        /* ===== CSS Variables ===== */
+        :root {
+            --text-dark: #1a1a1a;
+            --text-muted: #6b7280;
+            --accent: #b2560d;
+        }
+
+        /* ===== Hero Section ===== */
         .motel-hero {
-            position: relative;
-            border-radius: 28px;
-            overflow: hidden;
             max-width: 1240px;
             margin: 4rem auto 3rem;
-            min-height: 420px;
+            padding: 0 1rem;
             display: grid;
-            align-items: end;
-            color: #ffffff;
-            box-shadow: 0 32px 60px rgba(10, 23, 55, 0.35);
+            gap: 1.5rem;
         }
 
-        .motel-hero::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(180deg, rgba(11, 17, 30, 0.1) 20%, rgba(11, 17, 30, 0.75) 100%);
-        }
-
-        .motel-hero img {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .motel-hero-body {
-            position: relative;
-            padding: 2.5rem 3rem;
+        .motel-hero-heading {
             display: grid;
             gap: 0.75rem;
+        }
+
+        .motel-hero-heading h1 {
+            margin: 0;
+            font-size: clamp(2rem, 4vw, 3.1rem);
+        }
+
+        .motel-hero-heading p {
+            margin: 0;
+            max-width: 720px;
+            line-height: 1.7;
+            color: var(--text-muted);
         }
 
         .motel-hero-tags {
@@ -52,50 +50,214 @@
             gap: 0.4rem;
             padding: 0.35rem 0.85rem;
             border-radius: 999px;
-            background: rgba(255, 255, 255, 0.12);
+            background: rgba(178, 86, 13, 0.1);
+            color: var(--accent);
             font-size: 0.9rem;
             font-weight: 500;
         }
 
-        .motel-hero h1 {
-            margin: 0;
-            font-size: clamp(2.4rem, 4vw, 3.1rem);
+        /* ===== Hero Gallery ===== */
+        .motel-hero-gallery {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 0.5rem;
+            height: 420px;
         }
 
-        .motel-hero p {
-            margin: 0;
-            max-width: 580px;
-            line-height: 1.7;
-            color: rgba(255, 255, 255, 0.85);
+        .hero-main {
+            grid-row: 1 / 3;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
         }
 
+        .hero-main img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .hero-secondary-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+
+        .hero-secondary-grid figure {
+            position: relative;
+            overflow: hidden;
+            margin: 0;
+            border-radius: 12px;
+        }
+
+        .hero-secondary-grid img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .hero-image--with-overlay::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 12px;
+        }
+
+        .hero-show-all {
+            position: absolute;
+            right: 0.75rem;
+            bottom: 0.75rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.98);
+            color: #1a1a1a;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            z-index: 10;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .hero-show-all:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-show-all svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .hero-image--empty {
+            grid-column: 1 / -1;
+            grid-row: 1 / -1;
+            min-height: 420px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f3f4f6;
+            border-radius: 12px;
+        }
+
+        /* ===== Overview Section ===== */
         .motel-overview {
             max-width: 1240px;
             margin: 0 auto 3rem;
+            padding: 0 1rem;
+        }
+
+        .motel-overview-grid {
             display: grid;
-            gap: 2rem;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            align-items: start;
+        }
+
+        .motel-amenities-panel {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e7eb;
+        }
+
+        .motel-amenities-panel h3 {
+            margin: 0;
+            font-size: 1.35rem;
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        .motel-amenities-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .motel-amenities-link {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--accent);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .motel-amenities-link:hover {
+            text-decoration: underline;
+        }
+
+        .motel-amenities-list {
+            display: grid;
+            gap: 0.85rem;
+            margin-top: 1.25rem;
+        }
+
+        .motel-amenities-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .motel-amenities-item strong {
+            font-size: 1rem;
+        }
+
+        .motel-amenity-link {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .motel-amenity-link:hover {
+            color: var(--accent);
+        }
+
+        .motel-amenities-item p {
+            margin: 0;
+            color: var(--text-muted);
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+
+        .motel-overview-stack {
+            display: grid;
+            gap: 1rem;
         }
 
         .motel-overview-card {
             background: #ffffff;
-            border-radius: 20px;
+            border-radius: 16px;
             padding: 1.8rem;
-            box-shadow: 0 18px 36px rgba(19, 38, 74, 0.12);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             display: grid;
             gap: 0.8rem;
+            border: 1px solid #e5e7eb;
         }
 
         .motel-overview-card h3 {
             margin: 0;
             font-size: 1.2rem;
             color: var(--text-dark);
+            font-weight: 600;
         }
 
         .motel-overview-list {
             display: grid;
             gap: 0.5rem;
             color: var(--text-muted);
+            font-size: 0.95rem;
         }
 
         .motel-overview-list span {
@@ -104,79 +266,61 @@
             gap: 0.5rem;
         }
 
-        .motel-amenities {
-            max-width: 1240px;
-            margin: 0 auto 3rem;
-        }
-
-        .motel-amenities-grid {
-            display: grid;
-            gap: 1rem;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        }
-
-        .motel-amenity-card {
-            background: #ffffff;
-            border-radius: 18px;
-            padding: 1.5rem;
-            box-shadow: 0 14px 28px rgba(22, 40, 74, 0.12);
-            display: grid;
-            gap: 0.6rem;
-        }
-
-        .motel-gallery {
-            max-width: 1240px;
-            margin: 0 auto 3rem;
-        }
-
-        .motel-gallery-grid {
-            display: grid;
-            gap: 1rem;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        }
-
-        .motel-gallery-grid img {
-            border-radius: 18px;
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-            box-shadow: 0 18px 32px rgba(19, 34, 66, 0.12);
-        }
-
+        /* ===== Rooms Section ===== */
         .motel-rooms {
             max-width: 1240px;
             margin: 0 auto 4rem;
+            padding: 0 1rem;
+        }
+
+        .section-heading {
+            font-size: clamp(1.75rem, 3vw, 2.3rem);
+            margin-bottom: 0.75rem;
+            text-align: center;
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        .section-subheading {
+            color: var(--text-muted);
+            text-align: center;
+            margin-bottom: 2rem;
+            line-height: 1.7;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .motel-rooms-grid {
             display: grid;
             gap: 1.5rem;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(3, minmax(0, 1fr));
         }
 
         .motel-room-card {
             background: #ffffff;
-            border-radius: 22px;
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 22px 40px rgba(19, 37, 74, 0.14);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             display: flex;
             flex-direction: column;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
         }
 
         .motel-room-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 28px 54px rgba(19, 37, 74, 0.18);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
         }
 
         .motel-room-card img {
             width: 100%;
-            height: 200px;
+            height: 220px;
             object-fit: cover;
         }
 
         .motel-room-body {
-            padding: 1.7rem;
+            padding: 1.5rem;
             display: grid;
             gap: 0.8rem;
             flex: 1;
@@ -184,36 +328,37 @@
 
         .motel-room-title {
             margin: 0;
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             font-weight: 600;
             color: var(--text-dark);
         }
 
         .motel-room-items {
             display: grid;
-            gap: 0.35rem;
+            gap: 0.4rem;
             color: var(--text-dark);
+            font-size: 0.9rem;
         }
 
         .motel-room-items span::before {
             content: '•';
-            margin-right: 0.45rem;
+            margin-right: 0.5rem;
             color: var(--accent);
             font-size: 1.2rem;
-            line-height: 1;
         }
 
         .motel-room-footer {
-            padding: 0 1.7rem 1.7rem;
+            padding: 0 1.5rem 1.5rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 1rem;
         }
 
         .motel-room-price {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: 700;
-            color: #b2560d;
+            color: var(--accent);
         }
 
         .motel-room-price span {
@@ -227,30 +372,81 @@
             align-items: center;
             justify-content: center;
             gap: 0.4rem;
-            padding: 0.65rem 1.3rem;
-            border-radius: 999px;
-            background: #b2560d;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            background: var(--accent);
             color: #ffffff;
             font-weight: 600;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            white-space: nowrap;
         }
 
         .motel-room-button:hover {
+            background: #8f4409;
             transform: translateY(-2px);
-            box-shadow: 0 14px 27px rgba(178, 86, 13, 0.32);
+            box-shadow: 0 4px 12px rgba(178, 86, 13, 0.3);
         }
 
-        .section-heading {
-            font-size: clamp(1.9rem, 3vw, 2.3rem);
-            margin-bottom: 0.75rem;
+        .motels-empty {
             text-align: center;
+            padding: 3rem 1rem;
+            background: #f9fafb;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
         }
 
-        .section-subheading {
-            color: var(--text-muted);
-            text-align: center;
-            margin-bottom: 2rem;
-            line-height: 1.7;
+        /* ===== Responsive Design ===== */
+        @media (max-width: 1024px) {
+            .motel-rooms-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .motel-hero {
+                margin: 2rem auto 2rem;
+            }
+
+            .motel-hero-gallery {
+                grid-template-columns: 1fr;
+                height: auto;
+                gap: 0.5rem;
+            }
+
+            .hero-main {
+                grid-row: auto;
+                height: 300px;
+            }
+
+            .motel-room-footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .motel-room-button {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .motel-hero,
+            .motel-overview,
+            .motel-rooms {
+                padding: 0 0.75rem;
+            }
+
+            .hero-secondary-grid {
+                grid-template-rows: repeat(2, 150px);
+            }
+
+            .hero-main {
+                height: 250px;
+            }
+
+            .motel-rooms-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 @endpush
@@ -258,9 +454,14 @@
 @php use Illuminate\Support\Str; @endphp
 
 @section('content')
+    @php
+        $secondaryImages = $gallery->slice(1, 4);
+        $remainingPhotos = max($gallery->count() - (1 + $secondaryImages->count()), 0);
+    @endphp
+
+    {{-- Hero Section --}}
     <section class="motel-hero">
-        <img src="{{ $primaryImage }}" alt="{{ $motel->name }}">
-        <div class="motel-hero-body">
+        <div class="motel-hero-heading">
             <div class="motel-hero-tags">
                 @if($motel->motelType)
                     <span class="motel-tag">{{ $motel->motelType->name }}</span>
@@ -277,64 +478,90 @@
                 <p>{{ Str::limit(strip_tags($motel->description), 200) }}</p>
             @endif
         </div>
+
+        <div class="motel-hero-gallery">
+            <figure class="hero-main">
+                <img src="{{ $primaryImage }}" alt="{{ $motel->name }} front view">
+            </figure>
+            @if($secondaryImages->isNotEmpty())
+                <div class="hero-secondary-grid">
+                    @foreach($secondaryImages as $image)
+                        <figure class="{{ $loop->last ? 'hero-image--with-overlay' : '' }}">
+                            <img src="{{ $image }}" alt="{{ $motel->name }} gallery preview">
+                        </figure>
+                    @endforeach
+                </div>
+                <a class="hero-show-all" href="{{ route('website.motels.gallery', $motel) }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    Show all photos
+                    @if($remainingPhotos > 0)
+                        <span>({{ $gallery->count() }})</span>
+                    @endif
+                </a>
+            @else
+                <figure class="hero-image--empty">
+                    <a class="hero-show-all" href="{{ route('website.motels.gallery', $motel) }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        Show all photos
+                    </a>
+                </figure>
+            @endif
+        </div>
     </section>
 
+    {{-- Overview Section --}}
     <section class="motel-overview">
-        <article class="motel-overview-card">
-            <h3>Contact & Status</h3>
-            <div class="motel-overview-list">
-                <span><strong>Phone:</strong> {{ optional($motel->details)->contact_phone ?? 'Not provided' }}</span>
-                <span><strong>Email:</strong> {{ optional($motel->details)->contact_email ?? 'Not provided' }}</span>
-                <span><strong>Status:</strong> {{ optional($motel->details)->status ?? 'Active' }}</span>
+        <div class="motel-overview-grid">
+            @if($amenities->isNotEmpty())
+                <article class="motel-amenities-panel">
+                    <div class="motel-amenities-panel-header">
+                        <h3>What this place offers</h3>
+                        <a class="motel-amenities-link" href="{{ route('website.motels.amenities', $motel) }}">
+                            View all
+                            <span style="font-weight:500; color: var(--text-muted);">({{ $amenities->count() }})</span>
+                        </a>
+                    </div>
+                    <div class="motel-amenities-list">
+                        @foreach($amenities as $amenity)
+                            <div class="motel-amenities-item">
+                                <strong>
+                                    @if(!empty($amenity['amenity_id']))
+                                        <a class="motel-amenity-link"
+                                           href="{{ route('website.amenities.show', $amenity['amenity_id']) }}"
+                                           aria-label="Browse motels that include {{ $amenity['name'] }}">
+                                            {{ $amenity['name'] }}
+                                        </a>
+                                    @else
+                                        {{ $amenity['name'] }}
+                                    @endif
+                                </strong>
+                                @if(!empty($amenity['description']))
+                                    <p>{{ $amenity['description'] }}</p>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                </article>
+            @endif
+
+            <div class="motel-overview-stack">
+                <article class="motel-overview-card">
+                    <h3>Contact & Status</h3>
+                    <div class="motel-overview-list">
+                        <span><strong>Phone:</strong> {{ optional($motel->details)->contact_phone ?? 'Not provided' }}</span>
+                        <span><strong>Email:</strong> {{ optional($motel->details)->contact_email ?? 'Not provided' }}</span>
+                     </div>
+                </article>
+              
             </div>
-        </article>
-        <article class="motel-overview-card">
-            <h3>Location</h3>
-            <div class="motel-overview-list">
-                <span>{{ $location ?: 'Location coming soon' }}</span>
-                @if($motel->street_address)
-                    <span>{{ $motel->street_address }}</span>
-                @endif
-            </div>
-        </article>
-        <article class="motel-overview-card">
-            <h3>Coordinates</h3>
-            <div class="motel-overview-list">
-                <span>Latitude: {{ $motel->latitude ?? '—' }}</span>
-                <span>Longitude: {{ $motel->longitude ?? '—' }}</span>
-            </div>
-        </article>
+        </div>
     </section>
 
-    @if($amenities->isNotEmpty())
-        <section class="motel-amenities">
-            <h2 class="section-heading">Signature amenities</h2>
-            <p class="section-subheading">Elevated comforts and services curated to make every stay unforgettable.</p>
-            <div class="motel-amenities-grid">
-                @foreach($amenities as $amenity)
-                    <article class="motel-amenity-card">
-                        <strong>{{ $amenity['name'] }}</strong>
-                        @if(!empty($amenity['description']))
-                            <p style="margin: 0; color: var(--text-muted); line-height: 1.6;">{{ $amenity['description'] }}</p>
-                        @endif
-                    </article>
-                @endforeach
-            </div>
-        </section>
-    @endif
-
-    @if($gallery->isNotEmpty())
-        <section class="motel-gallery">
-            <h2 class="section-heading">Gallery</h2>
-            <p class="section-subheading">Step inside and explore highlights from {{ $motel->name }}.</p>
-            <div class="motel-gallery-grid">
-                @foreach($gallery as $image)
-                    <img src="{{ $image }}" alt="{{ $motel->name }} gallery image">
-                @endforeach
-            </div>
-        </section>
-    @endif
-
+    {{-- Rooms Section --}}
     <section class="motel-rooms">
         <h2 class="section-heading">Available rooms</h2>
         <p class="section-subheading">Select a room to view detailed amenities, imagery, and curated in-room experiences.</p>
@@ -346,7 +573,9 @@
                         <div class="motel-room-body">
                             <h3 class="motel-room-title">{{ $room['name'] }}</h3>
                             @if(!empty($room['description']))
-                                <p style="margin: 0; color: var(--text-muted); line-height: 1.6;">{{ Str::limit($room['description'], 120) }}</p>
+                                <p style="margin: 0; color: var(--text-muted); line-height: 1.6; font-size: 0.9rem;">
+                                    {{ Str::limit($room['description'], 120) }}
+                                </p>
                             @endif
                             <div class="motel-room-items">
                                 @forelse($room['items'] as $item)
@@ -381,4 +610,3 @@
         @endif
     </section>
 @endsection
-

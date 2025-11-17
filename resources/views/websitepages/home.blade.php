@@ -1,6 +1,6 @@
 @extends('websitepages.layouts.app')
 
-@section('title', 'bnbStay | Curated Stays Crafted for Comfort')
+@section('title', 'BnB Stay | Curated Stays Crafted for Comfort')
 @section('meta_description', 'Explore inspiring destinations, curated stays, and thoughtful hospitality with bnbStay—your partner for memorable getaways.')
 
 @push('styles')
@@ -162,19 +162,5 @@
     <!-- Gallery -->
     @include('websitepages.homepage.gallery')
 
-    <!-- CTA Section -->
-    <section class="section">
-        <div class="cta-section">
-            <h2>Ready to co-create your next stay?</h2>
-            <p>
-                Tell us what inspires you and we'll design a stay around it—whether it's food, art, wellness, or adventure.
-            </p>
-            <a class="cta-button" href="{{ route('website.contact') }}">
-                Start planning with us
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
-                </svg>
-            </a>
-        </div>
-    </section>
+   
 @endsection

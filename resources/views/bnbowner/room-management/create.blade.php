@@ -65,7 +65,7 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="mb-3">
-                                            <label for="price_per_night" class="form-label">Price Per Night ($)</label>
+                                            <label for="price_per_night" class="form-label">Price Per Night (TSH)</label>
                                             <input type="number" class="form-control" id="price_per_night" name="price_per_night" 
                                                    value="{{ old('price_per_night') }}" step="0.01" min="0" required>
                                         </div>
@@ -82,7 +82,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-3">
-                                            <label for="frontimage" class="form-label">Room Image</label>
+                                            <label for="frontimage" class="form-label">Room Front Image</label>
                                             <input type="file" class="form-control" id="frontimage" name="frontimage" 
                                                    accept="image/*">
                                         </div>

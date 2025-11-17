@@ -94,6 +94,7 @@ class MotelController extends Controller
         $amenities = $motel->amenities
             ->map(function ($pivot) {
                 return [
+                    'amenity_id' => optional($pivot->amenity)->id,
                     'name' => optional($pivot->amenity)->name ?? 'Amenity',
                     'description' => $pivot->description,
                 ];

@@ -4,12 +4,11 @@
         <div class="container">
             <!-- Section Header -->
             <div class="section-header" data-aos="fade-up">
-                <span class="section-badge">Premium Selection</span>
-                <h2 class="section-title">Our Exquisite Rooms</h2>
+                 <h2 class="section-title">Our Exquisite Stays</h2>
                 <p class="section-subtitle">
                     Choose from carefully curated motels designed to deliver elevated hospitality, 
                     signature amenities, and bespoke service tailored to your refined taste.
-                </p>
+                 </p>
             </div>
 
             <!-- Motels Grid -->
@@ -38,55 +37,18 @@
                         <div class="motel-content">
                             <div class="motel-header">
                                 <h3 class="motel-title">{{ $motel['name'] }}</h3>
-                                <div class="motel-rating">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                                    </svg>
-                                    <span>4.9</span>
-                                </div>
+                              
                             </div>
                             
                             <p class="motel-description">{{ $motel['description'] }}</p>
 
-                            <!-- Amenities -->
-                            <div class="motel-amenities">
-                                @forelse($motel['amenities'] as $amenity)
-                                    <span class="amenity-tag">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M20 6L9 17l-5-5"/>
-                                        </svg>
-                                        {{ $amenity }}
-                                    </span>
-                                @empty
-                                    <span class="amenity-tag">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M20 6L9 17l-5-5"/>
-                                        </svg>
-                                        Concierge Service
-                                    </span>
-                                @endforelse
-                            </div>
-
+                         
                             <!-- Footer with Price and CTA -->
                             <div class="motel-footer">
-                                <div class="price-container">
-                                    @if($motel['starting_price'])
-                                        <span class="price-label">Starting from</span>
-                                        <div class="price">
-                                            <span class="currency">$</span>
-                                            <span class="amount">{{ number_format($motel['starting_price'], 0) }}</span>
-                                            <span class="period">/night</span>
-                                        </div>
-                                    @else
-                                        <span class="contact-price">Contact for rates</span>
-                                    @endif
-                                </div>
-                                <a href="{{ route('website.motels.show', $motel['id']) }}" 
+                                 <a href="{{ route('website.motels.show', $motel['id']) }}" 
                                    class="view-details-btn">
                                     View Details
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
-                                    </svg>
+                                   
                                 </a>
                             </div>
                         </div>
@@ -94,15 +56,7 @@
                 @endforeach
             </div>
 
-            <!-- View All Button -->
-            <div class="section-footer" data-aos="fade-up">
-                <a href="{{ route('website.motels.index') }}" class="view-all-btn">
-                    <span>Explore All Accommodations</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
-                    </svg>
-                </a>
-            </div>
+            
         </div>
     </section>
 @endif
@@ -174,8 +128,8 @@
 /* Motels Grid */
 .motels-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-    gap: 32px;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 24px;
     margin-bottom: 64px;
 }
 
@@ -472,6 +426,22 @@
     transform: translateX(6px);
 }
 
+.view-all-text-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 24px;
+    margin-left: 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(26, 26, 26, 0.2);
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1a1a;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: rgba(26, 26, 26, 0.04);
+    cursor: default;
+}
+
 /* ============================================
    Responsive Design
    ============================================ */
@@ -481,10 +451,6 @@
         padding: 80px 0;
     }
     
-    .motels-grid {
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-        gap: 24px;
-    }
 }
 
 @media (max-width: 768px) {
@@ -528,6 +494,30 @@
     .view-all-btn {
         width: 100%;
         justify-content: center;
+    }
+}
+
+@media (max-width: 1600px) {
+    .motels-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 1400px) {
+    .motels-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 1100px) {
+    .motels-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .motels-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
