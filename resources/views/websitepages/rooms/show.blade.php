@@ -1,7 +1,7 @@
 @extends('websitepages.layouts.app')
 
-@section('title', ($room->roomType->name ?? 'Room').' | '.$motel->name)
-@section('meta_description', \Illuminate\Support\Str::limit('Explore '.$motel->name.' - '.($room->roomType->name ?? 'Room').' with curated amenities and bespoke comforts.', 150))
+@section('title', __('website.room.meta_title', ['room' => $room->roomType->name ?? __('website.room.generic_name'), 'motel' => $motel->name]))
+@section('meta_description', \Illuminate\Support\Str::limit(__('website.room.meta_description', ['room' => $room->roomType->name ?? __('website.room.generic_name'), 'motel' => $motel->name]), 150))
 
 @push('styles')
     <style>
@@ -166,61 +166,61 @@
         <img src="{{ $primaryImage }}" alt="{{ $room->roomType->name ?? 'Guest room' }}">
         <div class="room-hero-body">
             <span class="badge" style="width: fit-content;">{{ $motel->name }}</span>
-            <h1>{{ $room->roomType->name ?? 'Guest Room' }}</h1>
+            <h1>{{ $room->roomType->name ?? __('website.room.generic_name') }}</h1>
             <p>
-                Designed for restorative stays with curated amenities and thoughtful details. Enjoy personalised hospitality courtesy of {{ $motel->name }}.
+                {{ __('website.room.hero_subtitle', ['motel' => $motel->name]) }}
             </p>
         </div>
     </section>
 
     <section class="room-info">
         <article class="room-info-card">
-            <h3>Room overview</h3>
+            <h3>{{ __('website.room.info.overview_title') }}</h3>
             <div class="room-info-list">
-                <span><strong>Room number:</strong> {{ $room->room_number ?? '—' }}</span>
-                <span><strong>Status:</strong> {{ $room->status ?? 'Available' }}</span>
-                <span><strong>Type:</strong> {{ $room->roomType->name ?? 'Not specified' }}</span>
+                <span><strong>{{ __('website.room.info.room_number') }}</strong> {{ $room->room_number ?? '—' }}</span>
+                <span><strong>{{ __('website.room.info.status') }}</strong> {{ $room->status ?? __('website.room.info.status_available') }}</span>
+                <span><strong>{{ __('website.room.info.type') }}</strong> {{ $room->roomType->name ?? __('website.room.info.type_unknown') }}</span>
             </div>
         </article>
         <article class="room-info-card">
-            <h3>Nightly rate</h3>
+            <h3>{{ __('website.room.info.rate_title') }}</h3>
             <div class="room-price">
                 @if($room->price_per_night)
-                    ${{ number_format($room->price_per_night, 0) }} <span>/night</span>
+                    ${{ number_format($room->price_per_night, 0) }} <span>{{ __('website.general.per_night') }}</span>
                 @else
-                    <span style="color: var(--text-muted); font-weight:500;">Contact for rates</span>
+                    <span style="color: var(--text-muted); font-weight:500;">{{ __('website.general.contact_for_rates') }}</span>
                 @endif
             </div>
             @if($room->office_price_per_night)
                 <div style="color: var(--text-muted); font-size: 0.95rem;">
-                    Office rate: ${{ number_format($room->office_price_per_night, 0) }} /night
+                    {{ __('website.room.info.office_rate', ['price' => '$'.number_format($room->office_price_per_night, 0)]) }} {{ __('website.general.per_night') }}
                 </div>
             @endif
         </article>
         <article class="room-info-card">
-            <h3>Concierge support</h3>
+            <h3>{{ __('website.room.info.concierge_title') }}</h3>
             <div class="room-info-list">
-                <span><strong>Phone:</strong> {{ optional($motel->details)->contact_phone ?? 'Not provided' }}</span>
-                <span><strong>Email:</strong> {{ optional($motel->details)->contact_email ?? 'Not provided' }}</span>
+                <span><strong>{{ __('website.general.phone') }}</strong> {{ optional($motel->details)->contact_phone ?? __('website.general.not_provided') }}</span>
+                <span><strong>{{ __('website.general.email') }}</strong> {{ optional($motel->details)->contact_email ?? __('website.general.not_provided') }}</span>
             </div>
         </article>
     </section>
 
     @if($gallery->isNotEmpty())
         <section class="room-gallery">
-            <h2 class="section-heading">Gallery</h2>
-            <p class="section-subheading">A closer look at the space, ambience, and curated touches awaiting your stay.</p>
+            <h2 class="section-heading">{{ __('website.room.gallery.title') }}</h2>
+            <p class="section-subheading">{{ __('website.room.gallery.subtitle') }}</p>
             <div class="room-gallery-grid">
                 @foreach($gallery as $image)
-                    <img src="{{ $image }}" alt="{{ $room->roomType->name ?? 'Room' }} image">
+                    <img src="{{ $image }}" alt="{{ ($room->roomType->name ?? __('website.room.generic_name')).' image' }}">
                 @endforeach
             </div>
         </section>
     @endif
 
     <section class="room-items">
-        <h2 class="section-heading">In-room amenities</h2>
-        <p class="section-subheading">All the thoughtful details and inclusions crafted to elevate your time at {{ $motel->name }}.</p>
+        <h2 class="section-heading">{{ __('website.room.items.title') }}</h2>
+        <p class="section-subheading">{{ __('website.room.items.subtitle', ['motel' => $motel->name]) }}</p>
         @if($items->count())
             <div class="room-items-grid">
                 @foreach($items as $item)
@@ -234,9 +234,9 @@
             </div>
         @else
             <div class="motels-empty">
-                <h2 style="margin-bottom: 1rem;">Amenities coming soon</h2>
+                <h2 style="margin-bottom: 1rem;">{{ __('website.room.items.empty_title') }}</h2>
                 <p style="color: var(--text-muted); line-height: 1.7;">
-                    We’re finalising the in-room experience. Reach out to our concierge for bespoke recommendations and availability.
+                    {{ __('website.room.items.empty_description') }}
                 </p>
             </div>
         @endif

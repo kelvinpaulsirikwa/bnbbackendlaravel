@@ -1,12 +1,53 @@
+@php
+    $galleryItems = collect($featuredGallery ?? [])->take(5);
+@endphp
+
 @push('styles')
     <style>
         /* Enhanced Gallery - Premium Masonry Layout */
         .hpg-gallery-wrapper {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            grid-auto-rows: 260px;
-            gap: 1.25rem;
-            padding: 0.5rem 0;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-rows: repeat(2, minmax(200px, 1fr));
+            grid-template-areas:
+                "primary secondary tertiary"
+                "primary quaternary quinary";
+            grid-auto-rows: minmax(200px, 1fr);
+            gap: 2px;
+            padding: 0;
+        }
+
+        .hpg-gallery-section {
+            position: relative;
+            background: var(--surface-dim);
+            margin: 0 auto;
+            width: 100%;
+            padding: 1.25rem 0 0.25rem;
+            overflow: hidden;
+        }
+
+        .hpg-gallery-section::before,
+        .hpg-gallery-section::after {
+            content: '';
+            position: absolute;
+            left: 5%;
+            right: 5%;
+            height: 10px;
+            background: repeating-linear-gradient(
+                120deg,
+                rgba(99, 102, 241, 0.25),
+                rgba(99, 102, 241, 0.25) 12px,
+                rgba(14, 165, 233, 0.18) 12px,
+                rgba(14, 165, 233, 0.18) 24px
+            );
+            opacity: 0.6;
+            filter: blur(6px);
+            z-index: 0;
+        }
+
+        .hpg-gallery-section::before,
+        .hpg-gallery-section::after {
+            display: none;
         }
 
         .hpg-gallery-card {
@@ -17,7 +58,14 @@
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             background: #f8fafc;
+            min-height: 100%;
         }
+
+        .hpg-gallery-card:nth-child(1) { grid-area: primary; }
+        .hpg-gallery-card:nth-child(2) { grid-area: secondary; }
+        .hpg-gallery-card:nth-child(3) { grid-area: tertiary; }
+        .hpg-gallery-card:nth-child(4) { grid-area: quaternary; }
+        .hpg-gallery-card:nth-child(5) { grid-area: quinary; }
 
         .hpg-gallery-card::before {
             content: '';
@@ -172,7 +220,13 @@
             .hpg-gallery-wrapper {
                 grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
                 grid-auto-rows: 240px;
+                grid-template-rows: none;
+                grid-template-areas: none;
                 gap: 1rem;
+            }
+
+            .hpg-gallery-card:nth-child(-n+5) {
+                grid-area: auto;
             }
 
             .hpg-gallery-card--featured {
@@ -289,26 +343,33 @@
 @endpush
 
 <!-- Premium Gallery Section -->
-@if(isset($featuredGallery) && $featuredGallery->isNotEmpty())
-    <section class="section" style="background: var(--surface-dim); margin: 0 calc(-1 * 4vw); padding-left: 4vw; padding-right: 4vw;">
+@if($galleryItems->isNotEmpty())
+    <section class="hpg-gallery-section">
         <div class="section-header">
-            <h2 class="section-title">Explore Our Gallery</h2>
+            <h2 class="section-title">{{ __('website.home_gallery.title') }}</h2>
             <p class="section-subtitle">
-                A glimpse into a few of our favourite motels. Hover to reveal the stay, or 
-                <a class="hpg-gallery-inline-link" href="{{ route('website.gallery') }}">view full gallery</a> 
-                for more inspiration.
+                {!! __('website.home_gallery.subtitle_html', [
+                    'link' => '<a class="hpg-gallery-inline-link" href="'.route('website.gallery').'">'.__('website.home_gallery.link_text').'</a>'
+                ]) !!}
             </p>
         </div>
         
         <div class="hpg-gallery-wrapper">
-            @foreach($featuredGallery as $index => $featured)
+            @foreach($galleryItems as $index => $featured)
                 @php
                     $cardClass = 'hpg-gallery-card';
                     if ($index === 0) {
                         $cardClass .= ' hpg-gallery-card--featured';
                     }
+                    $hasMotel = !empty($featured['motel_id']);
                 @endphp
-                <article class="{{ $cardClass }}">
+                @if($hasMotel)
+                    <a class="{{ $cardClass }}"
+                       href="{{ route('website.motels.show', $featured['motel_id']) }}"
+                       aria-label="{{ __('website.home_gallery.card_aria', ['name' => $featured['motel_name']]) }}">
+                @else
+                    <div class="{{ $cardClass }}">
+                @endif
                     <img 
                         class="hpg-gallery-image" 
                         src="{{ $featured['url'] }}" 
@@ -318,7 +379,11 @@
                     <div class="hpg-gallery-content">
                         <h3 class="hpg-gallery-title">{{ $featured['motel_name'] }}</h3>
                     </div>
-                </article>
+                @if($hasMotel)
+                    </a>
+                @else
+                    </div>
+                @endif
             @endforeach
         </div>
         

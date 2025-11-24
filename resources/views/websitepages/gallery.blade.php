@@ -1,7 +1,7 @@
 @extends('websitepages.layouts.app')
 
-@section('title', 'Gallery | Discover Our Motels')
-@section('meta_description', 'Browse the bnbStay gallery showcasing stunning stays from our curated motel partners.')
+@section('title', __('website.gallery.meta_title'))
+@section('meta_description', __('website.gallery.meta_description'))
 
 @push('styles')
     <style>
@@ -406,9 +406,9 @@
 
 @section('content')
     <section class="gallery-hero">
-        <span class="badge">✨ Visual Stories</span>
-        <h1>Explore Our Gallery</h1>
-        <p>Take a virtual tour through our stunning properties and facilities. Each photo represents the character, design, and hospitality of our curated motels.</p>
+        <span class="badge">{{ __('website.gallery.badge') }}</span>
+        <h1>{{ __('website.gallery.title') }}</h1>
+        <p>{{ __('website.gallery.subtitle') }}</p>
     </section>
 
     @if($images->count() > 0)
@@ -421,7 +421,7 @@
                     @if($motelLink)
                         <a href="{{ $motelLink }}"
                            class="gallery-item-link-wrapper"
-                           aria-label="View {{ $image['motel_name'] }} details">
+                           aria-label="{{ __('website.gallery.card_aria', ['name' => $image['motel_name']]) }}">
                     @else
                         <div class="gallery-item-link-wrapper">
                     @endif
@@ -430,7 +430,7 @@
                                 <div>
                                     <strong>{{ $image['motel_name'] }}</strong>
                                     @if(!empty($image['created_at']))
-                                        <div style="font-size: 0.85rem; opacity: 0.85;">Captured {{ $image['created_at']->diffForHumans() }}</div>
+                                        <div style="font-size: 0.85rem; opacity: 0.85;">{{ __('website.gallery.captured', ['time' => $image['created_at']->diffForHumans()]) }}</div>
                                     @endif
                                 </div>
                             </div>
@@ -446,9 +446,9 @@
         <div class="custom-pagination">
             {{-- Previous Button --}}
             @if ($images->onFirstPage())
-                <span class="pagination-btn prev-next disabled">← Previous</span>
+                <span class="pagination-btn prev-next disabled">{{ __('website.pagination.previous') }}</span>
             @else
-                <a href="{{ $images->previousPageUrl() }}" class="pagination-btn prev-next">← Previous</a>
+                <a href="{{ $images->previousPageUrl() }}" class="pagination-btn prev-next">{{ __('website.pagination.previous') }}</a>
             @endif
 
             {{-- Page Numbers --}}
@@ -486,20 +486,20 @@
 
             {{-- Next Button --}}
             @if ($images->hasMorePages())
-                <a href="{{ $images->nextPageUrl() }}" class="pagination-btn prev-next">Next →</a>
+                <a href="{{ $images->nextPageUrl() }}" class="pagination-btn prev-next">{{ __('website.pagination.next') }}</a>
             @else
-                <span class="pagination-btn prev-next disabled">Next →</span>
+                <span class="pagination-btn prev-next disabled">{{ __('website.pagination.next') }}</span>
             @endif
         </div>
 
         {{-- Pagination Info --}}
         <div class="pagination-info">
-            Showing {{ $images->firstItem() }} to {{ $images->lastItem() }} of {{ $images->total() }} images
+            {{ __('website.gallery.pagination_info', ['from' => $images->firstItem(), 'to' => $images->lastItem(), 'total' => $images->total()]) }}
         </div>
     @else
         <div class="gallery-empty">
-            <h2>Gallery Coming Soon</h2>
-            <p>We're curating new visuals from our partner motels. Check back shortly to explore immersive photography from our collection.</p>
+            <h2>{{ __('website.gallery.empty_title') }}</h2>
+            <p>{{ __('website.gallery.empty_description') }}</p>
         </div>
     @endif
 @endsection

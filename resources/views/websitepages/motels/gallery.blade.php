@@ -1,6 +1,6 @@
 @extends('websitepages.layouts.app')
 
-@section('title', $motel->name . ' Photos | bnbStay Motel')
+@section('title', __('website.motel_gallery.meta_title', ['name' => $motel->name]))
 
 @push('styles')
     <style>
@@ -72,10 +72,10 @@
     <section class="motel-gallery-page">
         <div class="motel-gallery-header">
             <a href="{{ route('website.motels.show', $motel) }}" class="gallery-back">
-                &larr; Back to {{ $motel->name }}
+                {{ __('website.motel_gallery.back', ['name' => $motel->name]) }}
             </a>
-            <h1>Photos of {{ $motel->name }}</h1>
-            <p style="margin: 0; color: var(--text-muted);">Browse every captured angle of this stay, from the grand entrance to the intimate in-room moments.</p>
+            <h1>{{ __('website.motel_gallery.title', ['name' => $motel->name]) }}</h1>
+            <p style="margin: 0; color: var(--text-muted);">{{ __('website.motel_gallery.subtitle') }}</p>
         </div>
 
         @if($gallery->isNotEmpty())
@@ -88,7 +88,7 @@
             </div>
         @else
             <div class="motel-gallery-empty">
-                Photo collection coming soon. Check back shortly for newly added highlights.
+                {{ __('website.motel_gallery.empty') }}
             </div>
         @endif
     </section>

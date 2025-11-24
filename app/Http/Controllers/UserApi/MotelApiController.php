@@ -39,27 +39,71 @@ class MotelApiController extends Controller
                 });
             }
             
-            // Sorting
-            $sortBy = $request->get('sort_by', 'name');
+            // Location-based sorting (distance) if latitude and longitude are provided
+            $userLat = $request->get('latitude');
+            $userLon = $request->get('longitude');
+            $hasLocation = $userLat && $userLon;
+            
+            // Get sorting parameters
+            $sortBy = $request->get('sort_by', 'motel_type');
             $sortOrder = $request->get('sort_order', 'asc');
             
-            $allowedSortFields = ['name', 'created_at', 'updated_at'];
-            if (in_array($sortBy, $allowedSortFields)) {
-                $query->orderBy($sortBy, $sortOrder);
+            if ($hasLocation) {
+                // Calculate distance using Haversine formula
+                $distanceFormula = "(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude))))";
+                
+                // Secondary sort by accommodation type if requested
+                if ($sortBy === 'motel_type') {
+                    $query->leftJoin('motel_types', 'bnb_motels.motel_type_id', '=', 'motel_types.id')
+                          ->selectRaw("bnb_motels.*, $distanceFormula AS distance, motel_types.name AS motel_type_name", [$userLat, $userLon, $userLat])
+                          ->orderBy('distance', 'asc')
+                          ->orderBy('motel_type_name', $sortOrder);
+                } else {
+                    $query->selectRaw("bnb_motels.*, $distanceFormula AS distance", [$userLat, $userLon, $userLat])
+                          ->orderBy('distance', 'asc');
+                }
+            } else {
+                // Default sorting: by accommodation type (feature-based) then by name
+                if ($sortBy === 'motel_type') {
+                    // Sort by motel type (feature-based)
+                    $query->leftJoin('motel_types', 'bnb_motels.motel_type_id', '=', 'motel_types.id')
+                          ->orderBy('motel_types.name', $sortOrder)
+                          ->orderBy('bnb_motels.name', 'asc')
+                          ->select('bnb_motels.*');
+                } elseif ($sortBy === 'name') {
+                    $query->orderBy('bnb_motels.name', $sortOrder);
+                } elseif ($sortBy === 'district') {
+                    $query->leftJoin('districts', 'bnb_motels.district_id', '=', 'districts.id')
+                          ->orderBy('districts.name', $sortOrder)
+                          ->select('bnb_motels.*');
+                } elseif ($sortBy === 'price') {
+                    // Price sorting (if price field exists in details)
+                    $query->leftJoin('bnb_motel_details', 'bnb_motels.id', '=', 'bnb_motel_details.motel_id')
+                          ->orderBy('bnb_motel_details.rate', $sortOrder)
+                          ->select('bnb_motels.*');
+                } else {
+                    // Default fallback sorting
+                    $allowedSortFields = ['created_at', 'updated_at'];
+                    if (in_array($sortBy, $allowedSortFields)) {
+                        $query->orderBy('bnb_motels.' . $sortBy, $sortOrder);
+                    } else {
+                        // Default: sort by motel type if no valid sort field
+                        $query->leftJoin('motel_types', 'bnb_motels.motel_type_id', '=', 'motel_types.id')
+                              ->orderBy('motel_types.name', 'asc')
+                              ->orderBy('bnb_motels.name', 'asc')
+                              ->select('bnb_motels.*');
+                    }
+                }
             }
             
-            // Price sorting (if price field exists in details)
-            if ($sortBy === 'price') {
-                $query->leftJoin('motel_details', 'bnb_motels.id', '=', 'motel_details.motel_id')
-                      ->orderBy('motel_details.price_per_night', $sortOrder)
-                      ->select('bnb_motels.*');
-            }
-            
-            $motels = $query->get();
+            // Pagination
+            $page = $request->get('page', 1);
+            $limit = $request->get('limit', 10);
+            $motels = $query->paginate($limit, ['*'], 'page', $page);
             
             // Transform data to match SimpleMotel model
-            $transformedMotels = $motels->map(function($motel) {
-                return [
+            $transformedMotels = collect($motels->items())->map(function($motel) use ($hasLocation) {
+                $data = [
                     'id' => $motel->id,
                     'name' => $motel->name,
                     'front_image' => $motel->front_image,
@@ -69,11 +113,25 @@ class MotelApiController extends Controller
                     'longitude' => $motel->longitude,
                     'latitude' => $motel->latitude,
                 ];
-            });
+                
+                // Add distance if location-based sorting was used
+                if ($hasLocation && isset($motel->distance)) {
+                    $data['distance'] = round($motel->distance, 2);
+                }
+                
+                return $data;
+            })->values();
             
             return response()->json([
                 'success' => true,
                 'data' => $transformedMotels,
+                'pagination' => [
+                    'current_page' => $motels->currentPage(),
+                    'per_page' => $motels->perPage(),
+                    'total' => $motels->total(),
+                    'last_page' => $motels->lastPage(),
+                    'has_more' => $motels->hasMorePages(),
+                ],
                 'message' => 'Motels retrieved successfully'
             ]);
         } catch (\Exception $e) {
@@ -90,11 +148,29 @@ class MotelApiController extends Controller
         try {
             $query = Motel::with(['motelType', 'owner', 'details', 'district']);
             
-            // Get featured motels (you can add a featured field to your database)
+            // Location-based sorting (distance) if latitude and longitude are provided
+            $userLat = $request->get('latitude');
+            $userLon = $request->get('longitude');
+            $hasLocation = $userLat && $userLon;
+            
+            if ($hasLocation) {
+                // Calculate distance using Haversine formula
+                $distanceFormula = "(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude))))";
+                $query->selectRaw("bnb_motels.*, $distanceFormula AS distance", [$userLat, $userLon, $userLat])
+                      ->orderBy('distance', 'asc');
+            } else {
+                // Sort by accommodation type (feature-based) then by name
+                $query->leftJoin('motel_types', 'bnb_motels.motel_type_id', '=', 'motel_types.id')
+                      ->orderBy('motel_types.name', 'asc')
+                      ->orderBy('bnb_motels.name', 'asc')
+                      ->select('bnb_motels.*');
+            }
+            
+            // Limit to 10 items for featured
             $motels = $query->limit(10)->get();
             
-            $transformedMotels = $motels->map(function($motel) {
-                return [
+            $transformedMotels = $motels->map(function($motel) use ($hasLocation) {
+                $data = [
                     'id' => $motel->id,
                     'name' => $motel->name,
                     'front_image' => $motel->front_image,
@@ -104,6 +180,13 @@ class MotelApiController extends Controller
                     'longitude' => $motel->longitude,
                     'latitude' => $motel->latitude,
                 ];
+                
+                // Add distance if location-based sorting was used
+                if ($hasLocation && isset($motel->distance)) {
+                    $data['distance'] = round($motel->distance, 2);
+                }
+                
+                return $data;
             });
             
             return response()->json([

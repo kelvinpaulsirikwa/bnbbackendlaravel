@@ -1,7 +1,7 @@
 @extends('websitepages.layouts.app')
 
-@section('title', 'BnB Stay | Curated Stays Crafted for Comfort')
-@section('meta_description', 'Explore inspiring destinations, curated stays, and thoughtful hospitality with bnbStay—your partner for memorable getaways.')
+@section('title', __('website.home.meta_title'))
+@section('meta_description', __('website.home.meta_description'))
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/homepage-exquisite-rooms.css') }}">
@@ -149,6 +149,9 @@
 @section('content')
     <!-- Hero Section -->
     @include('websitepages.homepage.welcomenote')
+
+    <!-- How it Works -->
+    @include('websitepages.homepage.howitworks')
 
     <!-- Featured Motels / Our Exquisite Rooms -->
     @include('websitepages.homepage.exquisite-rooms')

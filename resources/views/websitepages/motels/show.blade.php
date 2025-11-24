@@ -1,6 +1,6 @@
 @extends('websitepages.layouts.app')
 
-@section('title', $motel->name.' | bnbStay Motel')
+@section('title', __('website.motel.meta_title', ['name' => $motel->name]))
 @section('meta_description', \Illuminate\Support\Str::limit(strip_tags($motel->description ?? 'Discover bespoke stays with bnbStay.'), 150))
 
 @push('styles')
@@ -10,15 +10,18 @@
             --text-dark: #1a1a1a;
             --text-muted: #6b7280;
             --accent: #b2560d;
+            --section-spacing-lg: clamp(2.5rem, 5vw, 4rem);
+            --section-spacing-md: clamp(1.75rem, 4vw, 3rem);
+            --section-spacing-sm: clamp(1rem, 3vw, 2rem);
         }
 
         /* ===== Hero Section ===== */
         .motel-hero {
             max-width: 1240px;
-            margin: 4rem auto 3rem;
+            margin: var(--section-spacing-lg) auto var(--section-spacing-md);
             padding: 0 1rem;
             display: grid;
-            gap: 1.5rem;
+            gap: var(--section-spacing-sm);
         }
 
         .motel-hero-heading {
@@ -62,6 +65,7 @@
             grid-template-columns: 1.2fr 1fr;
             gap: 0.5rem;
             height: 420px;
+            position: relative;
         }
 
         .hero-main {
@@ -151,14 +155,14 @@
         /* ===== Overview Section ===== */
         .motel-overview {
             max-width: 1240px;
-            margin: 0 auto 3rem;
+            margin: 0 auto var(--section-spacing-lg);
             padding: 0 1rem;
         }
 
         .motel-overview-grid {
             display: grid;
-            gap: 1.5rem;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: var(--section-spacing-sm);
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             align-items: start;
         }
 
@@ -233,7 +237,7 @@
 
         .motel-overview-stack {
             display: grid;
-            gap: 1rem;
+            gap: var(--section-spacing-sm);
         }
 
         .motel-overview-card {
@@ -269,7 +273,7 @@
         /* ===== Rooms Section ===== */
         .motel-rooms {
             max-width: 1240px;
-            margin: 0 auto 4rem;
+            margin: 0 auto var(--section-spacing-lg);
             padding: 0 1rem;
         }
 
@@ -293,7 +297,7 @@
 
         .motel-rooms-grid {
             display: grid;
-            gap: 1.5rem;
+            gap: var(--section-spacing-sm);
             grid-template-columns: repeat(3, minmax(0, 1fr));
         }
 
@@ -322,7 +326,7 @@
         .motel-room-body {
             padding: 1.5rem;
             display: grid;
-            gap: 0.8rem;
+            gap: 0.9rem;
             flex: 1;
         }
 
@@ -470,7 +474,7 @@
                     <span class="motel-tag">{{ $location }}</span>
                 @endif
                 @if($motel->rooms_count)
-                    <span class="motel-tag">{{ $motel->rooms_count }} rooms</span>
+                    <span class="motel-tag">{{ __('website.motel.rooms_count', ['count' => $motel->rooms_count]) }}</span>
                 @endif
             </div>
             <h1>{{ $motel->name }}</h1>
@@ -495,7 +499,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
-                    Show all photos
+                    {{ __('website.motel.show_all_photos') }}
                     @if($remainingPhotos > 0)
                         <span>({{ $gallery->count() }})</span>
                     @endif
@@ -506,7 +510,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
-                        Show all photos
+                        {{ __('website.motel.show_all_photos') }}
                     </a>
                 </figure>
             @endif
@@ -519,9 +523,9 @@
             @if($amenities->isNotEmpty())
                 <article class="motel-amenities-panel">
                     <div class="motel-amenities-panel-header">
-                        <h3>What this place offers</h3>
+                        <h3>{{ __('website.motel.amenities_title') }}</h3>
                         <a class="motel-amenities-link" href="{{ route('website.motels.amenities', $motel) }}">
-                            View all
+                            {{ __('website.general.view_all') }}
                             <span style="font-weight:500; color: var(--text-muted);">({{ $amenities->count() }})</span>
                         </a>
                     </div>
@@ -532,7 +536,7 @@
                                     @if(!empty($amenity['amenity_id']))
                                         <a class="motel-amenity-link"
                                            href="{{ route('website.amenities.show', $amenity['amenity_id']) }}"
-                                           aria-label="Browse motels that include {{ $amenity['name'] }}">
+                                           aria-label="{{ __('website.motel.amenity_link_aria', ['name' => $amenity['name']]) }}">
                                             {{ $amenity['name'] }}
                                         </a>
                                     @else
@@ -550,10 +554,10 @@
 
             <div class="motel-overview-stack">
                 <article class="motel-overview-card">
-                    <h3>Contact & Status</h3>
+                    <h3>{{ __('website.motel.contact_status.title') }}</h3>
                     <div class="motel-overview-list">
-                        <span><strong>Phone:</strong> {{ optional($motel->details)->contact_phone ?? 'Not provided' }}</span>
-                        <span><strong>Email:</strong> {{ optional($motel->details)->contact_email ?? 'Not provided' }}</span>
+                        <span><strong>{{ __('website.general.phone') }}</strong> {{ optional($motel->details)->contact_phone ?? __('website.general.not_provided') }}</span>
+                        <span><strong>{{ __('website.general.email') }}</strong> {{ optional($motel->details)->contact_email ?? __('website.general.not_provided') }}</span>
                      </div>
                 </article>
               
@@ -563,8 +567,8 @@
 
     {{-- Rooms Section --}}
     <section class="motel-rooms">
-        <h2 class="section-heading">Available rooms</h2>
-        <p class="section-subheading">Select a room to view detailed amenities, imagery, and curated in-room experiences.</p>
+        <h2 class="section-heading">{{ __('website.motel.rooms.title') }}</h2>
+        <p class="section-subheading">{{ __('website.motel.rooms.subtitle') }}</p>
         @if($rooms->isNotEmpty())
             <div class="motel-rooms-grid">
                 @foreach($rooms as $room)
@@ -581,20 +585,20 @@
                                 @forelse($room['items'] as $item)
                                     <span>{{ $item }}</span>
                                 @empty
-                                    <span>Premium linens & guest amenities</span>
+                                    <span>{{ __('website.motel.rooms.items_fallback') }}</span>
                                 @endforelse
                             </div>
                         </div>
                         <div class="motel-room-footer">
                             <div class="motel-room-price">
                                 @if($room['price'])
-                                    ${{ number_format($room['price'], 0) }} <span>/night</span>
+                                    ${{ number_format($room['price'], 0) }} <span>{{ __('website.general.per_night') }}</span>
                                 @else
-                                    <span style="color: var(--text-muted); font-weight:500;">Contact for rates</span>
+                                    <span style="color: var(--text-muted); font-weight:500;">{{ __('website.general.contact_for_rates') }}</span>
                                 @endif
                             </div>
                             <a class="motel-room-button" href="{{ route('website.rooms.show', [$motel->id, $room['id']]) }}">
-                                View details
+                                {{ __('website.general.view_details') }}
                             </a>
                         </div>
                     </article>
@@ -602,9 +606,9 @@
             </div>
         @else
             <div class="motels-empty">
-                <h2 style="margin-bottom: 1rem;">Room details coming soon</h2>
+                <h2 style="margin-bottom: 1rem;">{{ __('website.motel.rooms.empty_title') }}</h2>
                 <p style="color: var(--text-muted); line-height: 1.7;">
-                    This property is preparing to publish its room lineup. Check back shortly, or contact our concierge for tailored suggestions.
+                    {{ __('website.motel.rooms.empty_description') }}
                 </p>
             </div>
         @endif

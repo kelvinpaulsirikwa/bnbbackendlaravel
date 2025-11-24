@@ -1,7 +1,7 @@
 @extends('websitepages.layouts.app')
 
-@section('title', $motel->name.' Amenities | bnbStay Motel')
-@section('meta_description', 'Explore every experience and service offered at '.$motel->name.' with imagery and highlights.')
+@section('title', __('website.motel_amenities.meta_title', ['name' => $motel->name]))
+@section('meta_description', __('website.motel_amenities.meta_description', ['name' => $motel->name]))
 
 @push('styles')
     <style>
@@ -132,7 +132,7 @@
         }
 
         .main-image-wrapper::after {
-            content: '🔍 View';
+            content: attr(data-label);
             position: absolute;
             bottom: 20px;
             left: 50%;
@@ -566,11 +566,11 @@
 @section('content')
     <section class="amenities-hero">
         <a href="{{ route('website.motels.show', $motel) }}" class="amenities-back">
-            ← Back to {{ $motel->name }}
+            {{ __('website.motel_amenities.back', ['name' => $motel->name]) }}
         </a>
         <div class="hero-content">
-            <h1>Amenities & Experiences</h1>
-            <p>Discover every curated service and thoughtful detail at {{ $motel->name }}. Click any image to explore the full gallery.</p>
+            <h1>{{ __('website.motel_amenities.title') }}</h1>
+            <p>{{ __('website.motel_amenities.subtitle', ['name' => $motel->name]) }}</p>
         </div>
     </section>
 
@@ -591,7 +591,8 @@
                         <div class="amenity-images">
                             <div class="main-image-wrapper js-open-lightbox"
                                  data-amenity="{{ $amenityIndex }}"
-                                 data-image="0">
+                                 data-image="0"
+                                 data-label="{{ __('website.motel_amenities.lightbox_prompt') }}">
                                 <img class="main-image" src="{{ $amenity['primary_image'] }}" alt="{{ $amenity['name'] }}">
                             </div>
                             
@@ -632,34 +633,34 @@
                                         @if($amenityDetailUrl)
                                             <a class="amenity-title-link"
                                                href="{{ $amenityDetailUrl }}"
-                                               aria-label="View motels that feature {{ $amenity['name'] }}">
+                                               aria-label="{{ __('website.motel.amenity_link_aria', ['name' => $amenity['name']]) }}">
                                                 {{ $amenity['name'] }}
                                             </a>
                                         @else
                                             {{ $amenity['name'] }}
                                         @endif
                                     </h3>
-                                    <span class="amenity-badge">Featured</span>
+                                    <span class="amenity-badge">{{ __('website.motel_amenities.featured_badge') }}</span>
                                 </div>
                             </div>
                             <p class="amenity-description">
                                 @if(!empty($amenity['description']))
                                     {{ $amenity['description'] }}
                                 @else
-                                    Experience this premium amenity designed for your comfort and convenience.
+                                    {{ __('website.motel_amenities.description_fallback') }}
                                 @endif
                             </p>
                         </div>
 
                         <div class="amenity-footer">
                             <div class="image-count">
-                                📸 {{ $imageCollection->count() }} {{ $imageCollection->count() === 1 ? 'photo' : 'photos' }}
+                                📸 {{ $imageCollection->count() }} {{ trans_choice('website.motel_amenities.photo_label', $imageCollection->count()) }}
                             </div>
                             <button class="view-all-btn js-open-lightbox"
                                     type="button"
                                     data-amenity="{{ $amenityIndex }}"
                                     data-image="0">
-                                View Gallery
+                                {{ __('website.motel_amenities.view_gallery') }}
                             </button>
                         </div>
                     </article>
@@ -758,8 +759,8 @@
         </script>
     @else
         <div class="amenities-empty">
-            <h2>Amenities Coming Soon</h2>
-            <p>We're curating beautiful imagery and details for each amenity. Check back soon!</p>
+            <h2>{{ __('website.amenities.empty_title') }}</h2>
+            <p>{{ __('website.amenities.empty_description') }}</p>
         </div>
     @endif
 @endsection

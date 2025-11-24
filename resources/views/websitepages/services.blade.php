@@ -1,7 +1,7 @@
 @extends('websitepages.layouts.app')
 
-@section('title', 'Booking Services | bnbStay Hospitality Studio')
-@section('meta_description', 'Discover our comprehensive booking services: explore BNB types, room types, and locations across countries, regions, and districts.')
+@section('title', __('website.services.meta_title'))
+@section('meta_description', __('website.services.meta_description'))
 
 @push('styles')
     <style>
@@ -485,28 +485,27 @@
     <div class="services-container">
         <!-- Hero Section -->
         <section class="hero-services">
-            <h1>Booking Services</h1>
+            <h1>{{ __('website.services.hero.title') }}</h1>
             <p>
-                Discover our comprehensive booking platform featuring a wide selection of BNB types, room types, 
-                and locations across multiple countries, regions, and districts. Find your perfect stay with ease.
+                {{ __('website.services.hero.subtitle') }}
             </p>
         </section>
 
         <!-- BNB Types Section -->
         <section class="section" style="animation-delay: 0.2s;">
             <div class="section-header">
-                <h2>BNB Types</h2>
-                <p>Explore our diverse collection of accommodation types, each offering unique experiences and amenities.</p>
+                <h2>{{ __('website.services.bnb.title') }}</h2>
+                <p>{{ __('website.services.bnb.subtitle') }}</p>
             </div>
             <div class="bnb-types-grid">
                 @forelse($bnbTypes as $bnbType)
                     <div class="type-card">
                         <h3>{{ $bnbType->name }}</h3>
-                        <p>Experience exceptional hospitality with our {{ strtolower($bnbType->name) }} accommodations.</p>
+                        <p>{{ __('website.services.bnb.card_description', ['type' => strtolower($bnbType->name)]) }}</p>
                     </div>
                 @empty
                     <div class="empty-state" style="grid-column: 1 / -1;">
-                        <p>No BNB types available at the moment.</p>
+                        <p>{{ __('website.services.bnb.empty') }}</p>
                     </div>
                 @endforelse
             </div>
@@ -515,18 +514,18 @@
         <!-- Room Types Section -->
         <section class="section" style="animation-delay: 0.4s;">
             <div class="section-header">
-                <h2>Room Types</h2>
-                <p>Choose from a variety of room types designed to suit every traveler's needs and preferences.</p>
+                <h2>{{ __('website.services.rooms.title') }}</h2>
+                <p>{{ __('website.services.rooms.subtitle') }}</p>
             </div>
             <div class="room-types-grid">
                 @forelse($roomTypes as $roomType)
                     <div class="room-card">
                         <h3>{{ $roomType->name }}</h3>
-                        <p>{{ $roomType->description ?? 'Comfortable and well-appointed room designed for your relaxation and convenience.' }}</p>
+                        <p>{{ $roomType->description ?? __('website.services.rooms.card_fallback') }}</p>
                     </div>
                 @empty
                     <div class="empty-state" style="grid-column: 1 / -1;">
-                        <p>No room types available at the moment.</p>
+                        <p>{{ __('website.services.rooms.empty') }}</p>
                     </div>
                 @endforelse
             </div>
@@ -535,8 +534,8 @@
         <!-- Locations Section -->
         <section class="section" style="animation-delay: 0.6s;">
             <div class="section-header">
-                <h2>Our Locations</h2>
-                <p>Browse our extensive network of properties organized by country, region, and district for easy navigation.</p>
+                <h2>{{ __('website.services.locations.title') }}</h2>
+                <p>{{ __('website.services.locations.subtitle') }}</p>
             </div>
             <div class="location-grid">
                 @forelse($countries as $country)
@@ -553,17 +552,17 @@
                                             @endforeach
                                         </div>
                                     @else
-                                        <p style="color: #94a3b8; font-size: 0.875rem; margin: 0;">No districts available</p>
+                                        <p style="color: #94a3b8; font-size: 0.875rem; margin: 0;">{{ __('website.services.locations.no_districts') }}</p>
                                     @endif
                                 </div>
                             @empty
-                                <p style="color: #94a3b8; font-size: 0.95rem;">No regions available in this country.</p>
+                                <p style="color: #94a3b8; font-size: 0.95rem;">{{ __('website.services.locations.no_regions') }}</p>
                             @endforelse
                         </div>
                     </div>
                 @empty
                     <div class="empty-state" style="grid-column: 1 / -1;">
-                        <p>No locations available at the moment.</p>
+                        <p>{{ __('website.services.locations.empty') }}</p>
                     </div>
                 @endforelse
             </div>
@@ -572,14 +571,13 @@
         <!-- CTA Panel -->
         <section class="cta-panel">
             <div class="cta-content">
-                <span class="badge">🔍 Start Your Search</span>
-                <h2>Ready to book your perfect stay?</h2>
+                <span class="badge">{{ __('website.services.cta.badge') }}</span>
+                <h2>{{ __('website.services.cta.title') }}</h2>
                 <p>
-                    Explore our wide selection of BNB types, room types, and locations. 
-                    Find the perfect accommodation that matches your preferences and start your journey today.
+                    {{ __('website.services.cta.subtitle') }}
                 </p>
                 <a class="cta-button" href="{{ route('website.motels.index') }}">
-                    Browse Properties
+                    {{ __('website.services.cta.button') }}
                 </a>
             </div>
         </section>

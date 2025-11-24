@@ -19,7 +19,7 @@
         .uas-amenities-section {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 5rem 2rem;
+            padding: clamp(2.5rem, 5vw, 4rem) 2rem 2rem;
             background: var(--uas-bg-light);
         }
 
@@ -46,12 +46,12 @@
             margin: 0;
         }
 
-        /* Grid Layout - 4 columns */
+        /* Grid Layout - 3 columns */
         .uas-amenities-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 2rem;
-            margin-bottom: 3rem;
+            margin-bottom: 1.5rem;
         }
 
         /* Card Design */
@@ -63,6 +63,8 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
             position: relative;
+            text-decoration: none;
+            color: inherit;
         }
 
         .uas-amenity-card:hover {
@@ -192,14 +194,14 @@
         /* Responsive Design */
         @media (max-width: 1200px) {
             .uas-amenities-grid {
-                grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+                grid-template-columns: repeat(2, minmax(0, 1fr));
                 gap: 1.75rem;
             }
         }
 
         @media (max-width: 768px) {
             .uas-amenities-section {
-                padding: 4rem 1.5rem;
+                padding: 3rem 1.5rem 1.75rem;
             }
 
             .uas-amenities-grid {
@@ -222,7 +224,7 @@
 
         @media (max-width: 640px) {
             .uas-amenities-section {
-                padding: 3rem 1rem;
+                padding: 2.5rem 1rem 1.5rem;
             }
 
             .uas-section-header {
@@ -318,29 +320,27 @@
     <section class="uas-amenities-section" aria-labelledby="uas-amenities-title">
         <!-- Header -->
 
-        <h2 id="uas-amenities-title" 
+<h2 id="uas-amenities-title" 
     style="text-align:center; font-size:2.2rem; font-weight:800; margin-bottom:12px; 
            color:#1e3a8a; letter-spacing:1px;">
-    What We Offer
+    {{ __('website.home_featured_amenities.title') }}
 </h2>
 
 <p style="text-align:center; font-size:1.1rem; line-height:1.7; 
           color:#475569; max-width:750px; margin:0 auto 25px; font-weight:500;">
-    Signature comforts and thoughtful touches available across our curated selection of motels. 
-    <a href="{{ route('website.amenities') }}" 
-       style="color:#dc2626; font-weight:700; text-decoration:none; border-bottom:2px solid #dc2626;">
-        View all amenities
-    </a> 
-    to discover more.
+    {!! __('website.home_featured_amenities.description_html', [
+        'link' => '<a href="'.route('website.amenities').'" style="color:#dc2626; font-weight:700; text-decoration:none; border-bottom:2px solid #dc2626;">'.__('website.home_featured_amenities.link_text').'</a>'
+    ]) !!}
 </p>
 
-<br>
-       
         
         <!-- Amenities Grid -->
         <div class="uas-amenities-grid" role="list">
             @foreach($featuredAmenities as $index => $amenity)
-                <article class="uas-amenity-card" role="listitem">
+                <a class="uas-amenity-card"
+                   href="{{ route('website.amenities.show', $amenity['id']) }}"
+                   role="listitem"
+                   aria-label="{{ __('website.home_featured_amenities.card_aria', ['name' => $amenity['name']]) }}">
                     <!-- Card Number Badge -->
                     <div class="uas-card-number">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</div>
                     
@@ -369,7 +369,7 @@
                             <p class="uas-amenity-description">{{ $amenity['description'] }}</p>
                         @endif
                     </div>
-                </article>
+                </a>
             @endforeach
         </div>
     </section>

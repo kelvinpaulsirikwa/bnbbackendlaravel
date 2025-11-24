@@ -21,34 +21,67 @@
             overflow-x: hidden;
         }
 
-        /* Hero Section - Split Design */
+        /* Hero Section */
         .hero {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            min-height: 100vh;
             position: relative;
+            min-height: 100vh;
+            padding: clamp(3rem, 6vw, 6rem);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: #0b1324;
+            width: 100vw;
+            margin-left: calc(50% - 50vw);
+            margin-right: calc(50% - 50vw);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(90deg, rgba(5, 9, 20, 0.95) 0%, rgba(8, 12, 25, 0.8) 45%, rgba(12, 18, 30, 0.55) 70%),
+                url("{{ asset('images/static_file/welcomeimage.png') }}");
+            background-size: cover;
+            background-position: center;
+            filter: saturate(110%);
+            transform: scale(1.05);
+            animation: heroZoom 24s ease-in-out infinite alternate;
+            z-index: 0;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 75% 20%, rgba(30, 64, 175, 0.45), transparent 45%);
+            z-index: 0;
+        }
+
+        .hero-inner {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 100%;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: clamp(2rem, 5vw, 4rem);
+            flex-wrap: wrap;
         }
 
         .hero-content {
+            flex: 1 1 420px;
+            color: #ffffff;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            padding: 4rem 6rem;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: white;
-            position: relative;
-            overflow: hidden;
+            gap: 1.5rem;
         }
 
-        .hero-content::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(212, 165, 116, 0.1) 0%, transparent 70%);
-            border-radius: 50%;
+        @keyframes heroZoom {
+            from { transform: scale(1.05); }
+            to { transform: scale(1.15); }
         }
 
         .hero-badge {
@@ -83,46 +116,141 @@
             max-width: 500px;
         }
 
-        .hero-cta {
+        .hero-actions {
+            margin-top: 0.5rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 0.6rem 1.4rem;
-            border-radius: 999px;
-            background: #b2560d;
-            color: #ffffff;
+            gap: 0.5rem;
+            padding: 0.85rem 1.75rem;
+            border-radius: 14px;
             font-weight: 600;
             text-decoration: none;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            border: 1px solid transparent;
         }
 
-        .hero-cta:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 24px rgba(178, 86, 13, 0.3);
+        .hero-btn.primary {
+            background: #0b5ed7;
+            color: #ffffff;
+            box-shadow: 0 15px 40px rgba(11, 94, 215, 0.35);
         }
 
-        .hero-image {
+        .hero-btn.secondary {
+            background: rgba(255, 255, 255, 0.95);
+            color: #0b5ed7;
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .hero-floating {
+            flex: 0 0 auto;
+            width: clamp(320px, 28vw, 380px);
+            height: clamp(420px, 34vw, 460px);
             position: relative;
-            overflow: hidden;
         }
 
-        .hero-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            animation: zoomIn 20s ease infinite alternate;
-        }
-
-        @keyframes zoomIn {
-            from { transform: scale(1); }
-            to { transform: scale(1.1); }
-        }
-
-        .hero-image::after {
-            content: '';
+        .floating-card {
             position: absolute;
-            inset: 0;
-            background: linear-gradient(45deg, rgba(26, 26, 46, 0.3) 0%, transparent 100%);
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 1.35rem 1.65rem;
+            min-width: 240px;
+            box-shadow: 0 25px 45px rgba(9, 12, 30, 0.2);
+            border: 1px solid rgba(15, 23, 42, 0.06);
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .hero-floating .floating-card + .floating-card {
+            margin-top: 1rem;
+        }
+
+        .floating-card:nth-child(1) {
+            top: 0;
+            left: 0;
+        }
+
+        .floating-card:nth-child(2) {
+            top: 150px;
+            right: 0;
+            animation-delay: 0.8s;
+        }
+
+        .floating-card:nth-child(3) {
+            top: 320px;
+            left: 0;
+            animation-delay: 1.6s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        .metric-card {
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: 0.35rem;
+            font-weight: 700;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .metric-helper {
+            font-size: 0.95rem;
+            color: #1e293b;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        .metric-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 18px;
+            background: rgba(59, 130, 246, 0.15);
+            color: #2563eb;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            flex-shrink: 0;
+        }
+
+        .floating-card:nth-child(2) .metric-icon {
+            background: rgba(99, 102, 241, 0.18);
+            color: #4f46e5;
+        }
+
+        .floating-card:nth-child(3) .metric-icon {
+            background: rgba(16, 185, 129, 0.18);
+            color: #0f9f6e;
         }
 
         /* Stats Section */
@@ -318,6 +446,7 @@
             font-size: 0.95rem;
             color: #718096;
             line-height: 1.6;
+            line-clamp: 2;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
@@ -447,12 +576,28 @@
 
         /* Responsive Design */
         @media (max-width: 1200px) {
-            .hero {
-                grid-template-columns: 1fr;
+            .hero-inner {
+                flex-direction: column;
+                gap: 2.5rem;
             }
 
-            .hero-image {
-                min-height: 50vh;
+            .hero-floating {
+                width: 100%;
+                height: auto;
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .hero-floating .floating-card {
+                position: relative;
+                top: auto;
+                right: auto;
+                bottom: auto;
+                left: auto;
+                transform: none;
+                flex: 1 1 220px;
             }
 
             .stats {
@@ -463,15 +608,19 @@
             .rooms-section {
                 padding: 4rem 3rem;
             }
-
-            .hero-content {
-                padding: 3rem 3rem;
-            }
         }
 
         @media (max-width: 768px) {
-            .hero-content {
-                padding: 2rem 1.5rem;
+            .hero {
+                padding: 3rem 1.5rem 4rem;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+            }
+
+            .hero-floating {
+                flex-direction: column;
             }
 
             .stats {
@@ -546,55 +695,74 @@
     </style>
     <!-- Hero Section -->
     <section class="hero">
-        <div class="hero-content">
-            <span class="hero-badge">
-                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                </svg>
-                FBC Products
-            </span>
-            <h1 class="hero-title">Stay, Explore, Feel at Home</h1>
-            <p class="hero-subtitle">
-                Effortless bookings, curated motels, and warm hospitality— FBC products brings every getaway closer to perfect.
-            </p>
-            <a href="#rooms" class="hero-cta">
-                Explore Our Rooms
-              
-            </a>
-        </div>
-        <div class="hero-image">
-            <img src="{{ asset('images/static_file/welcomeimage.png') }}" alt="Luxury Hotel">
+        <div class="hero-inner">
+            <div class="hero-content">
+                <span class="hero-badge">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    {{ __('website.home.hero_badge') }}
+                </span>
+                <h1 class="hero-title">
+                    {{ __('website.home.hero_title') }}
+                </h1>
+                <p class="hero-subtitle">
+                    {{ __('website.home.hero_subtitle') }}
+                </p>
+                <div class="hero-actions">
+                    <a href="#download-android" class="hero-btn primary">
+                        <span>Download Android</span>
+                    </a>
+                    <a href="#download-ios" class="hero-btn secondary">
+                        <span>Download iOS</span>
+                    </a>
+                </div>
+            </div>
+            <div class="hero-floating">
+                <div class="floating-card">
+                        <div class="metric-icon">
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2Z"/>
+                                <path d="M2 12h20"/>
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/>
+                            </svg>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-label">Countries Reached</span>
+                            <span class="metric-value">{{ $statistics['total_countries'] }}+</span>
+                            <span class="metric-helper">Presence across our network</span>
+                        </div>
+                    </div>
+                    <div class="floating-card">
+                        <div class="metric-icon">
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="8.5" cy="7" r="3"/>
+                                <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-label">Total Accommodation</span>
+                            <span class="metric-value">{{ $statistics['total_motels'] }}+</span>
+                            <span class="metric-helper">Verified stays in our catalog</span>
+                        </div>
+                    </div>
+                    <div class="floating-card">
+                        <div class="metric-icon">
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 6L9 17l-5-5"/>
+                            </svg>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-label">Total Customers</span>
+                            <span class="metric-value">{{ $statistics['total_customers'] }}+</span>
+                            <span class="metric-helper">Guests hosted with care</span>
+                        </div>
+                    </div>
+            </div>
         </div>
     </section>
 
-    <!-- Statistics Section -->
-    <section class="stats">
-        <div class="stat-item">
-            <div class="stat-number">{{ $statistics['total_countries'] }}</div>
-            <div class="stat-label">Countries</div>
-            <div class="stat-desc">Worldwide</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-number">{{ $statistics['total_regions'] }}</div>
-            <div class="stat-label">Regions</div>
-            <div class="stat-desc">Beautiful</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-number">{{ $statistics['total_districts'] }}</div>
-            <div class="stat-label">Districts</div>
-            <div class="stat-desc">Curated</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-number">{{ $statistics['total_motels'] }}</div>
-            <div class="stat-label">Motels</div>
-            <div class="stat-desc">Premium</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-number">{{ $statistics['total_customers'] }}</div>
-            <div class="stat-label">Customers</div>
-            <div class="stat-desc">Happy</div>
-        </div>
-    </section>
-
-    <!-- Featured Rooms Section -->
+  
  

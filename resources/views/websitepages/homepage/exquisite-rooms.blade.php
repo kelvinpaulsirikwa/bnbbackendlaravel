@@ -1,19 +1,21 @@
+@php
+    $motelsToShow = collect($spotlightMotels ?? [])->take(6);
+@endphp
 <!-- Featured Motels / Our Exquisite Rooms Section -->
-@if(isset($spotlightMotels) && $spotlightMotels->isNotEmpty())
+@if($motelsToShow->isNotEmpty())
     <section class="exquisite-rooms-section">
         <div class="container">
             <!-- Section Header -->
             <div class="section-header" data-aos="fade-up">
-                 <h2 class="section-title">Our Exquisite Stays</h2>
+                 <h2 class="section-title">{{ __('website.home_exquisite.title') }}</h2>
                 <p class="section-subtitle">
-                    Choose from carefully curated motels designed to deliver elevated hospitality, 
-                    signature amenities, and bespoke service tailored to your refined taste.
+                    {{ __('website.home_exquisite.subtitle') }}
                  </p>
             </div>
 
             <!-- Motels Grid -->
             <div class="motels-grid">
-                @foreach($spotlightMotels as $index => $motel)
+                @foreach($motelsToShow as $index => $motel)
                     <article class="motel-card" data-aos="fade-up" data-aos-delay="{{ $index * 100 }}">
                         <!-- Image Container with Overlay -->
                         <div class="motel-image-wrapper">
@@ -28,7 +30,7 @@
                                         <circle cx="10" cy="10" r="7"/>
                                         <path d="M10 6v8M6 10h8"/>
                                     </svg>
-                                    Quick View
+                                    {{ __('website.general.quick_view') }}
                                 </a>
                             </div>
                         </div>
@@ -47,7 +49,7 @@
                             <div class="motel-footer">
                                  <a href="{{ route('website.motels.show', $motel['id']) }}" 
                                    class="view-details-btn">
-                                    View Details
+                                    {{ __('website.general.view_details') }}
                                    
                                 </a>
                             </div>
@@ -67,7 +69,7 @@
    ============================================ */
 
 .exquisite-rooms-section {
-    padding: 40px 0 60px;
+    padding: 10px 0 40px;
     background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
     position: relative;
     overflow: hidden;
@@ -128,9 +130,9 @@
 /* Motels Grid */
 .motels-grid {
     display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 24px;
-    margin-bottom: 64px;
+    margin-bottom: 32px;
 }
 
 /* Motel Card */
@@ -255,6 +257,7 @@
     line-height: 1.6;
     color: #666;
     margin: 0;
+    line-clamp: 2;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -349,7 +352,7 @@
 
 .view-details-btn {
     padding: 14px 28px;
-    background: #1a1a1a;
+    background: #b2560d;;
     color: #ffffff;
     border: none;
     border-radius: 50px;
@@ -494,24 +497,6 @@
     .view-all-btn {
         width: 100%;
         justify-content: center;
-    }
-}
-
-@media (max-width: 1600px) {
-    .motels-grid {
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-    }
-}
-
-@media (max-width: 1400px) {
-    .motels-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-}
-
-@media (max-width: 1100px) {
-    .motels-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
 

@@ -1,7 +1,7 @@
 @extends('websitepages.layouts.app')
 
-@section('title', 'Amenities | bnbStay Experiences')
-@section('meta_description', 'Discover the amenities curated across bnbStay motels to elevate every stay.')
+@section('title', __('website.amenities.meta_title'))
+@section('meta_description', __('website.amenities.meta_description'))
 
 @push('styles')
     <style>
@@ -652,7 +652,7 @@
                     <a class="amenity-card"
                        data-category="{{ $category }}"
                        href="{{ route('website.amenities.show', $amenity['id']) }}"
-                       aria-label="View motels with {{ $amenity['name'] }}">
+                       aria-label="{{ __('website.amenities.card_aria', ['name' => $amenity['name']]) }}">
                         <div class="amenity-icon">
                             @if($treatAsImage)
                                 <img src="{{ $icon }}" alt="{{ $amenity['name'] }} icon">
@@ -666,16 +666,16 @@
                         </div>
                         <div class="amenity-name">{{ $amenity['name'] }}</div>
                         <div class="amenity-description">
-                            Available at select properties for your comfort and convenience
+                            {{ __('website.amenities.card_helper') }}
                         </div>
                     </a>
                 @endforeach
             </section>
         @else
             <div class="amenities-empty">
-                <h2>✨ Amenities Coming Soon</h2>
+                <h2>{{ __('website.amenities.empty_title') }}</h2>
                 <p>
-                    We're currently curating premium amenities across our network. Check back shortly to explore everything included with each stay.
+                    {{ __('website.amenities.empty_description') }}
                 </p>
             </div>
         @endif

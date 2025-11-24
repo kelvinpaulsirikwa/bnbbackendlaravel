@@ -132,21 +132,13 @@ class SearchApiController extends Controller
                 $transformedMotels[] = [
                     'id' => $motel->id,
                     'name' => $motel->name,
-                    'description' => $motel->description ?? 'No description available',
                     'front_image' => $motel->front_image,
                     'street_address' => $motel->street_address,
                     'motel_type' => $motel->motelType ? $motel->motelType->name : 'Unknown Type',
                     'district' => $motel->district ? $motel->district->name : 'Unknown District',
                     'longitude' => $motel->longitude,
                     'latitude' => $motel->latitude,
-                    'created_at' => $motel->created_at ? $motel->created_at->toISOString() : null,
-                    'updated_at' => $motel->updated_at ? $motel->updated_at->toISOString() : null,
-                    
-                    // Additional data for search results display
-                    'location' => $motel->district ? $motel->district->name : 'Unknown',
                     'region' => $motel->district && $motel->district->region ? $motel->district->region->name : 'Unknown',
-                    'rating' => 4.5, // Default rating, replace with actual rating system
-                    'reviews' => rand(50, 500), // Default reviews, replace with actual review count
                     'badge' => 'Featured', // Default badge
                     'amenities' => $motel->amenities ? $motel->amenities->pluck('amenity.name')->toArray() : [],
                     'type' => $motel->motelType ? $motel->motelType->name : 'Unknown',
@@ -154,22 +146,8 @@ class SearchApiController extends Controller
                     'searchRank' => 1, // Will be calculated based on search count
                     
                     // Owner information
-                    'owner' => $motel->owner ? [
-                        'id' => $motel->owner->id,
-                        'username' => $motel->owner->username,
-                        'useremail' => $motel->owner->useremail,
-                        'telephone' => $motel->owner->telephone,
-                        'profileimage' => $motel->owner->profileimage,
-                    ] : null,
                     
-                    // Motel details
-                    'details' => $motel->details ? [
-                        'contact_phone' => $motel->details->contact_phone,
-                        'contact_email' => $motel->details->contact_email,
-                        'total_rooms' => $motel->details->total_rooms,
-                        'available_rooms' => $motel->details->available_rooms,
-                        'status' => $motel->details->status,
-                    ] : null,
+               
                 ];
             }
 

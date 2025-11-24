@@ -24,27 +24,7 @@ class HomeController extends Controller
 
     public function __construct()
     {
-        $footerMotelTypes = MotelType::query()
-            ->orderBy('name')
-            ->get(['id', 'name']);
-
-        $footerRegions = Region::query()
-            ->orderBy('name')
-            ->get(['id', 'name']);
-
-        $footerCountries = Country::query()
-            ->orderBy('name')
-            ->pluck('name');
-
-        $footerRoomTypes = RoomType::query()
-            ->orderBy('name')
-            ->pluck('name');
-
         View::share([
-            'footerMotelTypes' => $footerMotelTypes,
-            'footerRegions' => $footerRegions,
-            'footerCountries' => $footerCountries,
-            'footerRoomTypes' => $footerRoomTypes,
             'companyInfo' => config('companyinfo'),
         ]);
     }
@@ -82,7 +62,8 @@ class HomeController extends Controller
             ->get()
             ->map(function (BnbImage $image) {
                 return [
-                    'id' => $image->id,
+                    'motel_id' => optional($image->motel)->id,
+                    'image_id' => $image->id,
                     'motel_name' => $image->motel->name ?? 'Unnamed motel',
                     'url' => $this->resolveImageUrl($image->filepath),
                 ];

@@ -1,7 +1,7 @@
 @extends('websitepages.layouts.app')
 
-@section('title', 'Motels | Discover Stays with bnbStay')
-@section('meta_description', 'Browse the curated bnbStay collection of motels featuring premium amenities, thoughtful service, and memorable guest experiences.')
+@section('title', __('website.motels.meta_title'))
+@section('meta_description', __('website.motels.meta_description'))
 
 @push('styles')
     <style>
@@ -256,24 +256,24 @@
 
 @section('content')
     <section class="motels-hero">
-        <span class="badge" style="justify-self: center;">Our stays</span>
-        <h1>Our Exquisite Rooms</h1>
-        <p>Choose from our carefully curated selection of motels and suites—each designed with signature amenities, tasteful interiors, and personalised service for memorable stays.</p>
+        <span class="badge" style="justify-self: center;">{{ __('website.motels.hero_badge') }}</span>
+        <h1>{{ __('website.motels.hero_title') }}</h1>
+        <p>{{ __('website.motels.hero_subtitle') }}</p>
         @php
             $activeRegion = request('region') ? optional(($footerRegions ?? collect())->firstWhere('id', (int) request('region')))->name : null;
             $activeType = request('motel_type') ? optional(($footerMotelTypes ?? collect())->firstWhere('id', (int) request('motel_type')))->name : null;
         @endphp
         @if($activeRegion || $activeType)
             <div class="badge" style="justify-self: center; margin-top: 0.75rem; background: rgba(255,255,255,0.18); color: #ffffff;">
-                Showing
+                {{ __('website.motels.filters.showing') }}
                 @if($activeType)
-                    {{ $activeType }} stays
+                    {{ __('website.motels.filters.type', ['type' => $activeType]) }}
                 @endif
                 @if($activeRegion)
                     @if($activeType) · @endif
-                    Region: {{ $activeRegion }}
+                    {{ __('website.motels.filters.region', ['region' => $activeRegion]) }}
                 @endif
-                <a href="{{ route('website.motels.index') }}" style="margin-left: 0.75rem; color: #ffb200;">Clear</a>
+                <a href="{{ route('website.motels.index') }}" style="margin-left: 0.75rem; color: #ffb200;">{{ __('website.motels.filters.clear') }}</a>
             </div>
         @endif
     </section>
@@ -294,7 +294,7 @@
                     <div class="motels-footer">
                        
                         <a class="motels-button" href="{{ route('website.motels.show', $motel['id']) }}">
-                            View Details
+                            {{ __('website.general.view_details') }}
                         </a>
                     </div>
                 </article>
@@ -306,9 +306,9 @@
         </div>
     @else
         <div class="motels-empty">
-            <h2 style="margin-bottom: 1rem;">Motel listings coming soon</h2>
+            <h2 style="margin-bottom: 1rem;">{{ __('website.motels.empty_title') }}</h2>
             <p style="color: var(--text-muted); line-height: 1.7;">
-                We’re gathering new properties for the bnbStay collection. Check back shortly to explore our full roster of stays.
+                {{ __('website.motels.empty_description') }}
             </p>
         </div>
     @endif

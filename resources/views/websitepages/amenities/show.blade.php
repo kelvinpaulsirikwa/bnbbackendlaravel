@@ -1,7 +1,7 @@
 @extends('websitepages.layouts.app')
 
-@section('title', $amenity['name'].' Amenities | bnbStay Motels')
-@section('meta_description', 'Browse every motel offering '.$amenity['name'].' across the bnbStay collection.')
+@section('title', __('website.amenity.meta_title', ['name' => $amenity['name']]))
+@section('meta_description', __('website.amenity.meta_description', ['name' => $amenity['name']]))
 
 @push('styles')
     <style>
@@ -239,7 +239,7 @@
 @section('content')
     <section class="amenity-hero">
         <a class="amenity-hero-back" href="{{ route('website.amenities') }}">
-            ← Back to amenities
+            {{ __('website.amenity.back') }}
         </a>
         <div class="amenity-hero-card">
             <div class="amenity-hero-icon">
@@ -256,7 +256,7 @@
             </div>
             <div class="amenity-hero-content">
                 <h1>{{ $amenity['name'] }}</h1>
-                <p>Explore curated motels that proudly feature {{ Str::lower($amenity['name'] ?? 'this amenity') }}. Every listing below is verified to offer this amenity so you can book with confidence.</p>
+                <p>{{ __('website.amenity.hero_description', ['amenity' => Str::lower($amenity['name'] ?? __('website.amenity.generic_name'))]) }}</p>
             </div>
         </div>
     </section>
@@ -276,20 +276,20 @@
                             @forelse($motel['amenities'] as $highlight)
                                 <span>{{ $highlight }}</span>
                             @empty
-                                <span>Concierge assistance available</span>
+                                <span>{{ __('website.amenity.concierge_available') }}</span>
                             @endforelse
                         </div>
                     </div>
                     <div class="amenity-motel-footer">
                         <div class="amenity-motel-price">
                             @if($motel['starting_price'])
-                                ${{ number_format($motel['starting_price'], 0) }} <span>/night</span>
+                                ${{ number_format($motel['starting_price'], 0) }} <span>{{ __('website.general.per_night') }}</span>
                             @else
-                                <span style="color: #94a3b8; font-weight:500;">Contact for rates</span>
+                                <span style="color: #94a3b8; font-weight:500;">{{ __('website.general.contact_for_rates') }}</span>
                             @endif
                         </div>
                         <a class="amenity-motel-button" href="{{ route('website.motels.show', $motel['id']) }}">
-                            View motel
+                            {{ __('website.amenity.view_motel') }}
                         </a>
                     </div>
                 </article>
@@ -301,8 +301,8 @@
         </div>
     @else
         <div class="amenity-empty">
-            <h2>No motels found right now</h2>
-            <p>We’re expanding our collection. Check back shortly to see motels featuring {{ Str::lower($amenity['name'] ?? 'this amenity') }}.</p>
+            <h2>{{ __('website.amenity.empty_title') }}</h2>
+            <p>{{ __('website.amenity.empty_description', ['amenity' => Str::lower($amenity['name'] ?? __('website.amenity.generic_name'))]) }}</p>
         </div>
     @endif
 @endsection

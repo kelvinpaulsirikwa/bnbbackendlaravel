@@ -530,9 +530,9 @@
         <div class="pcs-container">
             <!-- Header Section -->
             <div class="pcs-header">
-                <span class="pcs-header-badge">Get In Touch</span>
-                <h2>{{ $info['hero']['title'] ?? 'If You Have Any Query, Feel Free To Contact Us' }}</h2>
-                <p>{{ $info['hero']['subtitle'] ?? 'We would love to hear from you. Reach out for bookings, questions, or custom packages.' }}</p>
+                <span class="pcs-header-badge">{{ __('website.contact.badge') }}</span>
+                <h2>{{ $info['hero']['title'] ?? __('website.contact.hero_title') }}</h2>
+                <p>{{ $info['hero']['subtitle'] ?? __('website.contact.hero_subtitle') }}</p>
             </div>
 
             <!-- Quick Contact Cards -->
@@ -561,7 +561,7 @@
                 <!-- Contact Form -->
                 <div class="pcs-form-card">
                     <div class="pcs-form-header">
-                        <h3>{{ $info['form']['title'] ?? 'Send Us A Message' }}</h3>
+                        <h3>{{ $info['form']['title'] ?? __('website.contact.form_title') }}</h3>
                         @if(!empty($info['form']['subtitle']))
                             <p class="pcs-subtitle">{{ $info['form']['subtitle'] }}</p>
                         @endif
@@ -578,14 +578,14 @@
                         <div class="pcs-form-grid">
                             <div class="pcs-form-row">
                                 <div class="pcs-form-group">
-                                    <label for="pcs_name">{{ $info['form']['fields']['name'] ?? 'Your Name' }}</label>
+                                    <label for="pcs_name">{{ $info['form']['fields']['name'] ?? __('website.contact.fields.name') }}</label>
                                     <input id="pcs_name" type="text" name="name" value="{{ old('name') }}" required>
                                     @error('name')
                                         <div class="pcs-error">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="pcs-form-group">
-                                    <label for="pcs_email">{{ $info['form']['fields']['email'] ?? 'Your Email' }}</label>
+                                    <label for="pcs_email">{{ $info['form']['fields']['email'] ?? __('website.contact.fields.email') }}</label>
                                     <input id="pcs_email" type="email" name="email" value="{{ old('email') }}" required>
                                     @error('email')
                                         <div class="pcs-error">{{ $message }}</div>
@@ -594,7 +594,7 @@
                             </div>
 
                             <div class="pcs-form-group">
-                                <label for="pcs_phone">{{ $info['form']['fields']['phone'] ?? 'Phone Number' }}</label>
+                                <label for="pcs_phone">{{ $info['form']['fields']['phone'] ?? __('website.contact.fields.phone') }}</label>
                                 <input id="pcs_phone" type="text" name="phone" value="{{ old('phone') }}">
                                 @error('phone')
                                     <div class="pcs-error">{{ $message }}</div>
@@ -602,7 +602,7 @@
                             </div>
 
                             <div class="pcs-form-group">
-                                <label for="pcs_message">{{ $info['form']['fields']['message'] ?? 'Message' }}</label>
+                                <label for="pcs_message">{{ $info['form']['fields']['message'] ?? __('website.contact.fields.message') }}</label>
                                 <textarea id="pcs_message" name="message" required>{{ old('message') }}</textarea>
                                 @error('message')
                                     <div class="pcs-error">{{ $message }}</div>
@@ -611,7 +611,7 @@
                         </div>
 
                         <button type="submit" class="pcs-submit-btn">
-                            <span>{{ $info['form']['button'] ?? 'Send Message' }}</span>
+                            <span>{{ $info['form']['button'] ?? __('website.contact.submit') }}</span>
                             <svg class="pcs-submit-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                             </svg>
@@ -622,11 +622,11 @@
                 <!-- Map Card -->
                 <div class="pcs-map-card">
                     <div class="pcs-map-header">
-                        <h3>{{ $info['map']['title'] ?? 'Visit Our Office' }}</h3>
+                        <h3>{{ $info['map']['title'] ?? __('website.contact.map_title') }}</h3>
                         @if(!empty($info['map']['subtitle']))
                             <p class="pcs-subtitle">{{ $info['map']['subtitle'] }}</p>
                         @else
-                            <p class="pcs-subtitle">{{ $info['map']['description'] ?? 'Find us in Dodoma - Ilazo. Drop by for an in-person chat.' }}</p>
+                            <p class="pcs-subtitle">{{ $info['map']['description'] ?? __('website.contact.map_description') }}</p>
                         @endif
                     </div>
                     <div class="pcs-map-container">

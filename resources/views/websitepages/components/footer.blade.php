@@ -216,12 +216,13 @@
         }
     </style>
 
+    @php($currentLocale = app()->getLocale())
     <div class="site-footer__container">
         <div class="site-footer__main">
             <div class="site-footer__brand">
                 <h2 class="site-footer__logo">bnbStay</h2>
                 <p class="site-footer__description">
-                    Professional hospitality platform connecting guests with premium accommodations across select destinations.
+                    {{ __('website.footer.description') }}
                 </p>
                 @if(($footerCountries ?? collect())->isNotEmpty())
                     <div class="site-footer__locations">
@@ -238,43 +239,60 @@
                 @endif
             </div>
 
-            <div class="site-footer__col">
-                <h3>Properties</h3>
-                <div class="site-footer__links">
-                    @forelse(($footerMotelTypes ?? collect())->take(6) as $motelType)
-                        <a href="{{ route('website.motels.index', ['motel_type' => $motelType->id]) }}">
-                            {{ $motelType->name }}
-                        </a>
-                    @empty
-                        <span>Coming soon</span>
-                    @endforelse
-                </div>
-
-                @if(($footerRoomTypes ?? collect())->isNotEmpty())
-                    <div class="site-footer__subheading">Room Types</div>
-                    <div class="site-footer__pill-list">
-                        @foreach(($footerRoomTypes ?? collect())->take(8) as $roomType)
-                            <span class="site-footer__pill">{{ $roomType }}</span>
-                        @endforeach
-                    </div>
-                @endif
-            </div>
-
-            <div class="site-footer__col">
-                <h3>Destinations</h3>
+                <div class="site-footer__col">
+                <h3>{{ __('website.footer.destinations') }}</h3>
                 <div class="site-footer__links">
                     @forelse(($footerRegions ?? collect())->take(6) as $region)
                         <a href="{{ route('website.motels.index', ['region' => $region->id]) }}">
                             {{ $region->name }}
                         </a>
                     @empty
-                        <span>Expanding soon</span>
+                        <span>{{ __('website.footer.expanding') }}</span>
                     @endforelse
                 </div>
             </div>
 
+
             <div class="site-footer__col">
-                <h3>Connect</h3>
+                <h3>{{ __('website.footer.properties') }}</h3>
+                <div class="site-footer__links">
+                    @forelse(($footerMotelTypes ?? collect())->take(6) as $motelType)
+                        <a href="{{ route('website.motels.index', ['motel_type' => $motelType->id]) }}">
+                            {{ $motelType->name }}
+                        </a>
+                    @empty
+                        <span>{{ __('website.footer.coming_soon') }}</span>
+                    @endforelse
+                </div>
+
+              
+            </div>
+
+            <div class="site-footer__col">
+                <h3>{{ __('website.footer.room_types') }}</h3>
+                <div class="site-footer__links">
+                @if(($footerRoomTypes ?? collect())->isNotEmpty())
+                    <div class="site-footer__pill-list">
+                        @foreach(($footerRoomTypes ?? collect())->take(8) as $roomType)
+                                @if(is_object($roomType) && ($roomType->id ?? false))
+                                    <a class="site-footer__pill" href="{{ route('website.motels.index', ['room_type' => $roomType->id]) }}">{{ $roomType->name ?? $roomType }}</a>
+                                @elseif(is_array($roomType) && ($roomType['id'] ?? false))
+                                    <a class="site-footer__pill" href="{{ route('website.motels.index', ['room_type' => $roomType['id']]) }}">{{ $roomType['name'] ?? $roomType }}</a>
+                            @else
+                                    <span class="site-footer__pill">{{ is_object($roomType) ? ($roomType->name ?? $roomType) : (is_array($roomType) ? ($roomType['name'] ?? $roomType) : $roomType) }}</span>
+                            @endif
+                        @endforeach
+                    </div>
+                @else
+                    <span>{{ __('website.footer.coming_soon') }}</span>
+                @endif
+                </div>
+            </div>
+
+           
+
+            <div class="site-footer__col">
+                <h3>{{ __('website.footer.connect') }}</h3>
                 <div class="site-footer__social">
                     <a href="#" aria-label="Facebook">
                         <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -301,10 +319,10 @@
         </div>
 
         <div class="site-footer__bottom">
-            <div>&copy; {{ now()->year }} bnbStay. All rights reserved.</div>
+            <div>{{ __('website.footer.copyright', ['year' => now()->year]) }}</div>
             <div class="site-footer__language-switch">
-                <a href="#" class="is-active">English</a>
-                <a href="#">Kiswahili</a>
+                <a href="{{ route('website.language.switch', 'en') }}" class="{{ $currentLocale === 'en' ? 'is-active' : '' }}">{{ __('website.language.english') }}</a>
+                <a href="{{ route('website.language.switch', 'sw') }}" class="{{ $currentLocale === 'sw' ? 'is-active' : '' }}">{{ __('website.language.swahili') }}</a>
             </div>
         </div>
     </div>

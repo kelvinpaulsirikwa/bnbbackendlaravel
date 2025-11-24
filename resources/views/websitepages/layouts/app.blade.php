@@ -3,8 +3,8 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>@yield('title', 'BnB Stay')</title>
-        <meta name="description" content="@yield('meta_description', 'Discover welcoming stays and curated experiences with bnbStay.')">
+        <title>@yield('title', __('website.meta.default_title'))</title>
+        <meta name="description" content="@yield('meta_description', __('website.meta.default_description'))">
         <link rel="icon" href="{{ asset('images/static_file/applogo.png') }}" type="image/png">
         <link rel="apple-touch-icon" href="{{ asset('images/static_file/applogo.png') }}">
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -105,6 +105,41 @@
                 transform: translateY(-2px);
             }
 
+            .nav-actions {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .nav-language {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-size: 0.85rem;
+                font-weight: 600;
+                color: rgba(15, 23, 42, 0.65);
+            }
+
+            .nav-language a {
+                padding: 0.35rem 0.75rem;
+                border-radius: 999px;
+                border: 1px solid transparent;
+                text-decoration: none;
+                color: inherit;
+                transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+            }
+
+            .nav-language a:hover {
+                color: var(--primary);
+                border-color: rgba(43, 112, 247, 0.35);
+            }
+
+            .nav-language a.is-active {
+                color: var(--primary);
+                border-color: rgba(43, 112, 247, 0.5);
+                background: rgba(43, 112, 247, 0.08);
+            }
+
             .nav-cta {
                 display: inline-flex;
                 align-items: center;
@@ -165,6 +200,12 @@
                     justify-content: center;
                 }
 
+                .nav-actions {
+                    width: 100%;
+                    justify-content: center;
+                    flex-wrap: wrap;
+                }
+
                 .nav-cta {
                     width: 100%;
                     justify-content: center;
@@ -179,20 +220,32 @@
     </head>
     <body>
         <header>
+            @php($currentLocale = app()->getLocale())
             <div class="nav">
                 <a class="nav-brand" href="{{ route('website.home') }}">
                     <img src="{{ asset('images/static_file/applogo.png') }}" alt="bnbStay logo" width="36" height="36">
                     <span class="nav-brand-text">BnB<span class="nav-brand-dotcom">.com</span></span>
                 </a>
                 <nav class="nav-links">
-                    <a href="{{ route('website.home') }}">Home</a>
-                    <a href="{{ route('website.gallery') }}">Gallery</a>
-                    <a href="{{ route('website.motels.index') }}">Motels</a>
-                    <a href="{{ route('website.amenities') }}">Amenities</a>
-                    <a href="{{ route('website.services') }}">Services</a>
-                    <a href="{{ route('website.contact') }}">Contact</a>
+                    <a href="{{ route('website.home') }}">{{ __('website.nav.home') }}</a>
+                    <a href="{{ route('website.gallery') }}">{{ __('website.nav.gallery') }}</a>
+                    <a href="{{ route('website.motels.index') }}">{{ __('website.nav.motels') }}</a>
+                    <a href="{{ route('website.amenities') }}">{{ __('website.nav.amenities') }}</a>
+                    <a href="{{ route('website.services') }}">{{ __('website.nav.services') }}</a>
+                    <a href="{{ route('website.contact') }}">{{ __('website.nav.contact') }}</a>
                 </nav>
-                <a class="nav-cta" href="{{ route('website.motels.index') }}">Book Now</a>
+                <div class="nav-actions">
+                    <div class="nav-language" aria-label="{{ __('website.language.label') }}">
+                        <a href="{{ route('website.language.switch', 'en') }}" class="{{ $currentLocale === 'en' ? 'is-active' : '' }}">
+                            {{ __('website.language.english') }}
+                        </a>
+                        <span>/</span>
+                        <a href="{{ route('website.language.switch', 'sw') }}" class="{{ $currentLocale === 'sw' ? 'is-active' : '' }}">
+                            {{ __('website.language.swahili') }}
+                        </a>
+                    </div>
+                    <a class="nav-cta" href="{{ route('website.motels.index') }}">{{ __('website.general.book_now') }}</a>
+                </div>
             </div>
         </header>
         <main>
