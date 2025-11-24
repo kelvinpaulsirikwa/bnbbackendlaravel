@@ -150,17 +150,21 @@
     <!-- Hero Section -->
     @include('websitepages.homepage.welcomenote')
 
-    <!-- How it Works -->
-    @include('websitepages.homepage.howitworks')
+    <br>
 
-    <!-- Featured Motels / Our Exquisite Rooms -->
+      <!-- Featured Motels / Our Exquisite Rooms -->
     @include('websitepages.homepage.exquisite-rooms')
+
+      <!-- How it Works -->
+      @include('websitepages.homepage.howitworks')
+
+      
+    <!-- Amenities -->
+    @include('websitepages.homepage.amenities')
 
     <!-- Property Types / Browse by Property Type -->
     @include('websitepages.homepage.property-types')
 
-    <!-- Amenities -->
-    @include('websitepages.homepage.amenities')
 
     <!-- Gallery -->
     @include('websitepages.homepage.gallery')

@@ -235,16 +235,10 @@
                     <a href="{{ route('website.contact') }}">{{ __('website.nav.contact') }}</a>
                 </nav>
                 <div class="nav-actions">
-                    <div class="nav-language" aria-label="{{ __('website.language.label') }}">
-                        <a href="{{ route('website.language.switch', 'en') }}" class="{{ $currentLocale === 'en' ? 'is-active' : '' }}">
-                            {{ __('website.language.english') }}
-                        </a>
-                        <span>/</span>
-                        <a href="{{ route('website.language.switch', 'sw') }}" class="{{ $currentLocale === 'sw' ? 'is-active' : '' }}">
-                            {{ __('website.language.swahili') }}
-                        </a>
-                    </div>
-                    <a class="nav-cta" href="{{ route('website.motels.index') }}">{{ __('website.general.book_now') }}</a>
+                    <a class="register-cta" href="{{ route('website.auth.register') }}"> {{ __('website.auth.register') }}
+                    </a>
+                    <a class="nav-cta" href="{{ route('login') }}"> {{ __('website.auth.login') }}
+                    </a>
                 </div>
             </div>
         </header>

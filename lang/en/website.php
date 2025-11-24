@@ -21,6 +21,14 @@ return [
         'swahili' => 'Kiswahili',
     ],
 
+    'auth' => [
+        'label' => 'Account navigation',
+        'login' => 'Login',
+        'register' => 'Register',
+        'register_page_title' => 'Register',
+        'register_page_message' => 'This is a register page.',
+    ],
+
     'general' => [
         'book_now' => 'Book Now',
         'quick_view' => 'Quick View',
@@ -31,6 +39,7 @@ return [
         'phone' => 'Phone:',
         'email' => 'Email:',
         'not_provided' => 'Not provided',
+        'use_words' => 'Use words',
     ],
 
     'home' => [

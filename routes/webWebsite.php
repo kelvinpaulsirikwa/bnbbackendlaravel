@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Website\AmenityController;
+use App\Http\Controllers\Website\AuthController;
 use App\Http\Controllers\Website\ContactMessageController;
 use App\Http\Controllers\Website\GalleryController;
 use App\Http\Controllers\Website\HomeController;
@@ -19,6 +20,7 @@ Route::middleware('website.locale')->group(function () {
             Route::get('/contact', 'contact')->name('contact');
         });
 
+    Route::get('/register', [AuthController::class, 'register'])->name('website.auth.register');
     Route::post('/contact', [ContactMessageController::class, 'store'])->name('website.contact.store');
     Route::get('/gallery', [GalleryController::class, 'index'])->name('website.gallery');
     Route::get('/amenities', [AmenityController::class, 'index'])->name('website.amenities');

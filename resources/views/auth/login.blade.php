@@ -1,109 +1,139 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login | FBC Website</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+@extends('websitepages.layouts.app')
 
+@section('title', __('Login'))
+
+@push('styles')
     <style>
-        body {
-            background: linear-gradient(135deg, #e3f2fd, #f8f9fa);
-            height: 100vh;
+        .login-page {
+            min-height: calc(100vh - 160px);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: "Poppins", sans-serif;
+            padding: 3rem 1rem 4rem;
+            background: linear-gradient(135deg, #f1f5f9, #f8fafc);
         }
 
         .login-card {
             border: none;
-            border-radius: 15px;
-            box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 22px;
+            box-shadow: 0 30px 60px rgba(15, 23, 42, 0.08);
             overflow: hidden;
             width: 100%;
-            max-width: 420px;
+            max-width: 460px;
             background-color: #fff;
-            transition: all 0.3s ease-in-out;
-        }
-
-        .container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .login-card:hover {
-            transform: translateY(-3px);
+            transform: translateY(-4px);
+            box-shadow: 0 40px 60px rgba(15, 23, 42, 0.12);
         }
 
         .login-header {
-            background-color: #007bff;
+            background: radial-gradient(circle at top, #2b70f7, #1f54bb);
             color: white;
             text-align: center;
-            padding: 30px 20px;
+            padding: 2.75rem 1.5rem 2.5rem;
         }
 
         .login-header img {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 10px;
+            width: 76px;
+            height: 76px;
+            margin-bottom: 1rem;
+            object-fit: contain;
         }
 
         .login-header h3 {
             margin: 0;
             font-weight: 600;
-            font-size: 1.3rem;
+            font-size: 1.45rem;
+            letter-spacing: 0.01em;
+        }
+
+        .login-header p {
+            margin: 0.35rem 0 0;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.82);
+        }
+
+        .login-form {
+            padding: 2.5rem 2.25rem 2rem;
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: grid;
+            gap: 0.45rem;
         }
 
         .form-label {
-            font-weight: 500;
-            color: #333;
+            font-weight: 600;
+            color: #0f172a;
+            font-size: 0.95rem;
         }
 
         .form-control {
-            border-radius: 10px;
-            padding: 10px;
+            border-radius: 14px;
+            border: 1px solid rgba(15, 23, 42, 0.12);
+            padding: 0.95rem 1.1rem;
+            font-size: 0.95rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-control:focus {
+            border-color: rgba(43, 112, 247, 0.8);
+            box-shadow: 0 0 0 3px rgba(43, 112, 247, 0.2);
+            outline: none;
         }
 
         .btn-login {
-            background-color: #007bff;
-            border-radius: 10px;
-            padding: 10px;
+            background: linear-gradient(120deg, #1f54bb, #2b70f7);
+            border-radius: 14px;
+            padding: 0.95rem;
             font-weight: 600;
-            transition: background 0.3s;
+            border: none;
+            font-size: 1rem;
+            letter-spacing: 0.02em;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            width: 100%;
         }
 
         .btn-login:hover {
-            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(43, 112, 247, 0.35);
         }
 
         .alert {
-            border-radius: 10px;
+            border-radius: 12px;
         }
 
         .text-footer {
             text-align: center;
-            margin-top: 15px;
-            color: #6c757d;
+            margin-top: 1.5rem;
+            color: #6b7280;
             font-size: 0.9rem;
         }
 
-        @media (max-width: 768px) {
-            .login-header {
-                padding: 25px 15px;
+        .text-footer a {
+            color: #1f54bb;
+            font-weight: 600;
+        }
+
+        @media (max-width: 520px) {
+            .login-form {
+                padding: 2rem 1.5rem 1.75rem;
             }
-            .login-header img {
-                width: 70px;
-                height: 70px;
+
+            .form-control {
+                font-size: 1rem;
             }
         }
     </style>
-</head>
+@endpush
 
-<body>
-    <div class="container">
+@section('content')
+    <div class="login-page">
         <div class="login-card">
             <div class="login-header">
                 <img src="{{ asset('images/static_file/applogo.png') }}" alt="App Logo">
@@ -111,7 +141,7 @@
                 <p class="mb-0">Please login to continue</p>
             </div>
 
-            <div class="card-body p-4">
+            <div class="login-form">
                 @if ($errors->any())
                     <div class="alert alert-danger">
                         @foreach ($errors->all() as $error)
@@ -122,16 +152,16 @@
 
                 <form method="POST" action="{{ url('/login') }}">
                     @csrf
-                    <div class="mb-3">
+                    <div class="form-group">
                         <label for="useremail" class="form-label">Email Address</label>
                         <input type="email" name="useremail" id="useremail" value="{{ old('useremail') }}" class="form-control" required placeholder="Enter your email">
                     </div>
 
-                    <div class="mb-3">
+                    <div class="form-group">
                         <label for="password" class="form-label">Password</label>
                         <input type="password" name="password" id="password" class="form-control" required placeholder="Enter your password">
                     </div>
-
+<br>
                     <div class="d-grid">
                         <button type="submit" class="btn btn-login text-white">Login</button>
                     </div>
@@ -144,7 +174,4 @@
             </div>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+@endsection
