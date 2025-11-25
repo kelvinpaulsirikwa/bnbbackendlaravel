@@ -17,7 +17,7 @@ class MotelController extends Controller
 
     public function index(Request $request): View
     {
-        $query = Motel::with(['rooms', 'amenities.amenity', 'motelType', 'images'])
+        $query = Motel::with(['rooms', 'amenities.amenity', 'motelType', 'images', 'district.region'])
             ->withCount('rooms');
 
         if ($request->filled('region')) {
@@ -48,6 +48,10 @@ class MotelController extends Controller
                 ->take(3)
                 ->values();
 
+            $location = optional($motel->district)->name;
+            $region = optional(optional($motel->district)->region)->name;
+            $locationText = collect([$location, $region])->filter()->implode(', ');
+
             return [
                 'id' => $motel->id,
                 'name' => $motel->name,
@@ -57,6 +61,7 @@ class MotelController extends Controller
                 'starting_price' => $startingPrice,
                 'rooms_count' => $motel->rooms_count,
                 'amenities' => $amenityHighlights,
+                'location' => $locationText,
             ];
         });
 

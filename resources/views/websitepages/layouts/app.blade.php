@@ -105,6 +105,76 @@
                 transform: translateY(-2px);
             }
 
+            .nav-dropdown {
+                position: relative;
+            }
+
+            .nav-dropdown-toggle {
+                border: none;
+                background: transparent;
+                font: inherit;
+                color: rgba(15, 23, 42, 0.65);
+                display: inline-flex;
+                align-items: center;
+                gap: 0.35rem;
+                cursor: pointer;
+                padding: 0;
+                transition: color 0.2s ease, transform 0.2s ease;
+            }
+
+            .nav-dropdown-toggle svg {
+                width: 14px;
+                height: 14px;
+                stroke-width: 2;
+            }
+
+            .nav-dropdown:hover .nav-dropdown-toggle,
+            .nav-dropdown:focus-within .nav-dropdown-toggle {
+                color: var(--primary);
+                transform: translateY(-2px);
+            }
+
+            .nav-dropdown-menu {
+                position: absolute;
+                top: calc(100% + 0.2rem);
+                left: 0;
+                min-width: 220px;
+                background: #ffffff;
+                border-radius: 16px;
+                box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
+                padding: 0.75rem 0;
+                display: flex;
+                flex-direction: column;
+                gap: 0;
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-8px);
+                transition: opacity 0.2s ease, transform 0.2s ease;
+                z-index: 20;
+            }
+
+            .nav-dropdown:hover .nav-dropdown-menu,
+            .nav-dropdown:focus-within .nav-dropdown-menu {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+
+            .nav-dropdown-menu a {
+                padding: 0.65rem 1.25rem;
+                text-decoration: none;
+                color: rgba(15, 23, 42, 0.85);
+                font-weight: 500;
+                transition: background 0.2s ease, color 0.2s ease;
+                display: block;
+            }
+
+            .nav-dropdown-menu a:hover,
+            .nav-dropdown-menu a:focus {
+                background: rgba(43, 112, 247, 0.08);
+                color: #1a4fbb;
+            }
+
             .nav-actions {
                 display: flex;
                 align-items: center;
@@ -198,6 +268,21 @@
                 .nav-links {
                     flex-wrap: wrap;
                     justify-content: center;
+                    gap: 1rem;
+                }
+
+                .nav-dropdown {
+                    width: 100%;
+                    text-align: center;
+                }
+
+                .nav-dropdown-menu {
+                    position: static;
+                    transform: none;
+                    box-shadow: none;
+                    background: rgba(255, 255, 255, 0.95);
+                    border-radius: 14px;
+                    margin-top: 0.75rem;
                 }
 
                 .nav-actions {
@@ -221,6 +306,8 @@
     <body>
         <header>
             @php($currentLocale = app()->getLocale())
+            @php($accommodationLabel = __('website.nav.accommodation_types'))
+            @php($accommodationLabel = $accommodationLabel === 'website.nav.accommodation_types' ? 'Accommodation Types' : $accommodationLabel)
             <div class="nav">
                 <a class="nav-brand" href="{{ route('website.home') }}">
                     <img src="{{ asset('images/static_file/applogo.png') }}" alt="bnbStay logo" width="36" height="36">
@@ -228,10 +315,49 @@
                 </a>
                 <nav class="nav-links">
                     <a href="{{ route('website.home') }}">{{ __('website.nav.home') }}</a>
-                    <a href="{{ route('website.gallery') }}">{{ __('website.nav.gallery') }}</a>
                     <a href="{{ route('website.motels.index') }}">{{ __('website.nav.motels') }}</a>
-                    <a href="{{ route('website.amenities') }}">{{ __('website.nav.amenities') }}</a>
-                    <a href="{{ route('website.services') }}">{{ __('website.nav.services') }}</a>
+                    @if(($navMotelTypes ?? collect())->count())
+                        <div class="nav-dropdown">
+                            <button class="nav-dropdown-toggle" type="button" aria-haspopup="true" aria-expanded="false">
+                                {{ $accommodationLabel }}
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                            <div class="nav-dropdown-menu" role="menu">
+                                @foreach($navMotelTypes as $type)
+                                    <a role="menuitem" href="{{ route('website.motels.index', ['motel_type' => $type->id]) }}">
+                                        {{ $type->name }}
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+                    @php($amenitiesLabel = __('website.nav.amenities'))
+                    @if(($navAmenities ?? collect())->count())
+                        <div class="nav-dropdown">
+                            <button class="nav-dropdown-toggle" type="button" aria-haspopup="true" aria-expanded="false">
+                                {{ $amenitiesLabel }}
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                            <div class="nav-dropdown-menu" role="menu">
+                                <a role="menuitem" href="{{ route('website.amenities') }}">
+                                    {{ __('website.nav.amenities_all') !== 'website.nav.amenities_all' ? __('website.nav.amenities_all') : __('website.nav.amenities') }}
+                                </a>
+                                @foreach($navAmenities as $amenity)
+                                    <a role="menuitem" href="{{ route('website.amenities.show', $amenity->id) }}">
+                                        {{ $amenity->name }}
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @else
+                        <a href="{{ route('website.amenities') }}">{{ $amenitiesLabel }}</a>
+                    @endif
+                    <a href="{{ route('website.gallery') }}">{{ __('website.nav.gallery') }}</a>
+
                     <a href="{{ route('website.contact') }}">{{ __('website.nav.contact') }}</a>
                 </nav>
                 <div class="nav-actions">

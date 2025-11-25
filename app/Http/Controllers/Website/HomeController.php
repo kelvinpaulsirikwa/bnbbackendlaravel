@@ -88,7 +88,7 @@ class HomeController extends Controller
                 ];
             });
 
-        $spotlightMotels = Motel::with(['rooms', 'amenities.amenity', 'images'])
+        $spotlightMotels = Motel::with(['rooms', 'amenities.amenity', 'images', 'district.region'])
             ->withCount('rooms')
             ->inRandomOrder()
             ->take(15)
@@ -107,6 +107,10 @@ class HomeController extends Controller
                     ->take(3)
                     ->values();
 
+                $districtName = optional($motel->district)->name;
+                $regionName = optional(optional($motel->district)->region)->name;
+                $location = collect([$districtName, $regionName])->filter()->implode(' • ');
+
                 return [
                     'id' => $motel->id,
                     'name' => $motel->name,
@@ -114,6 +118,7 @@ class HomeController extends Controller
                     'image' => $primaryImage,
                     'starting_price' => $startingPrice,
                     'amenities' => $amenityHighlights,
+                    'location' => $location,
                 ];
             });
 
@@ -140,47 +145,6 @@ class HomeController extends Controller
     /**
      * Display the services page.
      */
-    public function services(): ViewResponse
-    {
-        // Get all BNB types (MotelTypes)
-        $bnbTypes = MotelType::query()
-            ->orderBy('name')
-            ->get(['id', 'name']);
-
-        // Get all Room types
-        $roomTypes = RoomType::query()
-            ->orderBy('name')
-            ->get(['id', 'name', 'description']);
-
-        // Get countries with their regions and districts (hierarchical)
-        $countries = Country::with(['regions.districts'])
-            ->orderBy('name')
-            ->get()
-            ->map(function (Country $country) {
-                return [
-                    'id' => $country->id,
-                    'name' => $country->name,
-                    'regions' => $country->regions->map(function ($region) {
-                        return [
-                            'id' => $region->id,
-                            'name' => $region->name,
-                            'districts' => $region->districts->map(function ($district) {
-                                return [
-                                    'id' => $district->id,
-                                    'name' => $district->name,
-                                ];
-                            })->values(),
-                        ];
-                    })->values(),
-                ];
-            });
-
-        return view('websitepages.services', [
-            'bnbTypes' => $bnbTypes,
-            'roomTypes' => $roomTypes,
-            'countries' => $countries,
-        ]);
-    }
 
     /**
      * Display the contact page.

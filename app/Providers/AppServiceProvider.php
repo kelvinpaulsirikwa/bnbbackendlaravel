@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Amenity;
 use App\Models\Country;
 use App\Models\MotelType;
 use App\Models\Region;
@@ -49,6 +50,25 @@ class AppServiceProvider extends ServiceProvider
             });
 
             $view->with($footerData);
+        });
+
+        View::composer('websitepages.layouts.app', function ($view) {
+            $navMotelTypes = Cache::remember('nav_motel_types', 3600, function () {
+                return MotelType::query()
+                    ->orderBy('name')
+                    ->get(['id', 'name']);
+            });
+
+            $navAmenities = Cache::remember('nav_amenities', 3600, function () {
+                return Amenity::query()
+                    ->orderBy('name')
+                    ->get(['id', 'name']);
+            });
+
+            $view->with([
+                'navMotelTypes' => $navMotelTypes,
+                'navAmenities' => $navAmenities,
+            ]);
         });
     }
 }

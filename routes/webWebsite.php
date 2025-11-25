@@ -16,7 +16,6 @@ Route::middleware('website.locale')->group(function () {
         ->as('website.')
         ->group(function () {
             Route::get('/', 'index')->name('home');
-            Route::get('/services', 'services')->name('services');
             Route::get('/contact', 'contact')->name('contact');
         });
 

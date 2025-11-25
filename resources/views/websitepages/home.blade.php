@@ -5,7 +5,6 @@
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/homepage-exquisite-rooms.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/homepage-property-types.css') }}">
     <style>
         :root {
             --primary-gradient: linear-gradient(135deg, #2b70f7 0%, #1a5fd6 100%);
@@ -161,10 +160,6 @@
       
     <!-- Amenities -->
     @include('websitepages.homepage.amenities')
-
-    <!-- Property Types / Browse by Property Type -->
-    @include('websitepages.homepage.property-types')
-
 
     <!-- Gallery -->
     @include('websitepages.homepage.gallery')
