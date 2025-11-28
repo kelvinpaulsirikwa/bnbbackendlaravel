@@ -32,7 +32,8 @@ class NearMeApiController extends Controller
             // Calculate distance using Haversine formula
             $distanceFormula = "(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude))))";
 
-            $query = Motel::with(['motelType', 'district.region', 'owner', 'amenities.amenity', 'details'])
+            $query = Motel::active()
+                ->with(['motelType', 'district.region', 'owner', 'amenities.amenity', 'details'])
                 ->selectRaw("*, $distanceFormula AS distance", [$userLat, $userLon, $userLat])
                 ->whereRaw("$distanceFormula <= ?", [$userLat, $userLon, $userLat, $radius])
                 ->orderBy('distance', 'asc');
@@ -115,7 +116,8 @@ class NearMeApiController extends Controller
             $page = $request->get('page', 1);
             $limit = $request->get('limit', 10);
 
-            $query = Motel::with(['motelType', 'district.region', 'owner', 'amenities.amenity', 'details'])
+            $query = Motel::active()
+                ->with(['motelType', 'district.region', 'owner', 'amenities.amenity', 'details'])
                 ->leftJoin('bnbsearch', 'bnb_motels.id', '=', 'bnbsearch.bnb_motels_id')
                 ->selectRaw('bnb_motels.*, COALESCE(bnbsearch.count, 0) as search_count')
                 ->orderByRaw('COALESCE(bnbsearch.count, 0) DESC')
@@ -199,7 +201,8 @@ class NearMeApiController extends Controller
             $page = $request->get('page', 1);
             $limit = $request->get('limit', 10);
 
-            $query = Motel::with(['motelType', 'district.region', 'owner', 'amenities.amenity', 'details'])
+            $query = Motel::active()
+                ->with(['motelType', 'district.region', 'owner', 'amenities.amenity', 'details'])
                 ->orderBy('created_at', 'desc');
 
             $motels = $query->paginate($limit, ['*'], 'page', $page);

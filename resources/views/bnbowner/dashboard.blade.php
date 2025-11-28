@@ -3,167 +3,361 @@
 @section('title', 'BnB Owner Dashboard - ' . $selectedMotel->name)
 
 @section('content')
-<div class="container-fluid py-4" style="background-color: white; min-height: 100vh;">
-       
+<div class="container-fluid py-4" style="background-color: #f8f9fa; min-height: 100vh;">
+    
+    <!-- Header -->
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4">
+        <div>
+            <h1 class="h2 mb-1">{{ $selectedMotel->name }}</h1>
+            <p class="text-muted mb-0">
+                <i class="fas fa-calendar-alt me-1"></i> 
+                Registered {{ $selectedMotel->created_at->format('F j, Y') }}
+                <span class="mx-2">•</span>
+                <i class="fas fa-tag me-1"></i> 
+                {{ $selectedMotel->motelType->name ?? 'N/A' }}
+            </p>
+        </div>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <a href="{{ route('bnbowner.switch-account') }}" class="btn btn-outline-primary">
+                <i class="fas fa-exchange-alt me-1"></i> Switch Motel
+            </a>
+        </div>
+    </div>
 
-     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">{{ $selectedMotel->name }} Dashboard</h1>
-                <div class="btn-toolbar mb-2 mb-md-0">
-                    <div class="btn-group me-2">
-                        <a href="{{ route('bnbowner.switch-account') }}" class="btn btn-sm btn-outline-primary">
-                            <i class="fas fa-exchange-alt"></i> Switch Motel
+    <!-- Quick Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm h-100 stat-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon bg-primary bg-opacity-10 text-primary">
+                            <i class="fas fa-bed fa-lg"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h3 class="mb-0 fw-bold">{{ $motelStats['total_rooms'] }}</h3>
+                            <small class="text-muted">Total Rooms</small>
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-2 border-top">
+                        <small class="text-success">
+                            <i class="fas fa-check-circle me-1"></i>
+                            {{ $motelStats['available_rooms'] }} Available
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm h-100 stat-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon bg-success bg-opacity-10 text-success">
+                            <i class="fas fa-users fa-lg"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h3 class="mb-0 fw-bold">{{ $motelStats['total_staff'] }}</h3>
+                            <small class="text-muted">Staff Members</small>
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-2 border-top">
+                        <a href="{{ route('bnbowner.staff-management.index') }}" class="text-success text-decoration-none small">
+                            <i class="fas fa-arrow-right me-1"></i> Manage Staff
                         </a>
                     </div>
                 </div>
             </div>
-
-            <!-- Selected Motel Info -->
-            <div class="row mb-4">
-                <div class="col-12">
-                    <div class="card border-primary">
-                        <div class="card-header bg-primary text-white">
-                            <h5 class="mb-0">
-                                <i class="fas fa-hotel"></i> Current Motel: {{ $selectedMotel->name }}
-                            </h5>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm h-100 stat-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon bg-warning bg-opacity-10 text-warning">
+                            <i class="fas fa-concierge-bell fa-lg"></i>
                         </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    @if($selectedMotel->front_image)
-                                        <img src="{{ asset('storage/' . $selectedMotel->front_image) }}" 
-                                             class="img-fluid rounded" 
-                                             alt="{{ $selectedMotel->name }}">
-                                    @else
-                                        <div class="bg-light rounded d-flex align-items-center justify-content-center" 
-                                             style="height: 200px;">
-                                            <i class="fas fa-hotel fa-4x text-muted"></i>
-                                        </div>
-                                    @endif
+                        <div class="ms-3">
+                            <h3 class="mb-0 fw-bold">{{ $motelStats['total_amenities'] }}</h3>
+                            <small class="text-muted">Amenities</small>
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-2 border-top">
+                        <a href="{{ route('bnbowner.hotel-facilities.index') }}" class="text-warning text-decoration-none small">
+                            <i class="fas fa-arrow-right me-1"></i> View Facilities
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm h-100 stat-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="stat-icon bg-info bg-opacity-10 text-info">
+                            <i class="fas fa-images fa-lg"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h3 class="mb-0 fw-bold">{{ $motelStats['total_images'] }}</h3>
+                            <small class="text-muted">Gallery Images</small>
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-2 border-top">
+                        <a href="{{ route('bnbowner.hotel-images.index') }}" class="text-info text-decoration-none small">
+                            <i class="fas fa-arrow-right me-1"></i> Manage Gallery
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Motel Overview Card -->
+    <div class="row mb-4">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0">
+                        <i class="fas fa-hotel text-primary me-2"></i>Motel Overview
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3 mb-md-0">
+                            @if($selectedMotel->front_image)
+                                <img src="{{ asset('storage/' . $selectedMotel->front_image) }}" 
+                                     class="img-fluid rounded shadow-sm" 
+                                     alt="{{ $selectedMotel->name }}"
+                                     style="max-height: 200px; width: 100%; object-fit: cover;">
+                            @else
+                                <div class="bg-light rounded d-flex align-items-center justify-content-center shadow-sm" 
+                                     style="height: 200px;">
+                                    <i class="fas fa-hotel fa-4x text-muted"></i>
                                 </div>
-                                <div class="col-md-8">
-                                    <h4 class="text-primary">{{ $selectedMotel->name }}</h4>
-                                    <p class="text-muted">{{ $selectedMotel->description }}</p>
-                                    
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <p><strong><i class="fas fa-map-marker-alt"></i> Address:</strong><br>
-                                            {{ $selectedMotel->street_address }}</p>
-                                            
-                                            @if($selectedMotel->district)
-                                                <p><strong><i class="fas fa-city"></i> District:</strong><br>
-                                                {{ $selectedMotel->district->name }}</p>
-                                            @endif
-                                        </div>
-                                        <div class="col-md-6">
-                                            @if($selectedMotel->motelType)
-                                                <p><strong><i class="fas fa-tag"></i> Type:</strong><br>
-                                                {{ $selectedMotel->motelType->name }}</p>
-                                            @endif
-                                            
-                                            @if($selectedMotel->latitude && $selectedMotel->longitude)
-                                                <p><strong><i class="fas fa-map"></i> Coordinates:</strong><br>
-                                                {{ number_format($selectedMotel->latitude, 4) }}, {{ number_format($selectedMotel->longitude, 4) }}</p>
-                                            @endif
+                            @endif
+                        </div>
+                        <div class="col-md-8">
+                            <p class="text-muted mb-3">{{ Str::limit($selectedMotel->description, 200) ?? 'No description available.' }}</p>
+                            
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <div class="d-flex align-items-start">
+                                        <i class="fas fa-map-marker-alt text-danger mt-1 me-2"></i>
+                                        <div>
+                                            <small class="text-muted d-block">Address</small>
+                                            <strong>{{ $selectedMotel->street_address ?? 'Not set' }}</strong>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-sm-6">
+                                    <div class="d-flex align-items-start">
+                                        <i class="fas fa-city text-primary mt-1 me-2"></i>
+                                        <div>
+                                            <small class="text-muted d-block">Location</small>
+                                            <strong>
+                                                {{ $selectedMotel->district->name ?? 'N/A' }}
+                                                @if($selectedMotel->district && $selectedMotel->district->region)
+                                                    , {{ $selectedMotel->district->region->name }}
+                                                @endif
+                                            </strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="d-flex align-items-start">
+                                        <i class="fas fa-phone text-success mt-1 me-2"></i>
+                                        <div>
+                                            <small class="text-muted d-block">Contact Phone</small>
+                                            <strong>{{ $selectedMotel->contact_phone ?? 'Not set' }}</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="d-flex align-items-start">
+                                        <i class="fas fa-envelope text-info mt-1 me-2"></i>
+                                        <div>
+                                            <small class="text-muted d-block">Contact Email</small>
+                                            <strong>{{ $selectedMotel->contact_email ?? 'Not set' }}</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-3 pt-3 border-top">
+                                <a href="{{ route('bnbowner.hotel-management.index') }}" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-edit me-1"></i> Edit Information
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-          <!-- All Motels Quick Access -->
-          @if($allMotels->count() > 1)
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">
-                            <i class="fas fa-building"></i> All Your Motels
+        </div>
+        
+        <!-- Quick Info -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle text-info me-2"></i>Quick Info
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                            <span class="text-muted"><i class="fas fa-calendar-plus me-2"></i>Created</span>
+                            <strong>{{ $motelStats['created_at']->format('M d, Y') }}</strong>
+                        </li>
+                        <li class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                            <span class="text-muted"><i class="fas fa-clock me-2"></i>Age</span>
+                            <strong>{{ $motelStats['created_at']->diffForHumans(null, true) }}</strong>
+                        </li>
+                        <li class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                            <span class="text-muted"><i class="fas fa-tag me-2"></i>Type</span>
+                            <span class="badge bg-primary">{{ $selectedMotel->motelType->name ?? 'N/A' }}</span>
+                        </li>
+                        <li class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                            <span class="text-muted"><i class="fas fa-signal me-2"></i>Status</span>
+                            @if($selectedMotel->status === 'active')
+                                <span class="badge bg-success">Active</span>
+                            @elseif($selectedMotel->status === 'inactive')
+                                <span class="badge bg-warning">Inactive</span>
+                            @else
+                                <span class="badge bg-secondary">{{ ucfirst($selectedMotel->status ?? 'Unknown') }}</span>
+                            @endif
+                        </li>
+                        @if($selectedMotel->latitude && $selectedMotel->longitude)
+                        <li class="d-flex justify-content-between align-items-center py-2">
+                            <span class="text-muted"><i class="fas fa-map-pin me-2"></i>GPS</span>
+                            <small class="text-end">
+                                {{ number_format($selectedMotel->latitude, 4) }},<br>
+                                {{ number_format($selectedMotel->longitude, 4) }}
+                            </small>
+                        </li>
+                        @endif
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bolt text-warning me-2"></i>Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-3 col-sm-6">
+                            <a href="{{ route('bnbowner.room-management.index') }}" class="btn btn-outline-primary w-100 py-3">
+                                <i class="fas fa-bed fa-2x mb-2 d-block"></i>
+                                Manage Rooms
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <a href="{{ route('bnbowner.hotel-facilities.index') }}" class="btn btn-outline-success w-100 py-3">
+                                <i class="fas fa-concierge-bell fa-2x mb-2 d-block"></i>
+                                Manage Facilities
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <a href="{{ route('bnbowner.staff-management.index') }}" class="btn btn-outline-info w-100 py-3">
+                                <i class="fas fa-users fa-2x mb-2 d-block"></i>
+                                Manage Staff
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <a href="{{ route('bnbowner.chats.index') }}" class="btn btn-outline-warning w-100 py-3">
+                                <i class="fas fa-comments fa-2x mb-2 d-block"></i>
+                                Guest Messages
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- All Motels Quick Access -->
+    @if($allMotels->count() > 1)
+        <div class="row">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-building text-secondary me-2"></i>Your Other Motels
                         </h5>
+                        <span class="badge bg-secondary">{{ $allMotels->count() - 1 }} more</span>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             @foreach($allMotels as $motel)
-                                <div class="col-md-4 mb-3">
-                                    <div class="card {{ $motel->id == $selectedMotel->id ? 'border-primary' : '' }}">
-                                        <div class="card-body">
-                                            <h6 class="card-title">
-                                                {{ $motel->name }}
-                                                @if($motel->id == $selectedMotel->id)
-                                                    <span class="badge bg-primary">Current</span>
-                                                @endif
-                                            </h6>
-                                            <p class="card-text small">{{ Str::limit($motel->description, 80) }}</p>
-                                            @if($motel->id != $selectedMotel->id)
-                                                <form method="POST" action="{{ route('bnbowner.select-motel') }}" class="d-inline">
+                                @if($motel->id != $selectedMotel->id)
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card h-100 border">
+                                            <div class="card-body">
+                                                <h6 class="card-title mb-2">
+                                                    <i class="fas fa-hotel text-muted me-1"></i>
+                                                    {{ $motel->name }}
+                                                </h6>
+                                                <p class="card-text small text-muted mb-3">{{ Str::limit($motel->description, 60) }}</p>
+                                                <form method="POST" action="{{ route('bnbowner.select-motel') }}">
                                                     @csrf
                                                     <input type="hidden" name="motel_id" value="{{ $motel->id }}">
-                                                    <button type="submit" class="btn btn-sm btn-outline-primary">Switch To</button>
+                                                    <button type="submit" class="btn btn-sm btn-outline-primary">
+                                                        <i class="fas fa-exchange-alt me-1"></i> Switch To
+                                                    </button>
                                                 </form>
-                                            @endif
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                @endif
                             @endforeach
                         </div>
                     </div>
                 </div>
-            @endif
-
-    </div>
+            </div>
+        </div>
+    @endif
 </div>
 
 <style>
-.sidebar {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 100;
-    padding: 48px 0 0;
-    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+.stat-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.sidebar-sticky {
-    position: relative;
-    top: 0;
-    height: calc(100vh - 48px);
-    padding-top: .5rem;
-    overflow-x: hidden;
-    overflow-y: auto;
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1) !important;
 }
 
-.sidebar .nav-link {
-    font-weight: 500;
-    color: #333;
+.stat-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.sidebar .nav-link:hover {
-    color: #007bff;
+.card {
+    border-radius: 12px;
 }
 
-.sidebar .nav-link.active {
-    color: #007bff;
+.card-header {
+    border-radius: 12px 12px 0 0;
 }
 
-.sidebar-heading {
-    font-size: .75rem;
-    text-transform: uppercase;
-}
-
-main {
-    margin-left: 0;
-}
-
-@media (min-width: 768px) {
-    main {
-        margin-left: 16.66667%;
-    }
-}
-
-@media (min-width: 992px) {
-    main {
-        margin-left: 16.66667%;
-    }
+.btn-outline-primary:hover,
+.btn-outline-success:hover,
+.btn-outline-info:hover,
+.btn-outline-warning:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 </style>
 @endsection

@@ -20,6 +20,7 @@ Route::middleware('website.locale')->group(function () {
         });
 
     Route::get('/register', [AuthController::class, 'register'])->name('website.auth.register');
+    Route::post('/register', [AuthController::class, 'store'])->name('website.auth.register.store');
     Route::post('/contact', [ContactMessageController::class, 'store'])->name('website.contact.store');
     Route::get('/gallery', [GalleryController::class, 'index'])->name('website.gallery');
     Route::get('/amenities', [AmenityController::class, 'index'])->name('website.amenities');

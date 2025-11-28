@@ -20,6 +20,10 @@ Route::middleware(['auth', 'role:bnbowner,bnbonwner'])->group(function () {
     Route::post('/bnbowner/select-motel', [DashboardController::class, 'selectMotel'])->name('bnbowner.select-motel');
     Route::get('/bnbowner/switch-account', [DashboardController::class, 'switchAccount'])->name('bnbowner.switch-account');
     
+    // Motel Registration Routes (Owner adds new motel)
+    Route::get('/bnbowner/motel/create', [DashboardController::class, 'createMotel'])->name('bnbowner.motel.create');
+    Route::post('/bnbowner/motel/store', [DashboardController::class, 'storeMotel'])->name('bnbowner.motel.store');
+    
     // Hotel Management Routes
     Route::get('/bnbowner/hotel-management', [HotelManagementController::class, 'index'])->name('bnbowner.hotel-management.index');
     Route::put('/bnbowner/hotel-management/motel', [HotelManagementController::class, 'updateMotel'])->name('bnbowner.hotel-management.update-motel');

@@ -106,6 +106,21 @@
 
         .alert {
             border-radius: 12px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .alert-danger {
+            background-color: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+        }
+
+        .alert-info {
+            background-color: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1e40af;
         }
 
         .text-footer {
@@ -150,7 +165,13 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ url('/login') }}">
+                @if (session('status'))
+                    <div class="alert alert-info">
+                        {{ session('status') }}
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('login.submit') }}">
                     @csrf
                     <div class="form-group">
                         <label for="useremail" class="form-label">Email Address</label>

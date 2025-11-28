@@ -66,7 +66,7 @@ class SearchApiController extends Controller
     public function searchMotels(Request $request)
     {
         try {
-            $query = Motel::with(['motelType', 'district.region', 'owner', 'amenities.amenity', 'details']);
+            $query = Motel::active()->with(['motelType', 'district.region', 'owner', 'amenities.amenity', 'details']);
 
             // Apply search filters
             if ($request->filled('search')) {

@@ -17,7 +17,8 @@ class MotelController extends Controller
 
     public function index(Request $request): View
     {
-        $query = Motel::with(['rooms', 'amenities.amenity', 'motelType', 'images', 'district.region'])
+        $query = Motel::active()
+            ->with(['rooms', 'amenities.amenity', 'motelType', 'images', 'district.region'])
             ->withCount('rooms');
 
         if ($request->filled('region')) {
@@ -72,6 +73,11 @@ class MotelController extends Controller
 
     public function show(Motel $motel): View
     {
+        // Check if motel is active - if not, abort with 404
+        if ($motel->status !== 'active') {
+            abort(404);
+        }
+
         $motel->load([
             'rooms.roomType',
             'rooms.items',

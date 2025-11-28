@@ -17,7 +17,8 @@ class MotelDetailApiController extends Controller
     public function getMotelDetails($id)
     {
         try {
-            $motel = Motel::with(['motelType', 'district', 'owner', 'details'])
+            $motel = Motel::active()
+                          ->with(['motelType', 'district', 'owner', 'details'])
                           ->find($id);
 
             if (!$motel) {

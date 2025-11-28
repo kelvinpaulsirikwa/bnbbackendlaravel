@@ -5,7 +5,13 @@ namespace App\Http\Controllers\BnBOwner;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Motel;
+use App\Models\MotelDetail;
+use App\Models\MotelType;
+use App\Models\Country;
+use App\Models\Region;
+use App\Models\District;
 use App\Models\BnbUser;
 
 class DashboardController extends Controller
@@ -16,7 +22,7 @@ class DashboardController extends Controller
         
         // Get all motels owned by this user
         $motels = Motel::where('owner_id', $user->id)
-                      ->with(['district', 'motelType'])
+                      ->with(['district', 'motelType', 'details'])
                       ->get();
         
         return view('bnbowner.motel-selection', compact('motels', 'user'));
@@ -31,10 +37,10 @@ class DashboardController extends Controller
             return redirect()->route('bnbowner.motel-selection');
         }
         
-        // Get the selected motel
+        // Get the selected motel with all relationships
         $selectedMotel = Motel::where('id', $selectedMotelId)
                             ->where('owner_id', $user->id)
-                            ->with(['district', 'motelType', 'amenities', 'details'])
+                            ->with(['district.region', 'motelType', 'amenities.amenity', 'details', 'rooms', 'images'])
                             ->first();
         
         if (!$selectedMotel) {
@@ -45,7 +51,19 @@ class DashboardController extends Controller
         // Get all motels for switch account dropdown
         $allMotels = Motel::where('owner_id', $user->id)->get();
         
-        return view('bnbowner.dashboard', compact('selectedMotel', 'allMotels', 'user'));
+        // Calculate motel statistics
+        $motelStats = [
+            'created_at' => $selectedMotel->created_at,
+            'total_rooms' => $selectedMotel->rooms->count(),
+            'available_rooms' => $selectedMotel->details->available_rooms ?? 0,
+            'total_amenities' => $selectedMotel->amenities->count(),
+            'total_images' => $selectedMotel->images->count(),
+            'total_staff' => BnbUser::where('motel_id', $selectedMotel->id)
+                                   ->whereIn('role', ['bnbreceiptionist', 'bnbsecurity', 'bnbchef'])
+                                   ->count(),
+        ];
+        
+        return view('bnbowner.dashboard', compact('selectedMotel', 'allMotels', 'user', 'motelStats'));
     }
     
     public function selectMotel(Request $request)
@@ -62,6 +80,11 @@ class DashboardController extends Controller
             return redirect()->back()->with('error', 'Motel not found or access denied.');
         }
         
+        // Check if motel is active
+        if ($motel->status !== 'active') {
+            return redirect()->back()->with('error', 'This motel is still pending approval. You cannot manage it until it is activated.');
+        }
+        
         // Store selected motel in session
         session(['selected_motel_id' => $motelId]);
         
@@ -74,5 +97,98 @@ class DashboardController extends Controller
         session()->forget('selected_motel_id');
         
         return redirect()->route('bnbowner.motel-selection');
+    }
+
+    /**
+     * Show the form for creating a new motel
+     */
+    public function createMotel()
+    {
+        $motelTypes = MotelType::orderBy('name')->get();
+        $countries = Country::orderBy('name')->get();
+        $regions = Region::orderBy('name')->get();
+        $districts = District::orderBy('name')->get();
+
+        return view('bnbowner.motel-create', compact(
+            'motelTypes',
+            'countries',
+            'regions',
+            'districts'
+        ));
+    }
+
+    /**
+     * Store a newly created motel
+     */
+    public function storeMotel(Request $request)
+    {
+        $user = Auth::user();
+
+        // Validate motel data
+        $motelData = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:2000',
+            'motel_type_id' => 'required|exists:motel_types,id',
+            'street_address' => 'required|string|max:255',
+            'district_id' => 'required|exists:districts,id',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
+            'front_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        // Validate motel details
+        $detailsData = $request->validate([
+            'contact_phone' => 'required|string|max:20',
+            'contact_email' => 'nullable|email|max:100',
+            'total_rooms' => 'required|integer|min:1',
+            'available_rooms' => 'nullable|integer|min:0',
+        ]);
+
+        try {
+            // Handle image upload
+            $imagePath = null;
+            if ($request->hasFile('front_image')) {
+                $imagePath = $request->file('front_image')->store('motels', 'public');
+            }
+
+            // Create the motel
+            $motel = Motel::create([
+                'name' => $motelData['name'],
+                'description' => $motelData['description'] ?? null,
+                'owner_id' => $user->id,
+                'motel_type_id' => $motelData['motel_type_id'],
+                'street_address' => $motelData['street_address'],
+                'district_id' => $motelData['district_id'],
+                'latitude' => $motelData['latitude'] ?? null,
+                'longitude' => $motelData['longitude'] ?? null,
+                'front_image' => $imagePath,
+                'created_by' => $user->id,
+            ]);
+
+            // Create the motel details with status = 'inactive'
+            MotelDetail::create([
+                'motel_id' => $motel->id,
+                'contact_phone' => $detailsData['contact_phone'],
+                'contact_email' => $detailsData['contact_email'] ?? null,
+                'total_rooms' => $detailsData['total_rooms'],
+                'available_rooms' => $detailsData['available_rooms'] ?? $detailsData['total_rooms'],
+                'status' => 'inactive', // Set status to inactive, pending admin approval
+            ]);
+
+            return redirect()
+                ->route('bnbowner.motel-selection')
+                ->with('success', 'Your motel "' . $motel->name . '" has been submitted successfully! It is currently pending admin approval. You will be notified once it is activated.');
+
+        } catch (\Exception $e) {
+            // If image was uploaded but motel creation failed, delete the image
+            if ($imagePath) {
+                Storage::disk('public')->delete($imagePath);
+            }
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'An error occurred while creating your motel. Please try again.');
+        }
     }
 }

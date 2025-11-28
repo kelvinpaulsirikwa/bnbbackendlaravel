@@ -14,6 +14,11 @@ class RoomController extends Controller
 
     public function show(Motel $motel, BnbRoom $room): View
     {
+        // Check if motel is active - if not, abort with 404
+        if ($motel->status !== 'active') {
+            abort(404);
+        }
+
         if ($room->motelid !== $motel->id) {
             abort(404);
         }

@@ -227,6 +227,26 @@
                 box-shadow: 0 12px 24px rgba(178, 86, 13, 0.3);
             }
 
+            .register-cta {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0.6rem 1.4rem;
+                border-radius: 999px;
+                background: transparent;
+                color: #b2560d;
+                font-weight: 600;
+                border: 2px solid #b2560d;
+                transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+            }
+
+            .register-cta:hover {
+                transform: translateY(-2px);
+                background: #b2560d;
+                color: #ffffff;
+                box-shadow: 0 12px 24px rgba(178, 86, 13, 0.3);
+            }
+
             main {
                 flex: 1;
                 padding: 0 4vw 4vw;
@@ -361,10 +381,15 @@
                     <a href="{{ route('website.contact') }}">{{ __('website.nav.contact') }}</a>
                 </nav>
                 <div class="nav-actions">
-                    <a class="register-cta" href="{{ route('website.auth.register') }}"> {{ __('website.auth.register') }}
-                    </a>
-                    <a class="nav-cta" href="{{ route('login') }}"> {{ __('website.auth.login') }}
-                    </a>
+                    @if(\Illuminate\Support\Facades\Auth::check())
+                        <a class="nav-cta" href="{{ \Illuminate\Support\Facades\Auth::user()->role === 'bnbowner' ? route('bnbowner.motel-selection') : route('adminpages.dashboard') }}">
+                           
+                            Dashboard
+                        </a>
+                    @else
+                        <a class="register-cta" href="{{ route('website.auth.register') }}">{{ __('website.auth.register') }}</a>
+                        <a class="nav-cta" href="{{ route('login') }}">{{ __('website.auth.login') }}</a>
+                    @endif
                 </div>
             </div>
         </header>

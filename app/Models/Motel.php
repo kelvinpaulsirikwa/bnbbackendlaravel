@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class Motel extends Model
 {
@@ -31,6 +32,26 @@ class Motel extends Model
         'available_rooms',
         'status',
     ];
+
+    /**
+     * Scope to only include active motels (for public display).
+     * Excludes motels where status is 'inactive' or 'closed'.
+     */
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->whereHas('details', function ($q) {
+            $q->where('status', 'active');
+        });
+    }
+
+    /**
+     * Scope to include motels that have details with any status.
+     * Used for admin views where all motels should be visible.
+     */
+    public function scopeWithAnyStatus(Builder $query): Builder
+    {
+        return $query;
+    }
 
     // Relationship with BnbUser (owner)
     public function owner()

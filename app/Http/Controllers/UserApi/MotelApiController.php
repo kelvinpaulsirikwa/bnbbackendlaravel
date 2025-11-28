@@ -11,7 +11,7 @@ class MotelApiController extends Controller
     public function index(Request $request)
     {
         try {
-            $query = Motel::with(['motelType', 'owner', 'details', 'district']);
+            $query = Motel::active()->with(['motelType', 'owner', 'details', 'district']);
             
             // Filter by district if provided
             if ($request->filled('district_id')) {
@@ -146,7 +146,7 @@ class MotelApiController extends Controller
     public function featured(Request $request)
     {
         try {
-            $query = Motel::with(['motelType', 'owner', 'details', 'district']);
+            $query = Motel::active()->with(['motelType', 'owner', 'details', 'district']);
             
             // Location-based sorting (distance) if latitude and longitude are provided
             $userLat = $request->get('latitude');

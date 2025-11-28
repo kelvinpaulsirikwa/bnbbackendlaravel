@@ -25,8 +25,8 @@ return [
         'label' => 'Account navigation',
         'login' => 'Login',
         'register' => 'Register',
-        'register_page_title' => 'Register',
-        'register_page_message' => 'This is a register page.',
+        'register_page_title' => 'Motel Owner Registration | BnB',
+        'register_page_message' => 'Register as a motel owner to list your property on BnB and reach thousands of travelers seeking exceptional hospitality.',
     ],
 
     'general' => [

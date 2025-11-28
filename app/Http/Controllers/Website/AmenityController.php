@@ -29,7 +29,8 @@ class AmenityController extends Controller
 
     public function show(Request $request, Amenity $amenity): View
     {
-        $motelsQuery = Motel::with(['rooms', 'amenities.amenity', 'motelType', 'images'])
+        $motelsQuery = Motel::active()
+            ->with(['rooms', 'amenities.amenity', 'motelType', 'images'])
             ->withCount('rooms')
             ->whereHas('amenities', function ($query) use ($amenity) {
                 $query->where('amenities_id', $amenity->id);

@@ -21,8 +21,8 @@ class AboutApiController extends Controller
     public function getBnBStatistics()
     {
         try {
-            // Get total motels
-            $totalMotels = Motel::count();
+            // Get total active motels (only count active ones for public stats)
+            $totalMotels = Motel::active()->count();
             
             // Get total amenities
             $totalAmenities = Amenity::count();
@@ -50,10 +50,12 @@ class AboutApiController extends Controller
                     ];
                 });
             
-            // Get regions with motel counts
+            // Get regions with active motel counts
             $regionsWithCounts = Region::withCount('districts')
                 ->with(['districts' => function ($query) {
-                    $query->withCount('motels');
+                    $query->withCount(['motels' => function ($q) {
+                        $q->active();
+                    }]);
                 }])
                 ->get()
                 ->map(function ($region) {

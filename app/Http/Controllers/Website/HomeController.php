@@ -56,7 +56,9 @@ class HomeController extends Controller
             });
 
         $featuredGallery = BnbImage::with('motel')
-            ->whereHas('motel')
+            ->whereHas('motel', function ($query) {
+                $query->active();
+            })
             ->inRandomOrder()
             ->take(5)
             ->get()
@@ -88,7 +90,8 @@ class HomeController extends Controller
                 ];
             });
 
-        $spotlightMotels = Motel::with(['rooms', 'amenities.amenity', 'images', 'district.region'])
+        $spotlightMotels = Motel::active()
+            ->with(['rooms', 'amenities.amenity', 'images', 'district.region'])
             ->withCount('rooms')
             ->inRandomOrder()
             ->take(15)
@@ -123,12 +126,13 @@ class HomeController extends Controller
             });
 
         // Get statistics with caching (cache for 1 hour to improve performance)
+        // Only count active motels for public statistics
         $statistics = Cache::remember('website_statistics', 3600, function () {
             return [
                 'total_countries' => Country::count(),
                 'total_regions' => Region::count(),
                 'total_districts' => District::count(),
-                'total_motels' => Motel::count(),
+                'total_motels' => Motel::active()->count(),
                 'total_customers' => Customer::count(),
             ];
         });

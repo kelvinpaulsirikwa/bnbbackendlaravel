@@ -17,8 +17,11 @@ class GalleryController extends Controller
     public function index(Request $request): View
     {
         /** @var LengthAwarePaginator $images */
+        // Only show images from active motels
         $images = BnbImage::with('motel')
-            ->whereHas('motel')
+            ->whereHas('motel', function ($query) {
+                $query->active();
+            })
             ->orderByDesc('created_at')
             ->paginate(12);
 
@@ -41,6 +44,11 @@ class GalleryController extends Controller
 
     public function motelGallery(Motel $motel): View
     {
+        // Check if motel is active - if not, abort with 404
+        if ($motel->status !== 'active') {
+            abort(404);
+        }
+
         $motel->load('images');
         
         $gallery = collect([$motel->front_image])

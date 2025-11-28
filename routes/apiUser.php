@@ -24,72 +24,74 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-// Authentication routes
+// Public route - Login only (no authentication required)
 Route::post('/userlogin', [LoginUserByGoogleController::class, 'login']);
 
-// Protected authentication routes
+// All protected routes - require Sanctum authentication
 Route::middleware('auth:sanctum')->group(function () {
+    // Get authenticated user
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    // Logout route
     Route::post('/logout', [LoginUserByGoogleController::class, 'logout']);
-});
 
-// Public API routes for Flutter app
-Route::get('/regions', [RegionApiController::class, 'index']);
-Route::get('/districts', [DistrictApiController::class, 'index']);
-Route::get('/motel-types', [MotelTypeApiController::class, 'index']);
-Route::get('/motels', [MotelApiController::class, 'index']);
-Route::get('/motels/featured', [MotelApiController::class, 'featured']);
+    // Region and District routes
+    Route::get('/regions', [RegionApiController::class, 'index']);
+    Route::get('/districts', [DistrictApiController::class, 'index']);
+    
+    // Motel type routes
+    Route::get('/motel-types', [MotelTypeApiController::class, 'index']);
+    
+    // Motel routes
+    Route::get('/motels', [MotelApiController::class, 'index']);
+    Route::get('/motels/featured', [MotelApiController::class, 'featured']);
 
-// Motel detail routes
-Route::get('/motels/{id}/details', [MotelDetailApiController::class, 'getMotelDetails']);
-Route::get('/motels/{id}/images', [MotelDetailApiController::class, 'getMotelImages']);
-Route::get('/user/motels/{motelId}/images', [MotelDetailApiController::class, 'getMotelImagesPaging']);
+    // Motel detail routes
+    Route::get('/motels/{id}/details', [MotelDetailApiController::class, 'getMotelDetails']);
+    Route::get('/motels/{id}/images', [MotelDetailApiController::class, 'getMotelImages']);
+    Route::get('/user/motels/{motelId}/images', [MotelDetailApiController::class, 'getMotelImagesPaging']);
+    Route::get('/motels/{id}/amenities', [MotelDetailApiController::class, 'getMotelAmenities']);
+    Route::get('/amenities/{bnbamenitiesid}/amenitiesimage', [MotelDetailApiController::class, 'getamenitiesimage']);
 
-Route::get('/motels/{id}/amenities', [MotelDetailApiController::class, 'getMotelAmenities']);
-Route::get('/amenities/{bnbamenitiesid}/amenitiesimage', [MotelDetailApiController::class, 'getamenitiesimage']);
+    // Room routes
+    Route::get('/motels/{id}/rooms', [RoomApiController::class, 'getMotelRooms']);
+    Route::get('/motels/{id}/room-types', [RoomApiController::class, 'getMotelRoomTypes']);
+    Route::get('/rooms/{id}/details', [RoomApiController::class, 'getRoomDetails']);
+    Route::get('/rooms/{id}/images', [RoomApiController::class, 'getRoomImages']);
+    Route::get('/rooms/{id}/items', [RoomApiController::class, 'getRoomItems']);
 
+    // Search routes
+    Route::get('/search/regions', [SearchApiController::class, 'getRegions']);
+    Route::get('/search/amenities', [SearchApiController::class, 'getAmenities']);
+    Route::get('/search/motels', [SearchApiController::class, 'searchMotels']);
+    Route::get('/search/motels/{id}/images', [SearchApiController::class, 'getMotelImages']);
+    Route::post('/search/track', [SearchApiController::class, 'trackSearch']);
 
-// Room routes
-Route::get('/motels/{id}/rooms', [RoomApiController::class, 'getMotelRooms']);
-Route::get('/motels/{id}/room-types', [RoomApiController::class, 'getMotelRoomTypes']);
-Route::get('/rooms/{id}/details', [RoomApiController::class, 'getRoomDetails']);
-Route::get('/rooms/{id}/images', [RoomApiController::class, 'getRoomImages']);
-Route::get('/rooms/{id}/items', [RoomApiController::class, 'getRoomItems']);
+    // Near me routes
+    Route::get('/near-me/motels', [NearMeApiController::class, 'getNearMeMotels']);
+    Route::get('/top-searched/motels', [NearMeApiController::class, 'getTopSearchedMotels']);
+    Route::get('/newest/motels', [NearMeApiController::class, 'getNewestMotels']);
 
-// Search routes
-Route::get('/search/regions', [SearchApiController::class, 'getRegions']);
-Route::get('/search/amenities', [SearchApiController::class, 'getAmenities']);
-Route::get('/search/motels', [SearchApiController::class, 'searchMotels']);
-Route::get('/search/motels/{id}/images', [SearchApiController::class, 'getMotelImages']);
-Route::post('/search/track', [SearchApiController::class, 'trackSearch']);
+    // Booking routes (New unified controller)
+    Route::post('/check-room-availability', [BookingAndTransactionApiController::class, 'checkRoomAvailability']);
+    Route::post('/create-booking', [BookingAndTransactionApiController::class, 'createBookingAndProcessPayment']);
+    Route::post('/retry-payment/{bookingId}', [BookingAndTransactionApiController::class, 'retryPayment']);
+    Route::get('/booking/{bookingId}', [BookingAndTransactionApiController::class, 'getBookingDetails']);
+    Route::post('/cancel-booking/{bookingId}', [BookingAndTransactionApiController::class, 'cancelBooking']);
 
-// Near me routes
-Route::get('/near-me/motels', [NearMeApiController::class, 'getNearMeMotels']);
-Route::get('/top-searched/motels', [NearMeApiController::class, 'getTopSearchedMotels']);
-Route::get('/newest/motels', [NearMeApiController::class, 'getNewestMotels']);
+    // Legacy Booking routes
+    Route::post('/booking/create', [BookingController::class, 'createBooking']);
+    Route::get('/booking/customer/{customer_id}', [BookingController::class, 'getCustomerBookings']);
+    Route::get('/booking/customer/{customer_id}/transactions', [BookingController::class, 'getCustomerTransactions']);
+    Route::post('/booking/cancel', [BookingController::class, 'cancelBooking']);
 
-// Booking routes (New unified controller)
-Route::post('/check-room-availability', [BookingAndTransactionApiController::class, 'checkRoomAvailability']);
-Route::post('/create-booking', [BookingAndTransactionApiController::class, 'createBookingAndProcessPayment']);
-Route::post('/retry-payment/{bookingId}', [BookingAndTransactionApiController::class, 'retryPayment']);
-Route::get('/booking/{bookingId}', [BookingAndTransactionApiController::class, 'getBookingDetails']);
-Route::post('/cancel-booking/{bookingId}', [BookingAndTransactionApiController::class, 'cancelBooking']);
+    // About BnB routes
+    Route::get('/about/statistics', [AboutApiController::class, 'getBnBStatistics']);
+    Route::get('/about/amenities', [AboutApiController::class, 'getAmenities']);
 
-// Legacy Booking routes
-Route::post('/booking/create', [BookingController::class, 'createBooking']);
-Route::get('/booking/customer/{customer_id}', [BookingController::class, 'getCustomerBookings']);
-Route::get('/booking/customer/{customer_id}/transactions', [BookingController::class, 'getCustomerTransactions']);
-Route::post('/booking/cancel', [BookingController::class, 'cancelBooking']);
-
-// About BnB routes
-Route::get('/about/statistics', [AboutApiController::class, 'getBnBStatistics']);
-Route::get('/about/amenities', [AboutApiController::class, 'getAmenities']);
-
-// Chat routes (Protected with Sanctum)
-Route::middleware('auth:sanctum')->group(function () {
+    // Chat routes
     Route::get('/customer/chats', [UserChattingController::class, 'getCustomerChats']);
     Route::get('/chat/{chatId}/messages', [UserChattingController::class, 'getChatMessages']);
     Route::post('/chat/send-message', [UserChattingController::class, 'sendMessage']);

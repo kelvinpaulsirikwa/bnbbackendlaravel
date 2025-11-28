@@ -51,7 +51,7 @@
             </a>
         </li>
         <li>
-            <a href="#">
+            <a href="{{ route('website.home') }}">
                 <i class="bx bxs-home icon"></i>
                 Website Home
             </a>

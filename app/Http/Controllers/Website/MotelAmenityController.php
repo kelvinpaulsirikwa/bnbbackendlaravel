@@ -14,6 +14,11 @@ class MotelAmenityController extends Controller
 
     public function index(Motel $motel): View
     {
+        // Check if motel is active - if not, abort with 404
+        if ($motel->status !== 'active') {
+            abort(404);
+        }
+
         /** @var \Illuminate\Pagination\LengthAwarePaginator $amenities */
         $amenities = BnbAmenity::with(['amenity', 'images'])
             ->where('bnb_motels_id', $motel->id)
