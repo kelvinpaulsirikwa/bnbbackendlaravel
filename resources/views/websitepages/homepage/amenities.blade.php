@@ -7,7 +7,7 @@
             --uas-text-dark: #1e293b;
             --uas-text-light: #64748b;
             --uas-text-muted: #94a3b8;
-            --uas-bg-light: #f8fafc;
+            --uas-bg-light: #ffffff;
             --uas-bg-white: #ffffff;
             --uas-border: #e2e8f0;
             --uas-shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08);
@@ -20,7 +20,7 @@
             max-width: 1400px;
             margin: 0 auto;
             padding: clamp(2.5rem, 5vw, 4rem) 2rem 2rem;
-            background: var(--uas-bg-light);
+            background: #ffffff;
         }
 
         /* Section Header */

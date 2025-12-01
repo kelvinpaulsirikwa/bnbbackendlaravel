@@ -4,7 +4,51 @@
 
 @push('styles')
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+
         /* Enhanced Gallery - Premium Masonry Layout */
+        .hpg-gallery-section {
+            position: relative;
+            background: #ffffff;
+            margin: 0 auto;
+            width: 100%;
+            padding: 3rem 1rem 4rem;
+            overflow: hidden;
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .hpg-gallery-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .hpg-gallery-label {
+            display: inline-block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #0ea5e9;
+            margin-bottom: 1.25rem;
+        }
+
+        .hpg-gallery-heading {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 700;
+            color: #0f172a;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            margin: 0 0 1.25rem;
+        }
+
+        .hpg-gallery-desc {
+            font-size: 1.25rem;
+            color: #475569;
+            line-height: 1.7;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
         .hpg-gallery-wrapper {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -17,39 +61,6 @@
             padding: 0;
         }
 
-        .hpg-gallery-section {
-            position: relative;
-            background: var(--surface-dim);
-            margin: 0 auto;
-            width: 100%;
-            padding: 1.25rem 0 0.25rem;
-            overflow: hidden;
-        }
-
-        .hpg-gallery-section::before,
-        .hpg-gallery-section::after {
-            content: '';
-            position: absolute;
-            left: 5%;
-            right: 5%;
-            height: 10px;
-            background: repeating-linear-gradient(
-                120deg,
-                rgba(99, 102, 241, 0.25),
-                rgba(99, 102, 241, 0.25) 12px,
-                rgba(14, 165, 233, 0.18) 12px,
-                rgba(14, 165, 233, 0.18) 24px
-            );
-            opacity: 0.6;
-            filter: blur(6px);
-            z-index: 0;
-        }
-
-        .hpg-gallery-section::before,
-        .hpg-gallery-section::after {
-            display: none;
-        }
-
         .hpg-gallery-card {
             position: relative;
             border-radius: 20px;
@@ -57,7 +68,7 @@
             box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            background: #f8fafc;
+            background: #ffffff;
             min-height: 100%;
         }
 
@@ -139,83 +150,19 @@
             transform: translateY(0);
         }
 
-        .hpg-gallery-actions {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 3.5rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(15, 23, 42, 0.08);
-        }
-
-        .hpg-gallery-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.625rem;
-            padding: 0.875rem 2rem;
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--primary, #4f46e5);
-            background: transparent;
-            border: 2px solid currentColor;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            text-decoration: none;
-        }
-
-        .hpg-gallery-btn:hover {
-            background: var(--primary, #4f46e5);
-            color: #ffffff;
-            transform: translateX(4px);
-            box-shadow: 0 8px 24px rgba(79, 70, 229, 0.25);
-        }
-
-        .hpg-gallery-btn-icon {
-            width: 18px;
-            height: 18px;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .hpg-gallery-btn:hover .hpg-gallery-btn-icon {
-            transform: translateX(4px);
-        }
-
-        .hpg-gallery-btn--header {
-            flex-shrink: 0;
-        }
-
         .hpg-gallery-inline-link {
-            color: var(--primary, #4f46e5);
+            color: #0ea5e9;
             text-decoration: none;
             font-weight: 600;
             position: relative;
             transition: color 0.3s ease;
         }
 
-        .hpg-gallery-inline-link::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: currentColor;
-            transform: scaleX(0);
-            transform-origin: right;
-            transition: transform 0.3s ease;
-        }
-
         .hpg-gallery-inline-link:hover {
-            color: var(--primary-dark, #4338ca);
+            color: #0284c7;
         }
 
-        .hpg-gallery-inline-link:hover::after {
-            transform: scaleX(1);
-            transform-origin: left;
-        }
-
-        /* Enhanced Responsive Design */
+        /* Responsive Design */
         @media (max-width: 1024px) {
             .hpg-gallery-wrapper {
                 grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -236,24 +183,13 @@
             .hpg-gallery-title {
                 font-size: 1.25rem;
             }
-
-            .section-header {
-                flex-direction: column;
-                align-items: flex-start !important;
-            }
-
-            .hpg-gallery-btn--header {
-                align-self: stretch;
-                justify-content: center;
-            }
-
-            .hpg-gallery-inline-link {
-                display: inline-block;
-                margin-top: 0.25rem;
-            }
         }
 
         @media (max-width: 768px) {
+            .hpg-gallery-section {
+                padding: 3rem 0.5rem;
+            }
+
             .hpg-gallery-wrapper {
                 grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
                 grid-auto-rows: 220px;
@@ -272,19 +208,17 @@
             .hpg-gallery-title {
                 font-size: 1.125rem;
             }
-
-            .hpg-gallery-actions {
-                margin-top: 2.5rem;
-                padding-top: 1.5rem;
-            }
-
-            .hpg-gallery-btn {
-                padding: 0.75rem 1.5rem;
-                font-size: 0.9375rem;
-            }
         }
 
         @media (max-width: 480px) {
+            .hpg-gallery-heading {
+                font-size: 2rem;
+            }
+
+            .hpg-gallery-desc {
+                font-size: 1.1rem;
+            }
+
             .hpg-gallery-wrapper {
                 grid-template-columns: 1fr;
                 grid-auto-rows: 280px;
@@ -307,37 +241,6 @@
             .hpg-gallery-title {
                 font-size: 1rem;
             }
-
-            .hpg-gallery-btn {
-                width: 100%;
-                justify-content: center;
-                padding: 1rem;
-            }
-
-            .hpg-gallery-actions {
-                display: none;
-            }
-        }
-
-        /* Loading State */
-        .hpg-gallery-card[data-loading] {
-            background: linear-gradient(
-                90deg,
-                #f0f0f0 25%,
-                #e0e0e0 50%,
-                #f0f0f0 75%
-            );
-            background-size: 200% 100%;
-            animation: hpg-loading 1.5s ease-in-out infinite;
-        }
-
-        @keyframes hpg-loading {
-            0% {
-                background-position: 200% 0;
-            }
-            100% {
-                background-position: -200% 0;
-            }
         }
     </style>
 @endpush
@@ -345,9 +248,10 @@
 <!-- Premium Gallery Section -->
 @if($galleryItems->isNotEmpty())
     <section class="hpg-gallery-section">
-        <div class="section-header">
-            <h2 class="section-title">{{ __('website.home_gallery.title') }}</h2>
-            <p class="section-subtitle">
+        <div class="hpg-gallery-header">
+            <span class="hpg-gallery-label">Photo Gallery</span>
+            <h2 class="hpg-gallery-heading">{{ __('website.home_gallery.title') }}</h2>
+            <p class="hpg-gallery-desc">
                 {!! __('website.home_gallery.subtitle_html', [
                     'link' => '<a class="hpg-gallery-inline-link" href="'.route('website.gallery').'">'.__('website.home_gallery.link_text').'</a>'
                 ]) !!}
@@ -386,7 +290,5 @@
                 @endif
             @endforeach
         </div>
-        
-      
     </section>
 @endif

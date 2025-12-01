@@ -1,19 +1,16 @@
 @php
-    $motelsToShow = collect($spotlightMotels ?? [])->take(9);
+    $motelsToShow = collect($spotlightMotels ?? [])->take(18);
 @endphp
 <!-- Featured Motels / Our Exquisite Rooms Section -->
- <br>
 @if($motelsToShow->isNotEmpty())
     <section class="exquisite-rooms-section">
-        <div class="container">
+        <div class="ers-container">
             <!-- Section Header -->
-            <div class="section-header" data-aos="fade-up">
-                 <h2 class="section-title">{{ __('website.home_exquisite.title') }}</h2>
-                <p class="section-subtitle">
-                    {{ __('website.home_exquisite.subtitle') }}
-                 </p>
+            <div class="ers-header" data-aos="fade-up">
+                <span class="ers-label">Featured Stays</span>
+                <h2 class="ers-title">{{ __('website.home_exquisite.title') }}</h2>
+                <p class="ers-subtitle">{{ __('website.home_exquisite.subtitle') }}</p>
             </div>
-            <br>
 
             <!-- Motels Grid -->
             <div class="motels-grid">
@@ -21,96 +18,111 @@
                     <x-motel-card :motel="$motel" data-aos="fade-up" :data-aos-delay="$index * 100" />
                 @endforeach
             </div>
-
-            
         </div>
     </section>
 @endif
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+
 .exquisite-rooms-section {
-    padding: 10px 0;
-    background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+    padding: 3rem 1rem 4rem;
+    background: #ffffff;
     position: relative;
     overflow: hidden;
     width: 100vw;
     margin-left: calc(50% - 50vw);
     margin-right: calc(50% - 50vw);
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.exquisite-rooms-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, #e5e5e5 50%, transparent);
-}
-
-.container {
+.ers-container {
     width: 100%;
-    max-width: none;
-    margin: 0;
-    padding: 0 30px;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 1rem;
 }
 
-.section-header {
+.ers-header {
     text-align: center;
-    max-width: 720px;
-    margin: 0 auto 40px;
+    margin-bottom: 3rem;
 }
 
-.section-title {
-    font-size: clamp(32px, 5vw, 48px);
+.ers-label {
+    display: inline-block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #0ea5e9;
+    margin-bottom: 1.25rem;
+}
+
+.ers-title {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
     font-weight: 700;
-    color: #1a1a1a;
-    margin: 0 0 16px;
+    color: #0f172a;
     letter-spacing: -0.02em;
     line-height: 1.2;
+    margin: 0 0 1.25rem;
 }
 
-.section-subtitle {
-    font-size: 18px;
+.ers-subtitle {
+    font-size: 1.25rem;
+    color: #475569;
     line-height: 1.7;
-    color: #666666;
-    margin: 0;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 .motels-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 20px;
+    gap: 2.5rem;
+}
+
+@media (max-width: 1100px) {
+    .exquisite-rooms-section {
+        padding: 5rem 0.75rem;
+    }
+
+    .motels-grid {
+        gap: 1.5rem;
+    }
 }
 
 @media (max-width: 900px) {
     .motels-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
+    .ers-header {
+        margin-bottom: 3.5rem;
+    }
 }
 
 @media (max-width: 768px) {
     .exquisite-rooms-section {
-        padding: 45px 0;
+        padding: 4rem 0.5rem;
     }
 
-    .section-header {
-        margin-bottom: 32px;
+    .ers-container {
+        padding: 0 0.5rem;
     }
 
     .motels-grid {
         grid-template-columns: 1fr;
-        gap: 24px;
+        gap: 1.5rem;
     }
 }
 
 @media (max-width: 480px) {
-    .container {
-        padding: 0 20px;
+    .ers-title {
+        font-size: 2rem;
     }
 
-    .section-subtitle {
-        font-size: 16px;
+    .ers-subtitle {
+        font-size: 1.1rem;
     }
 }
 </style>

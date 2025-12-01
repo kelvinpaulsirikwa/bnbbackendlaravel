@@ -17,7 +17,7 @@
                 --pcs-text-secondary: #475569;
                 --pcs-text-muted: #64748b;
                 --pcs-bg-main: #ffffff;
-                --pcs-bg-section: #f8fafc;
+                --pcs-bg-section: #ffffff;
                 --pcs-border: #e2e8f0;
                 --pcs-shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08);
                 --pcs-shadow-md: 0 4px 16px rgba(15, 23, 42, 0.1);
@@ -26,7 +26,7 @@
             }
 
             .pcs-contact-wrapper {
-                background: #fefefe;
+                background: #ffffff;
                 padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 5vw, 3rem);
                 position: relative;
                 overflow: hidden;

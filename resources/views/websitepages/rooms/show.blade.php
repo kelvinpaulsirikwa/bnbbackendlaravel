@@ -22,7 +22,8 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(180deg, rgba(11, 17, 30, 0.1) 20%, rgba(11, 17, 30, 0.78) 100%);
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.3) 0%, rgba(15, 23, 42, 0.6) 50%, rgba(15, 23, 42, 0.92) 100%);
+            z-index: 1;
         }
 
         .room-hero img {
@@ -31,25 +32,42 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            z-index: 0;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
         }
 
         .room-hero-body {
             position: relative;
-            padding: 2.3rem 2.8rem;
+            z-index: 2;
+            padding: 2.5rem 3rem;
             display: grid;
-            gap: 0.7rem;
+            gap: 0.75rem;
         }
 
         .room-hero h1 {
             margin: 0;
             font-size: clamp(2.2rem, 4vw, 3rem);
+            font-weight: 700;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
         }
 
         .room-hero p {
             margin: 0;
             max-width: 540px;
-            color: rgba(255, 255, 255, 0.85);
+            color: rgba(255, 255, 255, 0.9);
             line-height: 1.7;
+            text-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .room-hero .badge {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
         }
 
         .room-info {
@@ -163,7 +181,9 @@
 
 @section('content')
     <section class="room-hero">
-        <img src="{{ $primaryImage }}" alt="{{ $room->roomType->name ?? 'Guest room' }}">
+        <img src="{{ $primaryImage ?: asset('images/static_file/applogo.png') }}" 
+             alt="{{ $room->roomType->name ?? 'Guest room' }}"
+             onerror="this.onerror=null; this.src='{{ asset('images/static_file/applogo.png') }}'">
         <div class="room-hero-body">
             <span class="badge" style="width: fit-content;">{{ $motel->name }}</span>
             <h1>{{ $room->roomType->name ?? __('website.room.generic_name') }}</h1>

@@ -190,7 +190,7 @@
 
                 <div class="text-footer mt-3">
                     <small>Forgot password? <a href="#" class="text-primary text-decoration-none">Reset here</a></small><br>
-                    <small>Don't have an account? <a href="#" class="text-primary text-decoration-none">Register</a></small>
+                    <small>Don't have an account? <a href="{{ route('website.auth.register') }}" class="text-primary text-decoration-none">Register</a></small>
                 </div>
             </div>
         </div>

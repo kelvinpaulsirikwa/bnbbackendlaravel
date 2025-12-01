@@ -281,11 +281,11 @@ return [
             'concierge_title' => 'Concierge support',
         ],
         'gallery' => [
-            'title' => 'Gallery',
+            'title' => 'Room Gallery',
             'subtitle' => 'A closer look at the space, ambience, and curated touches awaiting your stay.',
         ],
         'items' => [
-            'title' => 'In-room amenities',
+            'title' => 'What this room offer',
             'subtitle' => 'All the thoughtful details and inclusions crafted to elevate your time at :motel.',
             'empty_title' => 'Amenities coming soon',
             'empty_description' => 'We’re finalising the in-room experience. Reach out to our concierge for bespoke recommendations and availability.',

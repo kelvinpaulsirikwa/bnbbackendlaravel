@@ -10,7 +10,7 @@
             --primary-gradient: linear-gradient(135deg, #2b70f7 0%, #1a5fd6 100%);
             --accent-gradient: linear-gradient(135deg, #b2560d 0%, #8a4209 100%);
             --surface: #ffffff;
-            --surface-dim: #f8fafc;
+            --surface-dim: #ffffff;
             --border-light: rgba(148, 163, 184, 0.15);
             --text-dark: #0f172a;
             --text-muted: #64748b;
@@ -157,9 +157,8 @@
       <!-- How it Works -->
       @include('websitepages.homepage.howitworks')
 
-      
-    <!-- Amenities -->
-    @include('websitepages.homepage.amenities')
+      <!-- Why Us -->
+      @include('websitepages.homepage.whyus')
 
     <!-- Gallery -->
     @include('websitepages.homepage.gallery')

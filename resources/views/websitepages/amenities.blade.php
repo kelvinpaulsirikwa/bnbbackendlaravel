@@ -27,7 +27,7 @@
         }
 
         body {
-            background: linear-gradient(180deg, #fafbff 0%, #ffffff 50%, #f8f9ff 100%);
+            background: #ffffff;
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;

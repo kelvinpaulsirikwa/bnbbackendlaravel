@@ -18,7 +18,7 @@
         }
 
         body {
-            background: #f8fafc;
+            background: #ffffff;
         }
 
         .amenities-hero {
@@ -468,6 +468,92 @@
             justify-content: center;
         }
 
+        .amenities-pagination-inner {
+            background: #ffffff;
+            border-radius: 999px;
+            box-shadow: 0 14px 28px rgba(19, 37, 74, 0.12);
+            padding: 0.65rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .amenities-pagination-summary {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            padding-right: 0.5rem;
+            border-right: 1px solid #e5e7eb;
+        }
+
+        .amenities-pagination-list {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0;
+            margin: 0;
+        }
+
+        .amenities-pagination-list li {
+            margin: 0;
+        }
+
+        .amenities-page-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 38px;
+            height: 38px;
+            padding: 0 0.5rem;
+            border-radius: 50%;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            background: transparent;
+        }
+
+        .amenities-page-btn:hover {
+            background: rgba(178, 86, 13, 0.1);
+            color: var(--accent);
+        }
+
+        .amenities-page-btn.is-active {
+            background: var(--accent);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(178, 86, 13, 0.35);
+        }
+
+        .amenities-page-btn.is-disabled {
+            color: #cbd5e1;
+            pointer-events: none;
+        }
+
+        .amenities-page-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        @media (max-width: 640px) {
+            .amenities-pagination-inner {
+                padding: 0.5rem 1rem;
+                gap: 0.75rem;
+            }
+
+            .amenities-pagination-summary {
+                width: 100%;
+                text-align: center;
+                padding-right: 0;
+                padding-bottom: 0.5rem;
+                border-right: none;
+                border-bottom: 1px solid #e5e7eb;
+            }
+        }
+
         .amenities-empty {
             max-width: 700px;
             margin: 5rem auto;
@@ -668,9 +754,52 @@
             </div>
         </section>
 
-        <div class="amenities-pagination">
-            {{ $amenities->withQueryString()->links() }}
-        </div>
+        @if($amenities->hasPages())
+            <div class="amenities-pagination">
+                <div class="amenities-pagination-inner">
+                    <span class="amenities-pagination-summary">
+                        Showing {{ $amenities->firstItem() }} to {{ $amenities->lastItem() }} of {{ $amenities->total() }} results
+                    </span>
+                    <ul class="amenities-pagination-list">
+                        {{-- Previous --}}
+                        <li>
+                            @if($amenities->onFirstPage())
+                                <span class="amenities-page-btn is-disabled">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+                                </span>
+                            @else
+                                <a class="amenities-page-btn" href="{{ $amenities->previousPageUrl() }}">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+                                </a>
+                            @endif
+                        </li>
+
+                        {{-- Page Numbers --}}
+                        @foreach($amenities->getUrlRange(1, $amenities->lastPage()) as $page => $url)
+                            <li>
+                                <a class="amenities-page-btn {{ $page == $amenities->currentPage() ? 'is-active' : '' }}" 
+                                   href="{{ $url }}">
+                                    {{ $page }}
+                                </a>
+                            </li>
+                        @endforeach
+
+                        {{-- Next --}}
+                        <li>
+                            @if($amenities->hasMorePages())
+                                <a class="amenities-page-btn" href="{{ $amenities->nextPageUrl() }}">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+                                </a>
+                            @else
+                                <span class="amenities-page-btn is-disabled">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+                                </span>
+                            @endif
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        @endif
 
         @php
             $lightboxPayload = $amenities->map(function ($amenity) {
