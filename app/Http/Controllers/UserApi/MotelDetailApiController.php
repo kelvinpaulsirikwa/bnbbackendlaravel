@@ -8,6 +8,7 @@ use App\Models\BnbImage;
 use App\Models\BnbAmenity;
 use App\Models\BnbAmenityImage;
 use App\Models\MotelDetail;
+use App\Models\BnbRule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -252,6 +253,63 @@ class MotelDetailApiController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'An error occurred while retrieving images',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getMotelRules($id)
+    {
+        try {
+            $validator = Validator::make(['motel_id' => $id], [
+                'motel_id' => 'required|integer|exists:bnb_motels,id'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid motel ID',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+            // Check if motel exists and is active
+            $motel = Motel::active()->find($id);
+            if (!$motel) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Motel not found'
+                ], 404);
+            }
+
+            // Get BNB rules for this motel
+            $bnbRule = BnbRule::where('motel_id', $id)->first();
+
+            if (!$bnbRule) {
+                return response()->json([
+                    'success' => true,
+                    'data' => null,
+                    'message' => 'No rules found for this motel'
+                ], 200);
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'id' => $bnbRule->id,
+                    'motel_id' => $bnbRule->motel_id,
+                    'rules' => $bnbRule->rules,
+                    'created_at' => $bnbRule->created_at ? $bnbRule->created_at->format('Y-m-d H:i:s') : null,
+                    'updated_at' => $bnbRule->updated_at ? $bnbRule->updated_at->format('Y-m-d H:i:s') : null,
+                ],
+                'message' => 'BNB rules retrieved successfully'
+            ], 200);
+
+        } catch (\Exception $e) {
+            Log::error("Error fetching BNB rules: " . $e->getMessage(), ['exception' => $e]);
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while retrieving rules',
                 'error' => $e->getMessage()
             ], 500);
         }

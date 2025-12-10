@@ -139,6 +139,12 @@
         Motels
     </a>
 </li>
+<li>
+    <a href="{{ route('adminpages.bnb-rules.index') }}">
+        <i class="bx bx-list-check icon"></i>
+        BNB Rules
+    </a>
+</li>
         <li class="divider" data-text="User Management"></li>
         <li>
             <a href="{{ route('adminpages.users.index') }}">

@@ -107,6 +107,12 @@ class Motel extends Model
         return $this->hasMany(BnbChat::class, 'motel_id');
     }
 
+    // Relationship with BnbRule
+    public function bnbRule()
+    {
+        return $this->hasOne(BnbRule::class, 'motel_id');
+    }
+
     public function getContactPhoneAttribute()
     {
         return $this->details->contact_phone ?? null;

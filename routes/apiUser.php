@@ -54,6 +54,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user/motels/{motelId}/images', [MotelDetailApiController::class, 'getMotelImagesPaging']);
     Route::get('/motels/{id}/amenities', [MotelDetailApiController::class, 'getMotelAmenities']);
     Route::get('/amenities/{bnbamenitiesid}/amenitiesimage', [MotelDetailApiController::class, 'getamenitiesimage']);
+    Route::get('/motels/{id}/rules', [MotelDetailApiController::class, 'getMotelRules']);
 
     // Room routes
     Route::get('/motels/{id}/rooms', [RoomApiController::class, 'getMotelRooms']);

@@ -32,6 +32,7 @@ Route::prefix('adminpages')->name('adminpages.')->middleware(['auth', 'role:bnba
     Route::patch('/motels/{motel}/status', [App\Http\Controllers\Admin\MotelController::class, 'updateStatus'])->name('motels.update-status');
     Route::patch('/users/{user}/status', [App\Http\Controllers\Admin\BnbUserController::class, 'updateStatus'])->name('users.update-status');
     Route::resource('contact-messages', App\Http\Controllers\Admin\ContactMessageController::class)->only(['index', 'show', 'destroy']);
+    Route::resource('bnb-rules', App\Http\Controllers\Admin\BnbRuleController::class)->only(['index', 'show']);
     Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/chats', [App\Http\Controllers\Admin\ChatController::class, 'index'])->name('chats.index');
     Route::get('/chats/{chat}', [App\Http\Controllers\Admin\ChatController::class, 'show'])->name('chats.show');

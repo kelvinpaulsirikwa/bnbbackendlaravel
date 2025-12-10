@@ -11,6 +11,7 @@ use App\Http\Controllers\BnBOwner\RoomImageController;
 use App\Http\Controllers\BnBOwner\StaffManagementController;
 use App\Http\Controllers\BnBOwner\ChatController;
 use App\Http\Controllers\BnBOwner\ProfileController;
+use App\Http\Controllers\BnBOwner\BnbRuleController;
 
 // BnB Owner Routes
 Route::middleware(['auth', 'role:bnbowner,bnbonwner'])->group(function () {
@@ -85,4 +86,10 @@ Route::middleware(['auth', 'role:bnbowner,bnbonwner'])->group(function () {
     Route::post('/bnbowner/profile', [ProfileController::class, 'updateProfile'])->name('bnbowner.profile.update');
     Route::post('/bnbowner/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('bnbowner.profile.update-avatar');
     Route::post('/bnbowner/profile/password', [ProfileController::class, 'updatePassword'])->name('bnbowner.profile.update-password');
+    
+    // BNB Rules Management Routes
+    Route::get('/bnbowner/bnb-rules', [BnbRuleController::class, 'index'])->name('bnbowner.bnb-rules.index');
+    Route::post('/bnbowner/bnb-rules', [BnbRuleController::class, 'store'])->name('bnbowner.bnb-rules.store');
+    Route::put('/bnbowner/bnb-rules/{id}', [BnbRuleController::class, 'update'])->name('bnbowner.bnb-rules.update');
+    Route::delete('/bnbowner/bnb-rules/{id}', [BnbRuleController::class, 'destroy'])->name('bnbowner.bnb-rules.destroy');
 });

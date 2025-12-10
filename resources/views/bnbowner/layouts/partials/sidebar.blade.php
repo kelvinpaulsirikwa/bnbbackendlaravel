@@ -85,6 +85,12 @@
                 Hotel Images
             </a>
         </li>
+        <li>
+            <a href="{{ route('bnbowner.bnb-rules.index') }}">
+                <i class="bx bx-list-check icon"></i>
+                BNB Rules
+            </a>
+        </li>
 
        
 
