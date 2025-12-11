@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>@yield('title', __('website.meta.default_title'))</title>
-        <meta name="description" content="@yield('meta_description', __('website.meta.default_description'))">
-        <link rel="icon" href="{{ asset('images/static_file/applogo.png') }}" type="image/png">
-        <link rel="apple-touch-icon" href="{{ asset('images/static_file/applogo.png') }}">
+        <title><?php echo $__env->yieldContent('title', __('website.meta.default_title')); ?></title>
+        <meta name="description" content="<?php echo $__env->yieldContent('meta_description', __('website.meta.default_description')); ?>">
+        <link rel="icon" href="<?php echo e(asset('images/static_file/applogo.png')); ?>" type="image/png">
+        <link rel="apple-touch-icon" href="<?php echo e(asset('images/static_file/applogo.png')); ?>">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -627,75 +627,80 @@
                 }
             }
         </style>
-        @stack('styles')
+        <?php echo $__env->yieldPushContent('styles'); ?>
     </head>
     <body>
         <header>
-            @php($currentLocale = app()->getLocale())
-            @php($accommodationLabel = __('website.nav.accommodation_types'))
-            @php($accommodationLabel = $accommodationLabel === 'website.nav.accommodation_types' ? 'Accommodation Types' : $accommodationLabel)
+            <?php ($currentLocale = app()->getLocale()); ?>
+            <?php ($accommodationLabel = __('website.nav.accommodation_types')); ?>
+            <?php ($accommodationLabel = $accommodationLabel === 'website.nav.accommodation_types' ? 'Accommodation Types' : $accommodationLabel); ?>
             <div class="nav">
-                <a class="nav-brand" href="{{ route('website.home') }}">
-                    <img src="{{ asset('images/static_file/applogo.png') }}" alt="bnbStay logo" width="36" height="36">
+                <a class="nav-brand" href="<?php echo e(route('website.home')); ?>">
+                    <img src="<?php echo e(asset('images/static_file/applogo.png')); ?>" alt="bnbStay logo" width="36" height="36">
                     <span class="nav-brand-text">BnB<span class="nav-brand-dotcom">.com</span></span>
                 </a>
                 <nav class="nav-links">
-                    <a href="{{ route('website.home') }}">{{ __('website.nav.home') }}</a>
-                    <a href="{{ route('website.motels.index') }}">{{ __('website.nav.motels') }}</a>
-                    @if(($navMotelTypes ?? collect())->count())
+                    <a href="<?php echo e(route('website.home')); ?>"><?php echo e(__('website.nav.home')); ?></a>
+                    <a href="<?php echo e(route('website.motels.index')); ?>"><?php echo e(__('website.nav.motels')); ?></a>
+                    <?php if(($navMotelTypes ?? collect())->count()): ?>
                         <div class="nav-dropdown">
                             <button class="nav-dropdown-toggle" type="button" aria-haspopup="true" aria-expanded="false">
-                                {{ $accommodationLabel }}
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                    <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </button>
-                            <div class="nav-dropdown-menu" role="menu">
-                                @foreach($navMotelTypes as $type)
-                                    <a role="menuitem" href="{{ route('website.motels.index', ['motel_type' => $type->id]) }}">
-                                        {{ $type->name }}
-                                    </a>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
-                    @php($amenitiesLabel = __('website.nav.amenities'))
-                    @if(($navAmenities ?? collect())->count())
-                        <div class="nav-dropdown">
-                            <button class="nav-dropdown-toggle" type="button" aria-haspopup="true" aria-expanded="false">
-                                {{ $amenitiesLabel }}
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                    <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </button>
-                            <div class="nav-dropdown-menu" role="menu">
-                                <a role="menuitem" href="{{ route('website.amenities') }}">
-                                    {{ __('website.nav.amenities_all') !== 'website.nav.amenities_all' ? __('website.nav.amenities_all') : __('website.nav.amenities') }}
-                                </a>
-                                @foreach($navAmenities as $amenity)
-                                    <a role="menuitem" href="{{ route('website.amenities.show', $amenity->id) }}">
-                                        {{ $amenity->name }}
-                                    </a>
-                                @endforeach
-                            </div>
-                        </div>
-                    @else
-                        <a href="{{ route('website.amenities') }}">{{ $amenitiesLabel }}</a>
-                    @endif
-                    <a href="{{ route('website.gallery') }}">{{ __('website.nav.gallery') }}</a>
+                                <?php echo e($accommodationLabel); ?>
 
-                    <a href="{{ route('website.contact') }}">{{ __('website.nav.contact') }}</a>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                            <div class="nav-dropdown-menu" role="menu">
+                                <?php $__currentLoopData = $navMotelTypes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $type): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <a role="menuitem" href="<?php echo e(route('website.motels.index', ['motel_type' => $type->id])); ?>">
+                                        <?php echo e($type->name); ?>
+
+                                    </a>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                    <?php ($amenitiesLabel = __('website.nav.amenities')); ?>
+                    <?php if(($navAmenities ?? collect())->count()): ?>
+                        <div class="nav-dropdown">
+                            <button class="nav-dropdown-toggle" type="button" aria-haspopup="true" aria-expanded="false">
+                                <?php echo e($amenitiesLabel); ?>
+
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                            <div class="nav-dropdown-menu" role="menu">
+                                <a role="menuitem" href="<?php echo e(route('website.amenities')); ?>">
+                                    <?php echo e(__('website.nav.amenities_all') !== 'website.nav.amenities_all' ? __('website.nav.amenities_all') : __('website.nav.amenities')); ?>
+
+                                </a>
+                                <?php $__currentLoopData = $navAmenities; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $amenity): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <a role="menuitem" href="<?php echo e(route('website.amenities.show', $amenity->id)); ?>">
+                                        <?php echo e($amenity->name); ?>
+
+                                    </a>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <a href="<?php echo e(route('website.amenities')); ?>"><?php echo e($amenitiesLabel); ?></a>
+                    <?php endif; ?>
+                    <a href="<?php echo e(route('website.gallery')); ?>"><?php echo e(__('website.nav.gallery')); ?></a>
+
+                    <a href="<?php echo e(route('website.contact')); ?>"><?php echo e(__('website.nav.contact')); ?></a>
                 </nav>
                 <div class="nav-actions">
-                    @if(\Illuminate\Support\Facades\Auth::check())
-                        <a class="nav-cta" href="{{ \Illuminate\Support\Facades\Auth::user()->role === 'bnbowner' ? route('bnbowner.motel-selection') : route('adminpages.dashboard') }}">
+                    <?php if(\Illuminate\Support\Facades\Auth::check()): ?>
+                        <a class="nav-cta" href="<?php echo e(\Illuminate\Support\Facades\Auth::user()->role === 'bnbowner' ? route('bnbowner.motel-selection') : route('adminpages.dashboard')); ?>">
                            
                             Dashboard
                         </a>
-                    @else
-                        <a class="register-cta" href="{{ route('website.auth.register') }}">{{ __('website.auth.register') }}</a>
-                        <a class="nav-cta" href="{{ route('login') }}">{{ __('website.auth.login') }}</a>
-                    @endif
+                    <?php else: ?>
+                        <a class="register-cta" href="<?php echo e(route('website.auth.register')); ?>"><?php echo e(__('website.auth.register')); ?></a>
+                        <a class="nav-cta" href="<?php echo e(route('login')); ?>"><?php echo e(__('website.auth.login')); ?></a>
+                    <?php endif; ?>
                 </div>
                 <!-- Mobile Menu Button -->
                 <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open Menu">
@@ -714,8 +719,8 @@
         <!-- Mobile Drawer -->
         <aside class="mobile-drawer" id="mobileDrawer">
             <div class="mobile-drawer-header">
-                <a href="{{ route('website.home') }}" class="mobile-drawer-brand">
-                    <img src="{{ asset('images/static_file/applogo.png') }}" alt="BnB Logo">
+                <a href="<?php echo e(route('website.home')); ?>" class="mobile-drawer-brand">
+                    <img src="<?php echo e(asset('images/static_file/applogo.png')); ?>" alt="BnB Logo">
                     <span class="mobile-drawer-brand-text">BnB<span>.com</span></span>
                 </a>
                 <button class="mobile-drawer-close" id="mobileDrawerClose" aria-label="Close Menu">
@@ -728,16 +733,17 @@
 
             <nav class="mobile-drawer-nav">
                 <!-- Home -->
-                <a href="{{ route('website.home') }}" class="mobile-nav-item">
+                <a href="<?php echo e(route('website.home')); ?>" class="mobile-nav-item">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                         <polyline points="9 22 9 12 15 12 15 22"/>
                     </svg>
-                    {{ __('website.nav.home') }}
+                    <?php echo e(__('website.nav.home')); ?>
+
                 </a>
 
                 <!-- Motels -->
-                <a href="{{ route('website.motels.index') }}" class="mobile-nav-item">
+                <a href="<?php echo e(route('website.motels.index')); ?>" class="mobile-nav-item">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16"/>
                         <path d="M1 21h22"/>
@@ -746,11 +752,12 @@
                         <path d="M14 7h1"/>
                         <path d="M14 11h1"/>
                     </svg>
-                    {{ __('website.nav.motels') }}
+                    <?php echo e(__('website.nav.motels')); ?>
+
                 </a>
 
                 <!-- Accommodation Types (Expandable) -->
-                @if(($navMotelTypes ?? collect())->count())
+                <?php if(($navMotelTypes ?? collect())->count()): ?>
                     <div class="mobile-nav-expandable">
                         <button class="mobile-nav-toggle" type="button">
                             <span class="mobile-nav-toggle-left">
@@ -760,24 +767,26 @@
                                     <rect x="14" y="14" width="7" height="7"/>
                                     <rect x="3" y="14" width="7" height="7"/>
                                 </svg>
-                                {{ $accommodationLabel }}
+                                <?php echo e($accommodationLabel); ?>
+
                             </span>
                             <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <polyline points="6 9 12 15 18 9"/>
                             </svg>
                         </button>
                         <div class="mobile-nav-submenu">
-                            @foreach($navMotelTypes as $type)
-                                <a href="{{ route('website.motels.index', ['motel_type' => $type->id]) }}" class="mobile-nav-subitem">
-                                    {{ $type->name }}
+                            <?php $__currentLoopData = $navMotelTypes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $type): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <a href="<?php echo e(route('website.motels.index', ['motel_type' => $type->id])); ?>" class="mobile-nav-subitem">
+                                    <?php echo e($type->name); ?>
+
                                 </a>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
                     </div>
-                @endif
+                <?php endif; ?>
 
                 <!-- Amenities (Expandable) -->
-                @if(($navAmenities ?? collect())->count())
+                <?php if(($navAmenities ?? collect())->count()): ?>
                     <div class="mobile-nav-expandable">
                         <button class="mobile-nav-toggle" type="button">
                             <span class="mobile-nav-toggle-left">
@@ -785,52 +794,57 @@
                                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
                                     <polyline points="22 4 12 14.01 9 11.01"/>
                                 </svg>
-                                {{ $amenitiesLabel }}
+                                <?php echo e($amenitiesLabel); ?>
+
                             </span>
                             <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <polyline points="6 9 12 15 18 9"/>
                             </svg>
                         </button>
                         <div class="mobile-nav-submenu">
-                            <a href="{{ route('website.amenities') }}" class="mobile-nav-subitem">All Amenities</a>
-                            @foreach($navAmenities as $amenity)
-                                <a href="{{ route('website.amenities.show', $amenity->id) }}" class="mobile-nav-subitem">
-                                    {{ $amenity->name }}
+                            <a href="<?php echo e(route('website.amenities')); ?>" class="mobile-nav-subitem">All Amenities</a>
+                            <?php $__currentLoopData = $navAmenities; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $amenity): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <a href="<?php echo e(route('website.amenities.show', $amenity->id)); ?>" class="mobile-nav-subitem">
+                                    <?php echo e($amenity->name); ?>
+
                                 </a>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
                     </div>
-                @else
-                    <a href="{{ route('website.amenities') }}" class="mobile-nav-item">
+                <?php else: ?>
+                    <a href="<?php echo e(route('website.amenities')); ?>" class="mobile-nav-item">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
                             <polyline points="22 4 12 14.01 9 11.01"/>
                         </svg>
-                        {{ $amenitiesLabel }}
+                        <?php echo e($amenitiesLabel); ?>
+
                     </a>
-                @endif
+                <?php endif; ?>
 
                 <!-- Gallery -->
-                <a href="{{ route('website.gallery') }}" class="mobile-nav-item">
+                <a href="<?php echo e(route('website.gallery')); ?>" class="mobile-nav-item">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
                         <circle cx="8.5" cy="8.5" r="1.5"/>
                         <polyline points="21 15 16 10 5 21"/>
                     </svg>
-                    {{ __('website.nav.gallery') }}
+                    <?php echo e(__('website.nav.gallery')); ?>
+
                 </a>
 
                 <!-- Contact -->
-                <a href="{{ route('website.contact') }}" class="mobile-nav-item">
+                <a href="<?php echo e(route('website.contact')); ?>" class="mobile-nav-item">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                     </svg>
-                    {{ __('website.nav.contact') }}
+                    <?php echo e(__('website.nav.contact')); ?>
+
                 </a>
 
                 <!-- Auth Links -->
-                @if(\Illuminate\Support\Facades\Auth::check())
-                    <a href="{{ \Illuminate\Support\Facades\Auth::user()->role === 'bnbowner' ? route('bnbowner.motel-selection') : route('adminpages.dashboard') }}" class="mobile-nav-item">
+                <?php if(\Illuminate\Support\Facades\Auth::check()): ?>
+                    <a href="<?php echo e(\Illuminate\Support\Facades\Auth::user()->role === 'bnbowner' ? route('bnbowner.motel-selection') : route('adminpages.dashboard')); ?>" class="mobile-nav-item">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
                             <path d="M3 9h18"/>
@@ -838,25 +852,27 @@
                         </svg>
                         Dashboard
                     </a>
-                @else
-                    <a href="{{ route('login') }}" class="mobile-nav-item">
+                <?php else: ?>
+                    <a href="<?php echo e(route('login')); ?>" class="mobile-nav-item">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
                             <polyline points="10 17 15 12 10 7"/>
                             <line x1="15" y1="12" x2="3" y2="12"/>
                         </svg>
-                        {{ __('website.auth.login') }}
+                        <?php echo e(__('website.auth.login')); ?>
+
                     </a>
-                    <a href="{{ route('website.auth.register') }}" class="mobile-nav-item">
+                    <a href="<?php echo e(route('website.auth.register')); ?>" class="mobile-nav-item">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
                             <circle cx="8.5" cy="7" r="4"/>
                             <line x1="20" y1="8" x2="20" y2="14"/>
                             <line x1="23" y1="11" x2="17" y2="11"/>
                         </svg>
-                        {{ __('website.auth.register') }}
+                        <?php echo e(__('website.auth.register')); ?>
+
                     </a>
-                @endif
+                <?php endif; ?>
             </nav>
 
             <!-- Mobile Drawer Footer -->
@@ -881,10 +897,10 @@
                 <div class="mobile-footer-section">
                     <div class="mobile-footer-title">Language</div>
                     <div class="mobile-lang-btns">
-                        <a href="{{ route('website.language.switch', 'en') }}" class="mobile-lang-btn {{ app()->getLocale() === 'en' ? '' : 'inactive' }}">
+                        <a href="<?php echo e(route('website.language.switch', 'en')); ?>" class="mobile-lang-btn <?php echo e(app()->getLocale() === 'en' ? '' : 'inactive'); ?>">
                             🇺🇸 English
                         </a>
-                        <a href="{{ route('website.language.switch', 'sw') }}" class="mobile-lang-btn {{ app()->getLocale() === 'sw' ? '' : 'inactive' }}">
+                        <a href="<?php echo e(route('website.language.switch', 'sw')); ?>" class="mobile-lang-btn <?php echo e(app()->getLocale() === 'sw' ? '' : 'inactive'); ?>">
                             🇹🇿 Kiswahili
                         </a>
                     </div>
@@ -892,14 +908,14 @@
             </div>
         </aside>
         <main>
-            @yield('content')
+            <?php echo $__env->yieldContent('content'); ?>
         </main>
-        @include('websitepages.components.footer')
+        <?php echo $__env->make('websitepages.components.footer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
         
         <!-- Floating Action Button for Downloads -->
         <div class="fab-container">
             <div class="fab-options">
-                <a href="{{ config('companyinfo.app_links.android') }}" target="_blank" rel="noopener noreferrer" class="fab-option fab-android">
+                <a href="<?php echo e(config('companyinfo.app_links.android')); ?>" target="_blank" rel="noopener noreferrer" class="fab-option fab-android">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M17.523 2.326a.5.5 0 0 0-.727.054L15.022 4.5H8.978L7.204 2.38a.5.5 0 0 0-.727-.054.5.5 0 0 0-.054.727L8.022 5H6a3 3 0 0 0-3 3v9a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3h-2.022l1.599-1.947a.5.5 0 0 0-.054-.727zM8.5 10a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
                     </svg>
@@ -913,7 +929,7 @@
                 </a>
             </div>
             <button class="fab-main" aria-label="Download App">
-                <img class="fab-icon-logo" src="{{ asset('images/static_file/applogo.png') }}" alt="App Logo">
+                <img class="fab-icon-logo" src="<?php echo e(asset('images/static_file/applogo.png')); ?>" alt="App Logo">
                 <svg class="fab-icon-close" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="18" y1="6" x2="6" y2="18"/>
                     <line x1="6" y1="6" x2="18" y2="18"/>
@@ -1145,8 +1161,9 @@
             });
         </script>
 
-        @stack('scripts')
+        <?php echo $__env->yieldPushContent('scripts'); ?>
     </body>
 </html>
 
 
+<?php /**PATH C:\Users\iuser\Desktop\PROJECTS\BNB PROJECT\bnbbackendlaravel\resources\views/websitepages/layouts/app.blade.php ENDPATH**/ ?>

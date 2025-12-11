@@ -48,5 +48,9 @@ return [
             'message' => 'Message',
         ],
     ],
+    'app_links' => [
+        'android' => 'https://play.google.com/store/apps/details?id=tz.co.bnb',
+        'ios' => '#download-ios', // Add iOS link when available
+    ],
 ];
 

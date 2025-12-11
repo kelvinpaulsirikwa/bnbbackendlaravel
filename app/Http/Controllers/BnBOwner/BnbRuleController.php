@@ -115,6 +115,10 @@ class BnbRuleController extends Controller
         $user = Auth::user();
         $selectedMotelId = session('selected_motel_id');
         
+        if (!$selectedMotelId) {
+            return redirect()->route('bnbowner.motel-selection')->with('error', 'Please select a motel first.');
+        }
+        
         $motel = Motel::where('id', $selectedMotelId)
                      ->where('owner_id', $user->id)
                      ->first();
@@ -125,10 +129,14 @@ class BnbRuleController extends Controller
         
         $bnbRule = BnbRule::where('id', $id)
                          ->where('motel_id', $motel->id)
-                         ->firstOrFail();
+                         ->first();
+        
+        if (!$bnbRule) {
+            return redirect()->back()->with('error', 'Rules not found.');
+        }
         
         $bnbRule->delete();
         
-        return redirect()->back()->with('success', 'Rules deleted successfully.');
+        return redirect()->route('bnbowner.bnb-rules.index')->with('success', 'Rules deleted successfully.');
     }
 }

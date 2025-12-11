@@ -57,19 +57,10 @@
                         
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                @if($bnbRule)
+                                @if($bnbRule && $bnbRule->id)
                                     <button type="submit" class="btn btn-primary">
                                         <i class="fas fa-save me-1"></i>Update Rules
                                     </button>
-                                    <a href="{{ route('bnbowner.bnb-rules.destroy', $bnbRule->id) }}" 
-                                       class="btn btn-danger"
-                                       onclick="event.preventDefault(); if(confirm('Are you sure you want to delete the rules? This action cannot be undone.')) { document.getElementById('delete-form').submit(); }">
-                                        <i class="fas fa-trash me-1"></i>Delete Rules
-                                    </a>
-                                    <form id="delete-form" action="{{ route('bnbowner.bnb-rules.destroy', $bnbRule->id) }}" method="POST" style="display: none;">
-                                        @csrf
-                                        @method('DELETE')
-                                    </form>
                                 @else
                                     <button type="submit" class="btn btn-success">
                                         <i class="fas fa-plus me-1"></i>Create Rules
