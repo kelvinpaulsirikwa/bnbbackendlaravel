@@ -32,6 +32,7 @@ allDropdown.forEach(item=> {
 const toggleSidebar = document.querySelector('nav .toggle-sidebar');
 const allSideDivider = document.querySelectorAll('#sidebar .divider');
 
+if(sidebar && toggleSidebar) {
 if(sidebar.classList.contains('hide')) {
 	allSideDivider.forEach(item=> {
 		item.textContent = '-'
@@ -66,15 +67,16 @@ toggleSidebar.addEventListener('click', function () {
 		})
 	}
 })
+}
 
 
 
 
-sidebar.addEventListener('mouseleave', function () {
+if(sidebar) sidebar.addEventListener('mouseleave', function () {
 	if(this.classList.contains('hide')) {
 		allDropdown.forEach(item=> {
 			const a = item.parentElement.querySelector('a:first-child');
-			a.classList.remove('active');
+			if(a) { a.classList.remove('active'); }
 			item.classList.remove('show');
 		})
 		allSideDivider.forEach(item=> {
@@ -85,11 +87,11 @@ sidebar.addEventListener('mouseleave', function () {
 
 
 
-sidebar.addEventListener('mouseenter', function () {
+if(sidebar) sidebar.addEventListener('mouseenter', function () {
 	if(this.classList.contains('hide')) {
 		allDropdown.forEach(item=> {
 			const a = item.parentElement.querySelector('a:first-child');
-			a.classList.remove('active');
+			if(a) { a.classList.remove('active'); }
 			item.classList.remove('show');
 		})
 		allSideDivider.forEach(item=> {
@@ -101,37 +103,42 @@ sidebar.addEventListener('mouseenter', function () {
 
 
 
-// PROFILE DROPDOWN
+// PROFILE DROPDOWN (optional: only if nav .profile exists)
 const profile = document.querySelector('nav .profile');
-const imgProfile = profile.querySelector('img');
-const dropdownProfile = profile.querySelector('.profile-link');
+const imgProfile = profile ? profile.querySelector('img') : null;
+const dropdownProfile = profile ? profile.querySelector('.profile-link') : null;
 
-imgProfile.addEventListener('click', function () {
-	dropdownProfile.classList.toggle('show');
-})
+if (imgProfile && dropdownProfile) {
+	imgProfile.addEventListener('click', function () {
+		dropdownProfile.classList.toggle('show');
+	})
+}
 
 
 
 
-// MENU
+// MENU (optional: only if .menu elements exist)
 const allMenu = document.querySelectorAll('main .content-data .head .menu');
 
 allMenu.forEach(item=> {
 	const icon = item.querySelector('.icon');
 	const menuLink = item.querySelector('.menu-link');
-
-	icon.addEventListener('click', function () {
-		menuLink.classList.toggle('show');
-	})
+	if (icon && menuLink) {
+		icon.addEventListener('click', function () {
+			menuLink.classList.toggle('show');
+		})
+	}
 })
 
 
 
 window.addEventListener('click', function (e) {
-	if(e.target !== imgProfile) {
-		if(e.target !== dropdownProfile) {
-			if(dropdownProfile.classList.contains('show')) {
-				dropdownProfile.classList.remove('show');
+	if (dropdownProfile) {
+		if(e.target !== imgProfile) {
+			if(e.target !== dropdownProfile) {
+				if(dropdownProfile.classList.contains('show')) {
+					dropdownProfile.classList.remove('show');
+				}
 			}
 		}
 	}
@@ -139,7 +146,7 @@ window.addEventListener('click', function (e) {
 	allMenu.forEach(item=> {
 		const icon = item.querySelector('.icon');
 		const menuLink = item.querySelector('.menu-link');
-
+		if (!icon || !menuLink) return;
 		if(e.target !== icon) {
 			if(e.target !== menuLink) {
 				if (menuLink.classList.contains('show')) {
@@ -154,11 +161,11 @@ window.addEventListener('click', function (e) {
 
 
 
-// PROGRESSBAR
+// PROGRESSBAR (optional)
 const allProgress = document.querySelectorAll('main .card .progress');
 
 allProgress.forEach(item=> {
-	item.style.setProperty('--value', item.dataset.value)
+	if (item && item.dataset.value != null) item.style.setProperty('--value', item.dataset.value)
 })
 
 
@@ -196,7 +203,10 @@ tooltip: {
 },
 };
 
-var chart = new ApexCharts(document.querySelector("#chart"), options);
-chart.render();
+var chartEl = document.querySelector("#chart");
+if (chartEl) {
+	var chart = new ApexCharts(chartEl, options);
+	chart.render();
+}
 
 }); // End DOMContentLoaded

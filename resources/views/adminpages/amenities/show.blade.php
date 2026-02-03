@@ -72,7 +72,7 @@
                                         <h6 class="mb-1 text-muted">Icon</h6>
                                         @if($amenity->icon)
                                             <div class="d-flex align-items-center">
-                                                <img src="{{ asset($amenity->icon) }}" alt="Amenity icon" class="img-thumbnail me-2" style="max-width: 50px; max-height: 50px;">
+                                                <img src="{{ $amenity->icon_url }}" alt="Amenity icon" class="img-thumbnail me-2" style="max-width: 50px; max-height: 50px;" onerror="this.onerror=null;this.src='{{ asset('images/noimage.png') }}';">
                                                 <span class="fw-semibold">{{ basename($amenity->icon) }}</span>
                                             </div>
                                         @else

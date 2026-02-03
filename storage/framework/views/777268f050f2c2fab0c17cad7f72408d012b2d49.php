@@ -1,6 +1,4 @@
-@extends('adminpages.layouts.app')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class="container-fluid py-4" style="background-color: white; min-height: 100vh;">
         <!-- Page Header -->
         <div class="row mb-4">
@@ -12,7 +10,7 @@
                         </h1>
                         <p class="text-muted mb-0">Update amenity information</p>
                     </div>
-                    <a href="{{ route('adminpages.amenities.index') }}" class="btn btn-outline-secondary btn-lg shadow-sm">
+                    <a href="<?php echo e(route('adminpages.amenities.index')); ?>" class="btn btn-outline-secondary btn-lg shadow-sm">
                         <i class="bx bx-arrow-back"></i> Back to Amenities
                     </a>
                 </div>
@@ -30,9 +28,9 @@
                         </h5>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('adminpages.amenities.update', $amenity->id) }}" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            @method('PUT')
+                        <form action="<?php echo e(route('adminpages.amenities.update', $amenity->id)); ?>" method="POST" enctype="multipart/form-data">
+                            <?php echo csrf_field(); ?>
+                            <?php echo method_field('PUT'); ?>
                             
                             <div class="row g-3">
                                 <!-- Name Field -->
@@ -41,17 +39,32 @@
                                         Amenity Name <span class="text-danger">*</span>
                                     </label>
                                     <input type="text" 
-                                           class="form-control @error('name') is-invalid @enderror" 
+                                           class="form-control <?php $__errorArgs = ['name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" 
                                            id="name" 
                                            name="name" 
-                                           value="{{ old('name', $amenity->name) }}" 
+                                           value="<?php echo e(old('name', $amenity->name)); ?>" 
                                            placeholder="Enter amenity name"
                                            required>
-                                    @error('name')
+                                    <?php $__errorArgs = ['name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                                         <div class="invalid-feedback">
-                                            {{ $message }}
+                                            <?php echo e($message); ?>
+
                                         </div>
-                                    @enderror
+                                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                 </div>
 
                                 <!-- Icon Field -->
@@ -60,28 +73,43 @@
                                         Icon Image
                                     </label>
                                     
-                                    @if($amenity->icon)
+                                    <?php if($amenity->icon): ?>
                                         <div class="mb-3">
                                             <label class="form-label">Current Icon:</label>
                                             <div>
-                                                <img src="{{ $amenity->icon_url }}" alt="Current icon" class="img-thumbnail" style="max-width: 100px; max-height: 100px;" onerror="this.onerror=null;this.src='{{ asset('images/noimage.png') }}';">
+                                                <img src="<?php echo e($amenity->icon_url); ?>" alt="Current icon" class="img-thumbnail" style="max-width: 100px; max-height: 100px;" onerror="this.onerror=null;this.src='<?php echo e(asset('images/noimage.png')); ?>';">
                                             </div>
                                         </div>
-                                    @endif
+                                    <?php endif; ?>
                                     
                                     <input type="file" 
-                                           class="form-control @error('icon') is-invalid @enderror" 
+                                           class="form-control <?php $__errorArgs = ['icon'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" 
                                            id="icon" 
                                            name="icon" 
                                            accept="image/*">
                                     <div class="form-text">
                                         Upload a new icon image (JPEG, PNG, JPG, GIF, SVG - Max 2MB). Leave empty to keep current icon.
                                     </div>
-                                    @error('icon')
+                                    <?php $__errorArgs = ['icon'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                                         <div class="invalid-feedback">
-                                            {{ $message }}
+                                            <?php echo e($message); ?>
+
                                         </div>
-                                    @enderror
+                                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                 </div>
                             </div>
 
@@ -89,7 +117,7 @@
                             <div class="row mt-4">
                                 <div class="col-12">
                                     <div class="d-flex justify-content-end gap-2">
-                                        <a href="{{ route('adminpages.amenities.index') }}" 
+                                        <a href="<?php echo e(route('adminpages.amenities.index')); ?>" 
                                            class="btn btn-outline-secondary">
                                             <i class="bx bx-x"></i> Cancel
                                         </a>
@@ -105,4 +133,6 @@
             </div>
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('adminpages.layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\Users\iuser\Desktop\PROJECTS\BNB PROJECT\bnbbackendlaravel\resources\views/adminpages/amenities/edit.blade.php ENDPATH**/ ?>
