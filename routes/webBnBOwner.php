@@ -12,6 +12,7 @@ use App\Http\Controllers\BnBOwner\StaffManagementController;
 use App\Http\Controllers\BnBOwner\ChatController;
 use App\Http\Controllers\BnBOwner\ProfileController;
 use App\Http\Controllers\BnBOwner\BnbRuleController;
+use App\Http\Controllers\BnBOwner\RoleManagementController;
 
 // BnB Owner Routes
 Route::middleware(['auth', 'role:bnbowner,bnbonwner'])->group(function () {
@@ -92,4 +93,12 @@ Route::middleware(['auth', 'role:bnbowner,bnbonwner'])->group(function () {
     Route::post('/bnbowner/bnb-rules', [BnbRuleController::class, 'store'])->name('bnbowner.bnb-rules.store');
     Route::put('/bnbowner/bnb-rules/{id}', [BnbRuleController::class, 'update'])->name('bnbowner.bnb-rules.update');
     Route::delete('/bnbowner/bnb-rules/{id}', [BnbRuleController::class, 'destroy'])->name('bnbowner.bnb-rules.destroy');
+
+    // Role Management Routes
+    Route::get('/bnbowner/role-management', [RoleManagementController::class, 'index'])->name('bnbowner.role-management.index');
+    Route::get('/bnbowner/role-management/create', [RoleManagementController::class, 'create'])->name('bnbowner.role-management.create');
+    Route::post('/bnbowner/role-management', [RoleManagementController::class, 'store'])->name('bnbowner.role-management.store');
+    Route::get('/bnbowner/role-management/{id}/edit', [RoleManagementController::class, 'edit'])->name('bnbowner.role-management.edit');
+    Route::put('/bnbowner/role-management/{id}', [RoleManagementController::class, 'update'])->name('bnbowner.role-management.update');
+    Route::delete('/bnbowner/role-management/{id}', [RoleManagementController::class, 'destroy'])->name('bnbowner.role-management.destroy');
 });

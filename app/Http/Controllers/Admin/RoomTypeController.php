@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\AdminBaseController;
 use Illuminate\Http\Request;
 use App\Models\RoomType;
 
-class RoomTypeController extends Controller
+class RoomTypeController extends AdminBaseController
 {
     public function index(Request $request)
     {

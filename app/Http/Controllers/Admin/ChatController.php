@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\AdminBaseController;
 use App\Models\BnbChat;
 use App\Models\BnbChatMessage;
 use App\Models\BnbBooking;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
-class ChatController extends Controller
+class ChatController extends AdminBaseController
 {
     public function index(Request $request)
     {

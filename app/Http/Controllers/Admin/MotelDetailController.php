@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\AdminBaseController;
 use Illuminate\Http\Request;
 use App\Models\MotelDetail;
 use App\Models\Motel;
 use App\Models\District;
 
-class MotelDetailController extends Controller
+class MotelDetailController extends AdminBaseController
 {
     public function index(Request $request)
     {

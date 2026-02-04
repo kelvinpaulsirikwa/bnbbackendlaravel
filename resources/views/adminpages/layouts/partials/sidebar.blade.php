@@ -77,74 +77,99 @@
             </a>
         </li>
       
+        @if($admin_can('manage_countries') || $admin_can('manage_regions') || $admin_can('manage_districts'))
         <li class="divider" data-text="Location Management"></li>
-
-        
+        @endif
+        @if($admin_can('manage_countries'))
         <li>
             <a href="{{ route('adminpages.countries.index') }}">
                 <i class="bx bxs-flag icon"></i>
                 Countries
             </a>
         </li>
+        @endif
+        @if($admin_can('manage_regions'))
         <li>
             <a href="{{ route('adminpages.regions.index') }}">
                 <i class="bx bxs-map icon"></i>
                 Regions
             </a>
         </li>
+        @endif
+        @if($admin_can('manage_districts'))
         <li>
             <a href="{{ route('adminpages.districts.index') }}">
                 <i class="bx bxs-building icon"></i>
                 Districts
             </a>
         </li>
+        @endif
+        @if($admin_can('manage_amenities') || $admin_can('manage_motel_types') || $admin_can('manage_room_types'))
         <li class="divider" data-text="Amenity Management"></li>
-
-        
-<li>
-    <a href="{{ route('adminpages.amenities.index') }}">
-        <i class="bx bx-package icon"></i>
-        Amenities
-    </a>
-</li>
-<li>
-    <a href="{{ route('adminpages.motel-types.index') }}">
-        <i class="bx bx-building icon"></i>
-        Motel Types
-    </a>
-</li>
-<li>
-    <a href="{{ route('adminpages.room-types.index') }}">
-        <i class="bx bx-bed icon"></i>
-        Room Types
-    </a>
-</li>
+        @endif
+        @if($admin_can('manage_amenities'))
+        <li>
+            <a href="{{ route('adminpages.amenities.index') }}">
+                <i class="bx bx-package icon"></i>
+                Amenities
+            </a>
+        </li>
+        @endif
+        @if($admin_can('manage_motel_types'))
+        <li>
+            <a href="{{ route('adminpages.motel-types.index') }}">
+                <i class="bx bx-building icon"></i>
+                Motel Types
+            </a>
+        </li>
+        @endif
+        @if($admin_can('manage_room_types'))
+        <li>
+            <a href="{{ route('adminpages.room-types.index') }}">
+                <i class="bx bx-bed icon"></i>
+                Room Types
+            </a>
+        </li>
+        @endif
+        @if($admin_can('manage_chats') || $admin_can('manage_contact_messages'))
         <li class="divider" data-text="Guest Messaging"></li>
-<li>
-    <a href="{{ route('adminpages.chats.index') }}">
-        <i class="bx bx-conversation icon"></i>
-        Guest Chats
-    </a>
-</li>
-<li>
-    <a href="{{ route('adminpages.contact-messages.index') }}">
-        <i class="bx bx-envelope icon"></i>
-        Contact Messages
-    </a>
-</li>
+        @endif
+        @if($admin_can('manage_chats'))
+        <li>
+            <a href="{{ route('adminpages.chats.index') }}">
+                <i class="bx bx-conversation icon"></i>
+                Guest Chats
+            </a>
+        </li>
+        @endif
+        @if($admin_can('manage_contact_messages'))
+        <li>
+            <a href="{{ route('adminpages.contact-messages.index') }}">
+                <i class="bx bx-envelope icon"></i>
+                Contact Messages
+            </a>
+        </li>
+        @endif
+        @if($admin_can('manage_motels') || $admin_can('manage_bnb_rules'))
         <li class="divider" data-text="Motel Management"></li>
-<li>
-    <a href="{{ route('adminpages.motels.index') }}">
-        <i class="bx bx-home icon"></i>
-        Motels
-    </a>
-</li>
-<li>
-    <a href="{{ route('adminpages.bnb-rules.index') }}">
-        <i class="bx bx-list-check icon"></i>
-        BNB Rules
-    </a>
-</li>
+        @endif
+        @if($admin_can('manage_motels'))
+        <li>
+            <a href="{{ route('adminpages.motels.index') }}">
+                <i class="bx bx-home icon"></i>
+                Motels
+            </a>
+        </li>
+        @endif
+        @if($admin_can('manage_bnb_rules'))
+        <li>
+            <a href="{{ route('adminpages.bnb-rules.index') }}">
+                <i class="bx bx-list-check icon"></i>
+                BNB Rules
+            </a>
+        </li>
+        @endif
+        @if($admin_can('manage_users'))
         <li class="divider" data-text="User Management"></li>
         <li>
             <a href="{{ route('adminpages.users.index') }}">
@@ -152,6 +177,7 @@
                 User Management
             </a>
         </li>
+        @endif
         <li class="divider" data-text="Account Management"></li>
         <li>
             <a href="{{ route('adminpages.profile.edit') }}">

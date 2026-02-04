@@ -121,27 +121,37 @@
                                     @enderror
                                 </div>
 
-                                <!-- Role Field -->
+                                <!-- User Type: Admin or Owner -->
                                 <div class="col-md-6">
-                                    <label for="role" class="form-label">
-                                        Role <span class="text-danger">*</span>
+                                    <label class="form-label">
+                                        User Type <span class="text-danger">*</span>
                                     </label>
-                                    <select class="form-select @error('role') is-invalid @enderror" 
-                                            id="role" 
-                                            name="role" 
-                                            required>
-                                        <option value="">Select Role</option>
-                                        <option value="bnbadmin" {{ old('role', $user->role) == 'bnbadmin' ? 'selected' : '' }}>Admin</option>
-                                        <option value="bnbowner" {{ old('role', $user->role) == 'bnbowner' ? 'selected' : '' }}>Owner</option>
-                                        <option value="bnbreceiptionist" {{ old('role', $user->role) == 'bnbreceiptionist' ? 'selected' : '' }}>Receptionist</option>
-                                        <option value="bnbsecurity" {{ old('role', $user->role) == 'bnbsecurity' ? 'selected' : '' }}>Security</option>
-                                        <option value="bnbchef" {{ old('role', $user->role) == 'bnbchef' ? 'selected' : '' }}>Chef</option>
-                                    </select>
-                                    @error('role')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
+                                    <div class="d-flex gap-4">
+                                        <label class="form-check">
+                                            <input class="form-check-input" type="radio" name="user_type" id="user_type_admin" value="admin" {{ old('user_type', $user->role === 'bnbadmin' ? 'admin' : 'owner') == 'admin' ? 'checked' : '' }} required>
+                                            <span class="form-check-label">Admin</span>
+                                        </label>
+                                        <label class="form-check">
+                                            <input class="form-check-input" type="radio" name="user_type" id="user_type_owner" value="owner" {{ old('user_type', $user->role === 'bnbadmin' ? 'admin' : 'owner') == 'owner' ? 'checked' : '' }}>
+                                            <span class="form-check-label">Owner</span>
+                                        </label>
+                                    </div>
+                                    @error('user_type')
+                                        <div class="invalid-feedback d-block">{{ $message }}</div>
                                     @enderror
+                                </div>
+
+                                <!-- Admin Permissions (when Admin is selected) -->
+                                <div class="col-12" id="admin-permissions-wrap">
+                                    <label class="form-label">Admin Permissions – choose which admin areas this user can access</label>
+                                    <div class="border rounded p-3 bg-light">
+                                        @foreach(config('admin_permissions', []) as $key => $label)
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="admin_permissions[]" value="{{ $key }}" id="admin_perm_{{ $key }}" {{ in_array($key, old('admin_permissions', $user->admin_permissions ?? [])) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="admin_perm_{{ $key }}">{{ $label }}</label>
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </div>
 
                                 <!-- Status Field -->

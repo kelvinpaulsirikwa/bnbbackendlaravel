@@ -113,6 +113,11 @@ class Motel extends Model
         return $this->hasOne(BnbRule::class, 'motel_id');
     }
 
+    public function motelRoles()
+    {
+        return $this->hasMany(MotelRole::class, 'motel_id');
+    }
+
     public function getContactPhoneAttribute()
     {
         return $this->details->contact_phone ?? null;

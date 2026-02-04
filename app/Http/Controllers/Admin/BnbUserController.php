@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\BnbUser;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
-class BnbUserController extends Controller
+class BnbUserController extends AdminBaseController
 {
     public function index(Request $request)
     {
@@ -52,9 +51,15 @@ class BnbUserController extends Controller
             'password' => 'required|string|min:6|confirmed',
             'telephone' => 'nullable|string',
             'status' => 'required|in:active,unactive',
-            'role' => 'required|in:bnbadmin,bnbowner,bnbreceiptionist,bnbsecurity,bnbchef',
+            'user_type' => 'required|in:admin,owner',
+            'admin_permissions' => 'nullable|array',
+            'admin_permissions.*' => 'string|in:' . implode(',', array_keys(config('admin_permissions', []))),
             'profileimage' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
+
+        $data['role'] = $data['user_type'] === 'admin' ? 'bnbadmin' : 'bnbowner';
+        $data['admin_permissions'] = $data['user_type'] === 'admin' ? array_values($data['admin_permissions'] ?? []) : null;
+        unset($data['user_type']);
 
         // Handle profile image upload
         if ($request->hasFile('profileimage')) {
@@ -95,9 +100,15 @@ class BnbUserController extends Controller
             'password' => 'nullable|string|min:6|confirmed',
             'telephone' => 'nullable|string',
             'status' => 'required|in:active,unactive',
-            'role' => 'required|in:bnbadmin,bnbowner,bnbreceiptionist,bnbsecurity,bnbchef',
+            'user_type' => 'required|in:admin,owner',
+            'admin_permissions' => 'nullable|array',
+            'admin_permissions.*' => 'string|in:' . implode(',', array_keys(config('admin_permissions', []))),
             'profileimage' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
+
+        $data['role'] = $data['user_type'] === 'admin' ? 'bnbadmin' : 'bnbowner';
+        $data['admin_permissions'] = $data['user_type'] === 'admin' ? array_values($data['admin_permissions'] ?? []) : null;
+        unset($data['user_type']);
 
         // Handle profile image upload
         if ($request->hasFile('profileimage')) {

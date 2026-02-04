@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\AdminBaseController;
 use Illuminate\Http\Request;
 use App\Models\Region;
 use App\Models\Country;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Website\HomeController;
 
-class RegionController extends Controller
+class RegionController extends AdminBaseController
 {
     public function index(Request $request)
     {

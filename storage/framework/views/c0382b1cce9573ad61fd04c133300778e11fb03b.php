@@ -1,37 +1,36 @@
-@extends('layouts.owner')
+<?php $__env->startSection('title', 'Edit Staff Member'); ?>
 
-@section('title', 'Edit Staff Member')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="container-fluid py-4" style="background-color: white; min-height: 100vh;">
     <div class="row">
         <div class="col-12">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">Edit Staff Member - {{ $staff->username }}</h1>
+                <h1 class="h2">Edit Staff Member - <?php echo e($staff->username); ?></h1>
                 <div class="btn-toolbar mb-2 mb-md-0">
-                    <a href="{{ route('bnbowner.staff-management.index') }}" class="btn btn-outline-secondary">
+                    <a href="<?php echo e(route('bnbowner.staff-management.index')); ?>" class="btn btn-outline-secondary">
                         <i class="fas fa-arrow-left"></i> Back to Staff
                     </a>
                 </div>
             </div>
 
-            @if($errors->any())
+            <?php if($errors->any()): ?>
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <ul class="mb-0">
-                        @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
+                        <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <li><?php echo e($error); ?></li>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </ul>
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
-            @endif
+            <?php endif; ?>
 
-            @if(session('reset_password'))
+            <?php if(session('reset_password')): ?>
                 <div class="alert alert-info">
-                    <strong>New Password:</strong> {{ session('reset_password') }}
+                    <strong>New Password:</strong> <?php echo e(session('reset_password')); ?>
+
                     <p class="mb-0 small text-muted">Share this password securely with the staff member. They should change it after logging in.</p>
                 </div>
-            @endif
+            <?php endif; ?>
 
             <div class="row justify-content-center">
                 <div class="col-md-8">
@@ -43,30 +42,30 @@
                         </div>
                         <div class="card-body">
                             <div class="d-flex justify-content-end mb-4">
-                                <form method="POST" action="{{ route('bnbowner.staff-management.reset-password', $staff->id) }}">
-                                    @csrf
+                                <form method="POST" action="<?php echo e(route('bnbowner.staff-management.reset-password', $staff->id)); ?>">
+                                    <?php echo csrf_field(); ?>
                                     <button type="submit" class="btn btn-warning">
                                         <i class="fas fa-sync-alt"></i> Reset Password
                                     </button>
                                 </form>
                             </div>
-                            <form method="POST" action="{{ route('bnbowner.staff-management.update', $staff->id) }}" enctype="multipart/form-data">
-                                @csrf
-                                @method('PUT')
+                            <form method="POST" action="<?php echo e(route('bnbowner.staff-management.update', $staff->id)); ?>" enctype="multipart/form-data">
+                                <?php echo csrf_field(); ?>
+                                <?php echo method_field('PUT'); ?>
                                 
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="username" class="form-label">Full Name</label>
                                             <input type="text" class="form-control" id="username" name="username" 
-                                                   value="{{ old('username', $staff->username) }}" required>
+                                                   value="<?php echo e(old('username', $staff->username)); ?>" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="useremail" class="form-label">Email</label>
                                             <input type="email" class="form-control" id="useremail" name="useremail" 
-                                                   value="{{ old('useremail', $staff->useremail) }}" required>
+                                                   value="<?php echo e(old('useremail', $staff->useremail)); ?>" required>
                                         </div>
                                     </div>
                                 </div>
@@ -76,7 +75,24 @@
                                         <div class="mb-3">
                                             <label for="telephone" class="form-label">Phone Number</label>
                                             <input type="text" class="form-control" id="telephone" name="telephone" 
-                                                   value="{{ old('telephone', $staff->telephone) }}">
+                                                   value="<?php echo e(old('telephone', $staff->telephone)); ?>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="role" class="form-label">Role</label>
+                                            <select class="form-select" id="role" name="role" required>
+                                                <option value="">Select Role</option>
+                                                <option value="bnbreceiptionist" <?php echo e(old('role', $staff->role) == 'bnbreceiptionist' ? 'selected' : ''); ?>>
+                                                    Receptionist
+                                                </option>
+                                                <option value="bnbsecurity" <?php echo e(old('role', $staff->role) == 'bnbsecurity' ? 'selected' : ''); ?>>
+                                                    Security
+                                                </option>
+                                                <option value="bnbchef" <?php echo e(old('role', $staff->role) == 'bnbchef' ? 'selected' : ''); ?>>
+                                                    Chef
+                                                </option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -85,19 +101,19 @@
                                     <label for="profileimage" class="form-label">Profile Image</label>
                                     <input type="file" class="form-control" id="profileimage" name="profileimage" 
                                            accept="image/*">
-                                    @if($staff->profileimage)
+                                    <?php if($staff->profileimage): ?>
                                         <div class="mt-2">
-                                            <img src="{{ asset('storage/' . $staff->profileimage) }}" 
+                                            <img src="<?php echo e(asset('storage/' . $staff->profileimage)); ?>" 
                                                  alt="Current Image" 
                                                  style="max-width: 100px; max-height: 100px; object-fit: cover;"
                                                  class="img-thumbnail rounded-circle">
                                             <p class="text-muted small mt-1">Current image</p>
                                         </div>
-                                    @endif
+                                    <?php endif; ?>
                                 </div>
                                 
                                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                    <a href="{{ route('bnbowner.staff-management.index') }}" class="btn btn-secondary me-md-2">
+                                    <a href="<?php echo e(route('bnbowner.staff-management.index')); ?>" class="btn btn-secondary me-md-2">
                                         Cancel
                                     </a>
                                     <button type="submit" class="btn btn-primary">
@@ -112,4 +128,6 @@
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.owner', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\Users\iuser\Desktop\PROJECTS\BNB PROJECT\bnbbackendlaravel\resources\views/bnbowner/staff-management/edit.blade.php ENDPATH**/ ?>

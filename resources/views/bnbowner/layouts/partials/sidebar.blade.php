@@ -111,6 +111,12 @@
                 Staff Management
             </a>
         </li>
+        <li>
+            <a href="{{ route('bnbowner.role-management.index') }}">
+                <i class="bx bx-shield-quarter icon"></i>
+                Role Management
+            </a>
+        </li>
 
         <li class="divider" data-text="Guest Messaging"></li>
 

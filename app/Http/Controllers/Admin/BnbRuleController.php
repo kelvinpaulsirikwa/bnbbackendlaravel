@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\AdminBaseController;
 use Illuminate\Http\Request;
 use App\Models\BnbRule;
 use App\Models\Motel;
 
-class BnbRuleController extends Controller
+class BnbRuleController extends AdminBaseController
 {
     /**
      * Display all BNB rules

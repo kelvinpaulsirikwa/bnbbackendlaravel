@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\AdminBaseController;
 use App\Models\BnbUser;
 use App\Models\Customer;
 use App\Models\Country;
@@ -12,7 +12,7 @@ use App\Models\Motel;
 use App\Models\MotelDetail;
 use Carbon\Carbon;
 
-class DashboardController extends Controller
+class DashboardController extends AdminBaseController
 {
     public function index()
     {

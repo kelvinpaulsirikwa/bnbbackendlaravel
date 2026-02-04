@@ -179,42 +179,44 @@ endif;
 unset($__errorArgs, $__bag); ?>
                                 </div>
 
-                                <!-- Role Field -->
+                                <!-- User Type: Admin or Owner -->
                                 <div class="col-md-6">
-                                    <label for="role" class="form-label">
-                                        Role <span class="text-danger">*</span>
+                                    <label class="form-label">
+                                        User Type <span class="text-danger">*</span>
                                     </label>
-                                    <select class="form-select <?php $__errorArgs = ['role'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>" 
-                                            id="role" 
-                                            name="role" 
-                                            required>
-                                        <option value="">Select Role</option>
-                                        <option value="bnbadmin" <?php echo e(old('role', $user->role) == 'bnbadmin' ? 'selected' : ''); ?>>Admin</option>
-                                        <option value="bnbowner" <?php echo e(old('role', $user->role) == 'bnbowner' ? 'selected' : ''); ?>>Owner</option>
-                                        <option value="bnbreceiptionist" <?php echo e(old('role', $user->role) == 'bnbreceiptionist' ? 'selected' : ''); ?>>Receptionist</option>
-                                        <option value="bnbsecurity" <?php echo e(old('role', $user->role) == 'bnbsecurity' ? 'selected' : ''); ?>>Security</option>
-                                        <option value="bnbchef" <?php echo e(old('role', $user->role) == 'bnbchef' ? 'selected' : ''); ?>>Chef</option>
-                                    </select>
-                                    <?php $__errorArgs = ['role'];
+                                    <div class="d-flex gap-4">
+                                        <label class="form-check">
+                                            <input class="form-check-input" type="radio" name="user_type" id="user_type_admin" value="admin" <?php echo e(old('user_type', $user->role === 'bnbadmin' ? 'admin' : 'owner') == 'admin' ? 'checked' : ''); ?> required>
+                                            <span class="form-check-label">Admin</span>
+                                        </label>
+                                        <label class="form-check">
+                                            <input class="form-check-input" type="radio" name="user_type" id="user_type_owner" value="owner" <?php echo e(old('user_type', $user->role === 'bnbadmin' ? 'admin' : 'owner') == 'owner' ? 'checked' : ''); ?>>
+                                            <span class="form-check-label">Owner</span>
+                                        </label>
+                                    </div>
+                                    <?php $__errorArgs = ['user_type'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?>
-                                        <div class="invalid-feedback">
-                                            <?php echo e($message); ?>
-
-                                        </div>
+                                        <div class="invalid-feedback d-block"><?php echo e($message); ?></div>
                                     <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
+                                </div>
+
+                                <!-- Admin Permissions (when Admin is selected) -->
+                                <div class="col-12" id="admin-permissions-wrap">
+                                    <label class="form-label">Admin Permissions – choose which admin areas this user can access</label>
+                                    <div class="border rounded p-3 bg-light">
+                                        <?php $__currentLoopData = config('admin_permissions', []); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $label): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="admin_permissions[]" value="<?php echo e($key); ?>" id="admin_perm_<?php echo e($key); ?>" <?php echo e(in_array($key, old('admin_permissions', $user->admin_permissions ?? [])) ? 'checked' : ''); ?>>
+                                                <label class="form-check-label" for="admin_perm_<?php echo e($key); ?>"><?php echo e($label); ?></label>
+                                            </div>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    </div>
                                 </div>
 
                                 <!-- Status Field -->

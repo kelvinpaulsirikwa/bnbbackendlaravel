@@ -3,6 +3,14 @@
 <?php $__env->startSection('content'); ?>
 <div class="container-fluid py-4" style="background-color: #f8f9fa; min-height: 100vh;">
     
+    <?php if(session('error')): ?>
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+            <?php echo e(session('error')); ?>
+
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php endif; ?>
+
     <!-- Header -->
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4">
         <div>

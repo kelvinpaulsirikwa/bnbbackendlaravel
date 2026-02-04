@@ -14,10 +14,14 @@ class BnbUser extends Authenticatable
     protected $table = 'bnb_users';
 
     protected $fillable = [
-        'username','useremail','profileimage','password','telephone','status','role','createdby','motel_id'
+        'username','useremail','profileimage','password','telephone','status','role','createdby','motel_id','admin_permissions'
     ];
 
     protected $hidden = ['password'];
+
+    protected $casts = [
+        'admin_permissions' => 'array',
+    ];
 
     // Use useremail as the username field for authentication
     public function getAuthIdentifierName()

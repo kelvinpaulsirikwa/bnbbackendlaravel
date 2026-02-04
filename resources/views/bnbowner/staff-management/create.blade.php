@@ -80,23 +80,6 @@
                                                    value="{{ old('telephone') }}">
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="role" class="form-label">Role</label>
-                                            <select class="form-select" id="role" name="role" required>
-                                                <option value="">Select Role</option>
-                                                <option value="bnbreceiptionist" {{ old('role') == 'bnbreceiptionist' ? 'selected' : '' }}>
-                                                    <i class="fas fa-user-tie"></i> Receptionist
-                                                </option>
-                                                <option value="bnbsecurity" {{ old('role') == 'bnbsecurity' ? 'selected' : '' }}>
-                                                    <i class="fas fa-shield-alt"></i> Security
-                                                </option>
-                                                <option value="bnbchef" {{ old('role') == 'bnbchef' ? 'selected' : '' }}>
-                                                    <i class="fas fa-utensils"></i> Chef
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
                                 </div>
                                 
                                 <div class="mb-3">

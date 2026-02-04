@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\AdminBaseController;
 use App\Models\ContactMessage;
 use Illuminate\Http\Request;
 
-class ContactMessageController extends Controller
+class ContactMessageController extends AdminBaseController
 {
     public function index(Request $request)
     {

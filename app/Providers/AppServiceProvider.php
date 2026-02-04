@@ -7,6 +7,7 @@ use App\Models\Country;
 use App\Models\MotelType;
 use App\Models\Region;
 use App\Models\RoomType;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -30,6 +31,18 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        View::share('admin_can', function (string $permission): bool {
+            $user = Auth::user();
+            if (!$user || $user->role !== 'bnbadmin') {
+                return false;
+            }
+            $permissions = $user->admin_permissions;
+            if ($permissions === null || (is_array($permissions) && count($permissions) === 0)) {
+                return true;
+            }
+            return in_array($permission, $permissions, true);
+        });
+
         View::composer('websitepages.components.footer', function ($view) {
             $footerData = Cache::remember('footer_data_lookup', 3600, function () {
                 return [

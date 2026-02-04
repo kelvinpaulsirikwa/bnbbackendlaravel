@@ -72,11 +72,11 @@ class StaffManagementController extends Controller
             'useremail' => 'required|email|unique:bnb_users,useremail|max:255',
             'password' => 'required|string|min:6|confirmed',
             'telephone' => 'nullable|string|max:20',
-            'role' => 'required|in:bnbreceiptionist,bnbsecurity,bnbchef',
             'profileimage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
         
-        $data = $request->only(['username', 'useremail', 'telephone', 'role']);
+        $data = $request->only(['username', 'useremail', 'telephone']);
+        $data['role'] = 'bnbreceiptionist'; // default; assign via Role Management
         $data['password'] = Hash::make($request->password);
         $data['motel_id'] = $motel->id;
         $data['createdby'] = $user->id;
@@ -143,11 +143,10 @@ class StaffManagementController extends Controller
             'username' => 'required|string|max:255',
             'useremail' => 'required|email|unique:bnb_users,useremail,' . $id . ',id|max:255',
             'telephone' => 'nullable|string|max:20',
-            'role' => 'required|in:bnbreceiptionist,bnbsecurity,bnbchef',
             'profileimage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
         
-        $data = $request->only(['username', 'useremail', 'telephone', 'role']);
+        $data = $request->only(['username', 'useremail', 'telephone']);
         
         // Handle profile image upload
         if ($request->hasFile('profileimage')) {
