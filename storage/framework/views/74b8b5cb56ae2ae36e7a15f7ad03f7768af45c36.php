@@ -69,7 +69,6 @@
                                 <tr>
                                     <th class="border-0">ID</th>
                                     <th class="border-0">Name</th>
-                                    <th class="border-0">Icon</th>
                                     <th class="border-0">Created By</th>
                                     <th class="border-0">Created At</th>
                                     <th class="border-0 text-center">Actions</th>
@@ -85,13 +84,6 @@
                                             <div class="d-flex align-items-center">
                                                 <div class="fw-semibold"><?php echo e($amenity->name); ?></div>
                                             </div>
-                                        </td>
-                                        <td class="align-middle">
-                                            <?php if($amenity->icon): ?>
-                                                <img src="<?php echo e($amenity->icon_url); ?>" alt="Amenity icon" class="img-thumbnail" style="max-width: 40px; max-height: 40px;" onerror="this.onerror=null;this.src='<?php echo e(asset('images/noimage.png')); ?>';">
-                                            <?php else: ?>
-                                                <span class="text-muted">No icon</span>
-                                            <?php endif; ?>
                                         </td>
                                         <td class="align-middle">
                                             <span class="text-muted"><?php echo e($amenity->createdby ? \App\Models\BnbUser::find($amenity->createdby)->username ?? 'User #' . $amenity->createdby : 'System'); ?></span>

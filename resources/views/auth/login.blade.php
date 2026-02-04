@@ -1,198 +1,156 @@
-@extends('websitepages.layouts.app')
-
-@section('title', __('Login'))
-
-@push('styles')
-    <style>
-        .login-page {
-            min-height: calc(100vh - 160px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 3rem 1rem 4rem;
-            background: linear-gradient(135deg, #f1f5f9, #f8fafc);
-        }
-
-        .login-card {
-            border: none;
-            border-radius: 22px;
-            box-shadow: 0 30px 60px rgba(15, 23, 42, 0.08);
-            overflow: hidden;
-            width: 100%;
-            max-width: 460px;
-            background-color: #fff;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .login-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 40px 60px rgba(15, 23, 42, 0.12);
-        }
-
-        .login-header {
-            background: radial-gradient(circle at top, #2b70f7, #1f54bb);
-            color: white;
-            text-align: center;
-            padding: 2.75rem 1.5rem 2.5rem;
-        }
-
-        .login-header img {
-            width: 76px;
-            height: 76px;
-            margin-bottom: 1rem;
-            object-fit: contain;
-        }
-
-        .login-header h3 {
-            margin: 0;
-            font-weight: 600;
-            font-size: 1.45rem;
-            letter-spacing: 0.01em;
-        }
-
-        .login-header p {
-            margin: 0.35rem 0 0;
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.82);
-        }
-
-        .login-form {
-            padding: 2.5rem 2.25rem 2rem;
-            display: grid;
-            gap: 1.5rem;
-        }
-
-        .form-group {
-            display: grid;
-            gap: 0.45rem;
-        }
-
-        .form-label {
-            font-weight: 600;
-            color: #0f172a;
-            font-size: 0.95rem;
-        }
-
-        .form-control {
-            border-radius: 14px;
-            border: 1px solid rgba(15, 23, 42, 0.12);
-            padding: 0.95rem 1.1rem;
-            font-size: 0.95rem;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .form-control:focus {
-            border-color: rgba(43, 112, 247, 0.8);
-            box-shadow: 0 0 0 3px rgba(43, 112, 247, 0.2);
-            outline: none;
-        }
-
-        .btn-login {
-            background: linear-gradient(120deg, #1f54bb, #2b70f7);
-            border-radius: 14px;
-            padding: 0.95rem;
-            font-weight: 600;
-            border: none;
-            font-size: 1rem;
-            letter-spacing: 0.02em;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            width: 100%;
-        }
-
-        .btn-login:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 30px rgba(43, 112, 247, 0.35);
-        }
-
-        .alert {
-            border-radius: 12px;
-            padding: 1rem 1.25rem;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-        }
-
-        .alert-danger {
-            background-color: #fef2f2;
-            border: 1px solid #fecaca;
-            color: #991b1b;
-        }
-
-        .alert-info {
-            background-color: #eff6ff;
-            border: 1px solid #bfdbfe;
-            color: #1e40af;
-        }
-
-        .text-footer {
-            text-align: center;
-            margin-top: 1.5rem;
-            color: #6b7280;
-            font-size: 0.9rem;
-        }
-
-        .text-footer a {
-            color: #1f54bb;
-            font-weight: 600;
-        }
-
-        @media (max-width: 520px) {
-            .login-form {
-                padding: 2rem 1.5rem 1.75rem;
-            }
-
-            .form-control {
-                font-size: 1rem;
-            }
-        }
-    </style>
-@endpush
-
-@section('content')
-    <div class="login-page">
-        <div class="login-card">
-            <div class="login-header">
-                <img src="{{ asset('images/static_file/applogo.png') }}" alt="App Logo">
-                <h3>Welcome Back</h3>
-                <p class="mb-0">Please login to continue</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Login | {{ config('bnbcompany.name', 'BnB') }}</title>
+    <link rel="icon" href="{{ asset('images/static_file/applogo.png') }}" type="image/png">
+    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Top Navbar -->
+    <nav class="login-navbar">
+        <div class="login-nav-inner">
+            <a href="{{ route('website.home') }}" class="login-nav-brand">
+                <img src="{{ asset('images/static_file/applogo.png') }}" alt="{{ config('bnbcompany.name') }}" class="login-nav-logo">
+                <span class="login-nav-brand-text">{{ config('bnbcompany.name') }}</span>
+            </a>
+            <div class="login-nav-links">
+                <a href="{{ route('website.home') }}" class="login-nav-link">Home</a>
+                <a href="{{ route('login') }}" class="login-nav-link login-nav-link-active">Login</a>
+                <a href="{{ route('website.auth.register') }}" class="login-nav-link">Register</a>
             </div>
+        </div>
+    </nav>
 
-            <div class="login-form">
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        @foreach ($errors->all() as $error)
-                            <div>{{ $error }}</div>
-                        @endforeach
+    <div class="login-container">
+        <!-- Left Panel - Promotional Image -->
+        <div class="promotional-panel" style="background-image: url('{{ asset('images/static_file/welcomeimage.png') }}');">
+            <div class="promotional-content">
+                <div class="promo-text-top">{{ config('bnbcompany.name') }}</div>
+                <div class="promo-text-bottom">
+                    <div class="promo-name">{{ config('bnbcompany.name') }}</div>
+                    <div class="promo-description">
+                        {{ config('bnbcompany.welcome_note') }}
                     </div>
-                @endif
+                </div>
+            </div>
+            <div class="promotional-overlay"></div>
+        </div>
 
-                @if (session('status'))
-                    <div class="alert alert-info">
-                        {{ session('status') }}
+        <!-- Right Panel - Login Form -->
+        <div class="login-form-panel">
+            <div class="login-content">
+                <!-- Logo -->
+                <div class="logo-container">
+                    <div class="logo-icon">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16 4L20 12L28 14L20 16L16 24L12 16L4 14L12 12L16 4Z" fill="currentColor"/>
+                        </svg>
                     </div>
-                @endif
+                    <span class="logo-text">{{ config('bnbcompany.short') }}</span>
+                </div>
 
-                <form method="POST" action="{{ route('login.submit') }}">
+                <!-- Welcome Message -->
+                <div class="welcome-section">
+                    <h1 class="welcome-title">Welcome Back!</h1>
+                    <p class="welcome-subtitle">{{ config('bnbcompany.name') }}, {{ config('bnbcompany.motto') }}</p>
+                </div>
+
+                <!-- Login Form -->
+                <form method="POST" action="{{ route('login.submit') }}" class="login-form">
                     @csrf
+
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            @foreach ($errors->all() as $error)
+                                <div>{{ $error }}</div>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    @if (session('status'))
+                        <div class="alert alert-info">
+                            {{ session('status') }}
+                        </div>
+                    @endif
+
+                    <!-- Email Field -->
                     <div class="form-group">
-                        <label for="useremail" class="form-label">Email Address</label>
-                        <input type="email" name="useremail" id="useremail" value="{{ old('useremail') }}" class="form-control" required placeholder="Enter your email">
+                        <label for="useremail" class="form-label">Email</label>
+                        <input
+                            type="email"
+                            id="useremail"
+                            name="useremail"
+                            class="form-input @error('useremail') is-invalid @enderror"
+                            placeholder="Enter your email"
+                            value="{{ old('useremail') }}"
+                            required
+                            autofocus
+                        >
+                        @error('useremail')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
                     </div>
 
+                    <!-- Password Field -->
                     <div class="form-group">
                         <label for="password" class="form-label">Password</label>
-                        <input type="password" name="password" id="password" class="form-control" required placeholder="Enter your password">
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="form-input @error('password') is-invalid @enderror"
+                            placeholder="Enter your password"
+                            required
+                        >
+                        @error('password')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
                     </div>
-<br>
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-login text-white">Login</button>
+
+                    <!-- Remember Me & Forgot Password -->
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="remember" id="remember">
+                            <span>Remember me</span>
+                        </label>
+                        <a href="#" class="forgot-password-link">Forgot Password</a>
                     </div>
+
+                    <!-- Sign In Button -->
+                    <button type="submit" class="btn-signin">Sign In</button>
                 </form>
 
                 <div class="text-footer mt-3">
-                    <small>Forgot password? <a href="#" class="text-primary text-decoration-none">Reset here</a></small><br>
-                    <small>Don't have an account? <a href="{{ route('website.auth.register') }}" class="text-primary text-decoration-none">Register</a></small>
+                    <small>Don't have an account? <a href="{{ route('website.auth.register') }}">Register</a></small>
                 </div>
             </div>
         </div>
     </div>
-@endsection
+
+    <script>
+        if (window.performance && window.performance.navigation.type === window.performance.navigation.TYPE_BACK_FORWARD) {
+            window.location.href = window.location.href + (window.location.href.indexOf('?') > -1 ? '&' : '?') + '_t=' + new Date().getTime();
+        }
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                window.location.href = window.location.href.split('?')[0] + '?_t=' + new Date().getTime();
+            }
+        });
+        if (window.history && window.history.pushState) {
+            window.history.pushState(null, null, window.location.href);
+            window.addEventListener('popstate', function() {
+                window.history.pushState(null, null, window.location.href);
+                window.location.href = window.location.href.split('?')[0] + '?_t=' + new Date().getTime();
+            });
+        }
+    </script>
+</body>
+</html>
