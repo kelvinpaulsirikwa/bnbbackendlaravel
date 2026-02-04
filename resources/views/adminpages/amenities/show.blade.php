@@ -62,26 +62,6 @@
                                 </div>
                             </div>
 
-                            <!-- Icon -->
-                            <div class="col-md-6">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-shrink-0">
-                                        <i class="bx bx-image text-primary fs-4"></i>
-                                    </div>
-                                    <div class="flex-grow-1 ms-3">
-                                        <h6 class="mb-1 text-muted">Icon</h6>
-                                        @if($amenity->icon)
-                                            <div class="d-flex align-items-center">
-                                                <img src="{{ $amenity->icon_url }}" alt="Amenity icon" class="img-thumbnail me-2" style="max-width: 50px; max-height: 50px;" onerror="this.onerror=null;this.src='{{ asset('images/noimage.png') }}';">
-                                                <span class="fw-semibold">{{ basename($amenity->icon) }}</span>
-                                            </div>
-                                        @else
-                                            <p class="mb-0 text-muted">No icon set</p>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-
                             <!-- Created By -->
                             <div class="col-md-6">
                                 <div class="d-flex align-items-center">

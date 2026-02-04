@@ -30,7 +30,7 @@
                         </h5>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('adminpages.amenities.update', $amenity->id) }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('adminpages.amenities.update', $amenity->id) }}" method="POST">
                             @csrf
                             @method('PUT')
                             
@@ -48,36 +48,6 @@
                                            placeholder="Enter amenity name"
                                            required>
                                     @error('name')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-
-                                <!-- Icon Field -->
-                                <div class="col-12">
-                                    <label for="icon" class="form-label">
-                                        Icon Image
-                                    </label>
-                                    
-                                    @if($amenity->icon)
-                                        <div class="mb-3">
-                                            <label class="form-label">Current Icon:</label>
-                                            <div>
-                                                <img src="{{ $amenity->icon_url }}" alt="Current icon" class="img-thumbnail" style="max-width: 100px; max-height: 100px;" onerror="this.onerror=null;this.src='{{ asset('images/noimage.png') }}';">
-                                            </div>
-                                        </div>
-                                    @endif
-                                    
-                                    <input type="file" 
-                                           class="form-control @error('icon') is-invalid @enderror" 
-                                           id="icon" 
-                                           name="icon" 
-                                           accept="image/*">
-                                    <div class="form-text">
-                                        Upload a new icon image (JPEG, PNG, JPG, GIF, SVG - Max 2MB). Leave empty to keep current icon.
-                                    </div>
-                                    @error('icon')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>

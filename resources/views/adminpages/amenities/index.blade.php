@@ -68,7 +68,6 @@
                                 <tr>
                                     <th class="border-0">ID</th>
                                     <th class="border-0">Name</th>
-                                    <th class="border-0">Icon</th>
                                     <th class="border-0">Created By</th>
                                     <th class="border-0">Created At</th>
                                     <th class="border-0 text-center">Actions</th>
@@ -84,13 +83,6 @@
                                             <div class="d-flex align-items-center">
                                                 <div class="fw-semibold">{{ $amenity->name }}</div>
                                             </div>
-                                        </td>
-                                        <td class="align-middle">
-                                            @if($amenity->icon)
-                                                <img src="{{ $amenity->icon_url }}" alt="Amenity icon" class="img-thumbnail" style="max-width: 40px; max-height: 40px;" onerror="this.onerror=null;this.src='{{ asset('images/noimage.png') }}';">
-                                            @else
-                                                <span class="text-muted">No icon</span>
-                                            @endif
                                         </td>
                                         <td class="align-middle">
                                             <span class="text-muted">{{ $amenity->createdby ? \App\Models\BnbUser::find($amenity->createdby)->username ?? 'User #' . $amenity->createdby : 'System' }}</span>

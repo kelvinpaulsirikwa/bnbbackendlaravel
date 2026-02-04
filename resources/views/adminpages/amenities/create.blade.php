@@ -30,7 +30,7 @@
                         </h5>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('adminpages.amenities.store') }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('adminpages.amenities.store') }}" method="POST">
                             @csrf
                             
                             <div class="row g-3">
@@ -47,26 +47,6 @@
                                            placeholder="Enter amenity name"
                                            required>
                                     @error('name')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-
-                                <!-- Icon Field -->
-                                <div class="col-12">
-                                    <label for="icon" class="form-label">
-                                        Icon Image
-                                    </label>
-                                    <input type="file" 
-                                           class="form-control @error('icon') is-invalid @enderror" 
-                                           id="icon" 
-                                           name="icon" 
-                                           accept="image/*">
-                                    <div class="form-text">
-                                        Upload an icon image (JPEG, PNG, JPG, GIF, SVG - Max 2MB)
-                                    </div>
-                                    @error('icon')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
