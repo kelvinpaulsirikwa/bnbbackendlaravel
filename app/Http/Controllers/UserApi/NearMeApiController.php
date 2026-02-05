@@ -10,9 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class NearMeApiController extends Controller
 {
-    /**
-     * Get motels near user location with distance-based pagination
-     */
     public function getNearMeMotels(Request $request)
     {
         try {
@@ -107,9 +104,6 @@ class NearMeApiController extends Controller
         }
     }
 
-    /**
-     * Get top searched motels with pagination
-     */
     public function getTopSearchedMotels(Request $request)
     {
         try {
@@ -192,9 +186,6 @@ class NearMeApiController extends Controller
         }
     }
 
-    /**
-     * Get newest motels with pagination
-     */
     public function getNewestMotels(Request $request)
     {
         try {

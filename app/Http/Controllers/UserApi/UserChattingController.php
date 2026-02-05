@@ -14,9 +14,6 @@ use Carbon\Carbon;
 
 class UserChattingController extends Controller
 {
-    /**
-     * Get all chats for a customer (motels they've chatted with)
-     */
     public function getCustomerChats(Request $request)
     {
         try {
@@ -109,9 +106,6 @@ class UserChattingController extends Controller
         }
     }
 
-    /**
-     * Get messages for a specific chat
-     */
     public function getChatMessages($chatId, Request $request)
     {
         try {
@@ -227,9 +221,6 @@ class UserChattingController extends Controller
         }
     }
 
-    /**
-     * Send a message
-     */
     public function sendMessage(Request $request)
     {
         try {
@@ -357,9 +348,6 @@ class UserChattingController extends Controller
         }
     }
 
-    /**
-     * Create or get existing chat
-     */
     public function createOrGetChat(Request $request)
     {
         try {

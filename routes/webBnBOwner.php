@@ -76,6 +76,7 @@ Route::middleware(['auth', 'role:bnbowner,bnbonwner'])->group(function () {
     Route::put('/bnbowner/staff-management/{id}', [StaffManagementController::class, 'update'])->name('bnbowner.staff-management.update');
     Route::post('/bnbowner/staff-management/{id}/reset-password', [StaffManagementController::class, 'resetPassword'])->name('bnbowner.staff-management.reset-password');
     Route::patch('/bnbowner/staff-management/{id}/toggle-status', [StaffManagementController::class, 'toggleStatus'])->name('bnbowner.staff-management.toggle-status');
+    Route::post('/bnbowner/staff-management/{id}/transfer', [StaffManagementController::class, 'transfer'])->name('bnbowner.staff-management.transfer');
 
     // Guest Chat Routes
     Route::get('/bnbowner/chats', [ChatController::class, 'index'])->name('bnbowner.chats.index');

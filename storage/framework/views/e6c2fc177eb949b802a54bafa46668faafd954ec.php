@@ -70,25 +70,11 @@
                                             <td><?php echo e($member->useremail); ?></td>
                                             <td><?php echo e($member->telephone ?? 'N/A'); ?></td>
                                             <td>
-                                                <span class="badge 
-                                                    <?php echo e($member->role === 'bnbreceiptionist' ? 'bg-info' : ''); ?>
-
-                                                    <?php echo e($member->role === 'bnbsecurity' ? 'bg-warning' : ''); ?>
-
-                                                    <?php echo e($member->role === 'bnbchef' ? 'bg-success' : ''); ?>
-
-                                                ">
-                                                    <?php if($member->role === 'bnbreceiptionist'): ?>
-                                                        <i class="fas fa-user-tie"></i> Receptionist
-                                                    <?php elseif($member->role === 'bnbsecurity'): ?>
-                                                        <i class="fas fa-shield-alt"></i> Security
-                                                    <?php elseif($member->role === 'bnbchef'): ?>
-                                                        <i class="fas fa-utensils"></i> Chef
-                                                    <?php else: ?>
-                                                        <?php echo e(ucfirst($member->role)); ?>
-
-                                                    <?php endif; ?>
-                                                </span>
+                                                <?php if($member->motelRole): ?>
+                                                    <span class="badge bg-primary"><?php echo e($member->motelRole->name); ?></span>
+                                                <?php else: ?>
+                                                    <span class="text-muted">—</span>
+                                                <?php endif; ?>
                                             </td>
                                             <td>
                                                 <span class="badge bg-<?php echo e($member->status === 'active' ? 'success' : 'danger'); ?>">

@@ -15,9 +15,6 @@ use Illuminate\Support\Facades\Log;
 
 class AboutApiController extends Controller
 {
-    /**
-     * Get BnB statistics and information
-     */
     public function getBnBStatistics()
     {
         try {
@@ -108,9 +105,6 @@ class AboutApiController extends Controller
         }
     }
     
-    /**
-     * Get detailed amenities list
-     */
     public function getAmenities()
     {
         try {

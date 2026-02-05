@@ -127,7 +127,12 @@ class StaffManagementController extends Controller
         }
 
         $motelRoles = MotelRole::where('motel_id', $motel->id)->orderBy('name')->get();
-        return view('bnbowner.staff-management.edit', compact('motel', 'staff', 'motelRoles'))->with('selectedMotel', $motel);
+        // Other motels owned by this user (for transfer option), excluding current motel
+        $ownedMotels = Motel::where('owner_id', $user->id)
+            ->where('id', '!=', $motel->id)
+            ->orderBy('name')
+            ->get();
+        return view('bnbowner.staff-management.edit', compact('motel', 'staff', 'motelRoles', 'ownedMotels'))->with('selectedMotel', $motel);
     }
     
     public function update(Request $request, $id)
@@ -242,5 +247,61 @@ class StaffManagementController extends Controller
         
         return redirect()->route('bnbowner.staff-management.index')
                        ->with('success', "Staff member {$action} successfully.");
+    }
+
+    /**
+     * Transfer staff member to another BNB/motel owned by the same owner.
+     * Requires account password confirmation.
+     */
+    public function transfer(Request $request, $id)
+    {
+        $user = Auth::user();
+        $selectedMotelId = session('selected_motel_id');
+
+        $motel = Motel::where('id', $selectedMotelId)
+                     ->where('owner_id', $user->id)
+                     ->first();
+
+        if (!$motel) {
+            return redirect()->back()->with('error', 'Motel not found.');
+        }
+
+        $staff = BnbUser::where('id', $id)
+                       ->where('motel_id', $motel->id)
+                       ->first();
+
+        if (!$staff) {
+            return redirect()->back()->with('error', 'Staff member not found.');
+        }
+
+        $request->validate([
+            'target_motel_id' => 'required|exists:bnb_motels,id',
+            'password' => 'required|string',
+        ]);
+
+        $targetMotel = Motel::where('id', $request->target_motel_id)
+                            ->where('owner_id', $user->id)
+                            ->first();
+
+        if (!$targetMotel) {
+            return redirect()->back()->with('error', 'You can only transfer to a BNB that you own.');
+        }
+
+        if ((int) $targetMotel->id === (int) $motel->id) {
+            return redirect()->back()->with('error', 'Staff is already in this BNB. Choose a different one.');
+        }
+
+        if (!Hash::check($request->password, $user->password)) {
+            return redirect()->back()->with('error', 'Incorrect account password. Transfer cancelled.');
+        }
+
+        $staff->update([
+            'motel_id' => $targetMotel->id,
+            'motel_role_id' => null, // Role is per-motel; clear so owner can assign in new BNB
+        ]);
+
+        return redirect()
+            ->route('bnbowner.staff-management.index')
+            ->with('success', "Staff member {$staff->username} has been transferred to {$targetMotel->name}.");
     }
 }

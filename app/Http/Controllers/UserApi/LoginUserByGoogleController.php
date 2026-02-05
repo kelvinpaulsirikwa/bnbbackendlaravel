@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Website\HomeController;
 
-
 class LoginUserByGoogleController extends Controller
 {
     public function login(Request $request)
@@ -81,9 +80,11 @@ class LoginUserByGoogleController extends Controller
         ], 200);
     }
 
-    /**
-     * Logout user and revoke current token
-     */
+    public function me(Request $request)
+    {
+        return $request->user();
+    }
+
     public function logout(Request $request)
     {
         try {

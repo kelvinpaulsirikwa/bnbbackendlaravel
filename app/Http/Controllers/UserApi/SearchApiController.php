@@ -12,9 +12,6 @@ use Illuminate\Support\Facades\DB;
 
 class SearchApiController extends Controller
 {
-    /**
-     * Get all regions for search filters
-     */
     public function getRegions()
     {
         try {
@@ -36,9 +33,6 @@ class SearchApiController extends Controller
         }
     }
 
-    /**
-     * Get all amenities for search filters
-     */
     public function getAmenities()
     {
         try {
@@ -60,9 +54,6 @@ class SearchApiController extends Controller
         }
     }
 
-    /**
-     * Search motels with filters and tracking
-     */
     public function searchMotels(Request $request)
     {
         try {
@@ -171,9 +162,6 @@ class SearchApiController extends Controller
         }
     }
 
-    /**
-     * Get motel images for search results
-     */
     public function getMotelImages($motelId, Request $request)
     {
         try {
@@ -217,9 +205,6 @@ class SearchApiController extends Controller
         }
     }
 
-    /**
-     * Track search results - increment search count for returned motels
-     */
     public function trackSearch(Request $request)
     {
         try {

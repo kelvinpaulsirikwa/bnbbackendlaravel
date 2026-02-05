@@ -88,6 +88,7 @@ class MotelDetailApiController extends Controller
             ], 500);
         }
     }
+
     public function getMotelImagesPaging(Request $request, $motelId)
     {
         try {

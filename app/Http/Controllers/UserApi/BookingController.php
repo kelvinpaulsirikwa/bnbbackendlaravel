@@ -14,9 +14,6 @@ use Illuminate\Support\Str;
 
 class BookingController extends Controller
 {
-    /**
-     * Create a new booking with transaction
-     */
     public function createBooking(Request $request)
     {
         try {
@@ -175,9 +172,6 @@ class BookingController extends Controller
         }
     }
 
-    /**
-     * Get customer bookings
-     */
     public function getCustomerBookings(Request $request, $customerId)
     {
         try {
@@ -473,9 +467,6 @@ class BookingController extends Controller
 
     
     
-    /**
-     * Cancel a booking
-     */
     public function cancelBooking(Request $request)
     {
         try {

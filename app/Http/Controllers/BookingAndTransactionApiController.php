@@ -11,9 +11,6 @@ use Carbon\Carbon;
 
 class BookingAndTransactionApiController extends Controller
 {
-    /**
-     * Create booking and validate (without saving to database)
-     */
     public function createBookingAndProcessPayment(Request $request)
     {
         try {
@@ -219,9 +216,6 @@ class BookingAndTransactionApiController extends Controller
         return ['valid' => true];
     }
 
-    /**
-     * Check room availability endpoint
-     */
     public function checkRoomAvailability(Request $request)
     {
         try {
@@ -330,9 +324,6 @@ class BookingAndTransactionApiController extends Controller
         }
     }
 
-    /**
-     * Get booking details
-     */
     public function getBookingDetails($bookingId)
     {
         try {
@@ -360,9 +351,6 @@ class BookingAndTransactionApiController extends Controller
         }
     }
 
-    /**
-     * Cancel booking
-     */
     public function cancelBooking(Request $request, $bookingId)
     {
         try {

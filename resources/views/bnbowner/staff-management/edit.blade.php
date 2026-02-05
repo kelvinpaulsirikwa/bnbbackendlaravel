@@ -33,6 +33,13 @@
                 </div>
             @endif
 
+            @if(session('error'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
+
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     <div class="card">
@@ -121,6 +128,48 @@
                             </form>
                         </div>
                     </div>
+
+                    @if(isset($ownedMotels) && $ownedMotels->isNotEmpty())
+                    <div class="card mt-4 border-warning">
+                        <div class="card-header bg-warning text-dark">
+                            <h5 class="mb-0">
+                                <i class="fas fa-exchange-alt"></i> Transfer to another BNB
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted mb-3">Move this staff member to one of your other properties. You will need to enter your account password to confirm.</p>
+                            <form method="POST" action="{{ route('bnbowner.staff-management.transfer', $staff->id) }}" class="transfer-form">
+                                @csrf
+                                <div class="row align-items-end">
+                                    <div class="col-md-4">
+                                        <label for="target_motel_id" class="form-label">Transfer to BNB</label>
+                                        <select class="form-select" id="target_motel_id" name="target_motel_id" required>
+                                            <option value="">— Select a BNB —</option>
+                                            @foreach($ownedMotels as $m)
+                                                <option value="{{ $m->id }}">{{ $m->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="transfer_password" class="form-label">Your account password</label>
+                                        <input type="password" class="form-control" id="transfer_password" name="password" required placeholder="Enter your login password" autocomplete="current-password">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="submit" class="btn btn-warning">
+                                            <i class="fas fa-exchange-alt"></i> Transfer Staff
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    @else
+                    <div class="card mt-4 border-secondary">
+                        <div class="card-body text-muted">
+                            <i class="fas fa-info-circle"></i> Transfer to another BNB is available when you own more than one property.
+                        </div>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>

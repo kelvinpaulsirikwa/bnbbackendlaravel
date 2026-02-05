@@ -142,7 +142,7 @@ class MotelApiController extends Controller
             ], 500);
         }
     }
-    
+
     public function featured(Request $request)
     {
         try {

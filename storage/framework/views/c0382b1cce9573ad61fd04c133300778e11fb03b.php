@@ -32,6 +32,14 @@
                 </div>
             <?php endif; ?>
 
+            <?php if(session('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?php echo e(session('error')); ?>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     <div class="card">
@@ -78,8 +86,22 @@
                                                    value="<?php echo e(old('telephone', $staff->telephone)); ?>">
                                         </div>
                                     </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="motel_role_id" class="form-label">Role (from Role Management)</label>
+                                            <select class="form-select" id="motel_role_id" name="motel_role_id">
+                                                <option value="">— No role —</option>
+                                                <?php $__currentLoopData = $motelRoles ?? []; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $r): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <option value="<?php echo e($r->id); ?>" <?php echo e(old('motel_role_id', $staff->motel_role_id) == $r->id ? 'selected' : ''); ?>><?php echo e($r->name); ?></option>
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                            </select>
+                                            <?php if(empty($motelRoles) || $motelRoles->isEmpty()): ?>
+                                                <small class="text-muted">Create roles in <a href="<?php echo e(route('bnbowner.role-management.index')); ?>">Role Management</a> first.</small>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
                                 </div>
-                                
+
                                 <div class="mb-3">
                                     <label for="profileimage" class="form-label">Profile Image</label>
                                     <input type="file" class="form-control" id="profileimage" name="profileimage" 
@@ -106,6 +128,48 @@
                             </form>
                         </div>
                     </div>
+
+                    <?php if(isset($ownedMotels) && $ownedMotels->isNotEmpty()): ?>
+                    <div class="card mt-4 border-warning">
+                        <div class="card-header bg-warning text-dark">
+                            <h5 class="mb-0">
+                                <i class="fas fa-exchange-alt"></i> Transfer to another BNB
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted mb-3">Move this staff member to one of your other properties. You will need to enter your account password to confirm.</p>
+                            <form method="POST" action="<?php echo e(route('bnbowner.staff-management.transfer', $staff->id)); ?>" class="transfer-form">
+                                <?php echo csrf_field(); ?>
+                                <div class="row align-items-end">
+                                    <div class="col-md-4">
+                                        <label for="target_motel_id" class="form-label">Transfer to BNB</label>
+                                        <select class="form-select" id="target_motel_id" name="target_motel_id" required>
+                                            <option value="">— Select a BNB —</option>
+                                            <?php $__currentLoopData = $ownedMotels; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $m): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <option value="<?php echo e($m->id); ?>"><?php echo e($m->name); ?></option>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="transfer_password" class="form-label">Your account password</label>
+                                        <input type="password" class="form-control" id="transfer_password" name="password" required placeholder="Enter your login password" autocomplete="current-password">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="submit" class="btn btn-warning">
+                                            <i class="fas fa-exchange-alt"></i> Transfer Staff
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <?php else: ?>
+                    <div class="card mt-4 border-secondary">
+                        <div class="card-body text-muted">
+                            <i class="fas fa-info-circle"></i> Transfer to another BNB is available when you own more than one property.
+                        </div>
+                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

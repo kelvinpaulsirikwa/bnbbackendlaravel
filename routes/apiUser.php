@@ -13,7 +13,6 @@ use App\Http\Controllers\UserApi\BookingController;
 use App\Http\Controllers\UserApi\AboutApiController;
 use App\Http\Controllers\UserApi\UserChattingController;
 use App\Http\Controllers\BookingAndTransactionApiController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,9 +29,7 @@ Route::post('/userlogin', [LoginUserByGoogleController::class, 'login']);
 // All protected routes - require Sanctum authentication
 Route::middleware('auth:sanctum')->group(function () {
     // Get authenticated user
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
+    Route::get('/user', [LoginUserByGoogleController::class, 'me']);
 
     // Logout route
     Route::post('/logout', [LoginUserByGoogleController::class, 'logout']);
