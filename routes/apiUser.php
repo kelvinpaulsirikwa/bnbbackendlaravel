@@ -12,7 +12,6 @@ use App\Http\Controllers\UserApi\NearMeApiController;
 use App\Http\Controllers\UserApi\BookingController;
 use App\Http\Controllers\UserApi\AboutApiController;
 use App\Http\Controllers\UserApi\UserChattingController;
-use App\Http\Controllers\BookingAndTransactionApiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -72,15 +71,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/top-searched/motels', [NearMeApiController::class, 'getTopSearchedMotels']);
     Route::get('/newest/motels', [NearMeApiController::class, 'getNewestMotels']);
 
-    // Booking routes (New unified controller)
-    Route::post('/check-room-availability', [BookingAndTransactionApiController::class, 'checkRoomAvailability']);
-    Route::post('/create-booking', [BookingAndTransactionApiController::class, 'createBookingAndProcessPayment']);
-    Route::post('/retry-payment/{bookingId}', [BookingAndTransactionApiController::class, 'retryPayment']);
-    Route::get('/booking/{bookingId}', [BookingAndTransactionApiController::class, 'getBookingDetails']);
-    Route::post('/cancel-booking/{bookingId}', [BookingAndTransactionApiController::class, 'cancelBooking']);
-
-    // Legacy Booking routes
-    Route::post('/booking/create', [BookingController::class, 'createBooking']);
+    // Booking routes (unified for Flutter BookingService)
+    Route::post('/check-room-availability', [BookingController::class, 'checkRoomAvailability']);
+    Route::post('/create-booking', [BookingController::class, 'createBooking']);
+    Route::post('/create-multiple-bookings', [BookingController::class, 'createMultipleBookings']);
+    Route::post('/retry-payment/{bookingId}', [BookingController::class, 'retryPayment']);
+    Route::get('/booking/{bookingId}', [BookingController::class, 'getBookingDetails']);
     Route::get('/booking/customer/{customer_id}', [BookingController::class, 'getCustomerBookings']);
     Route::get('/booking/customer/{customer_id}/transactions', [BookingController::class, 'getCustomerTransactions']);
     Route::post('/booking/cancel', [BookingController::class, 'cancelBooking']);

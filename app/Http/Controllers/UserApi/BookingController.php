@@ -4,6 +4,7 @@ namespace App\Http\Controllers\UserApi;
 
 use App\Http\Controllers\Controller;
 use App\Models\BnbBooking;
+use App\Models\BnbBookingDate;
 use App\Models\BnbTransaction;
 use App\Models\BnbRoom;
 use App\Models\Customer;
@@ -25,7 +26,7 @@ class BookingController extends Controller
                 'check_out_date' => 'required|date|after:check_in_date',
                 'contact_number' => 'required|string|min:10',
                 'payment_method' => 'required|in:mobile_money,bank_transfer,cash,card',
-                'payment_reference' => 'required|string',
+                'payment_reference' => 'nullable|string|max:255',
                 'special_requests' => 'nullable|string|max:500',
             ]);
 
@@ -55,23 +56,19 @@ class BookingController extends Controller
             }
 
             // Calculate booking details
-            $checkInDate = \Carbon\Carbon::parse($request->check_in_date);
-            $checkOutDate = \Carbon\Carbon::parse($request->check_out_date);
+            $checkInDate = \Carbon\Carbon::parse($request->check_in_date)->startOfDay();
+            $checkOutDate = \Carbon\Carbon::parse($request->check_out_date)->startOfDay();
             $numberOfNights = $checkInDate->diffInDays($checkOutDate);
             $pricePerNight = $room->price_per_night;
             $totalAmount = $pricePerNight * $numberOfNights;
 
-                // Check for conflicting bookings
-                $conflictingBooking = BnbBooking::where('bnb_room_id', $request->room_id)
-                    ->where('status', '!=', 'cancelled')
-                    ->where(function ($query) use ($checkInDate, $checkOutDate) {
-                        $query->whereBetween('check_in_date', [$checkInDate, $checkOutDate])
-                            ->orWhereBetween('check_out_date', [$checkInDate, $checkOutDate])
-                            ->orWhere(function ($q) use ($checkInDate, $checkOutDate) {
-                                $q->where('check_in_date', '<=', $checkInDate)
-                                    ->where('check_out_date', '>=', $checkOutDate);
-                            });
-                    })
+                // Check for conflicting bookings using per-day records
+                // We consider nights from check_in (inclusive) to check_out (exclusive)
+                $conflictingBooking = BnbBookingDate::where('bnb_room_id', $request->room_id)
+                    ->whereBetween('booked_date', [
+                        $checkInDate->format('Y-m-d'),
+                        $checkOutDate->copy()->subDay()->format('Y-m-d'),
+                    ])
                     ->exists();
 
             if ($conflictingBooking) {
@@ -100,16 +97,6 @@ class BookingController extends Controller
                         'special_requests' => $request->special_requests,
                     ]);
 
-                    // Create per-day booking records so availability can be tracked by date
-                    for ($date = $checkInDate->copy(); $date->lt($checkOutDate); $date->addDay()) {
-                        \App\Models\BnbBookingDate::create([
-                            'booking_id' => $booking->id,
-                            'bnb_room_id' => $room->id,
-                            'booked_date' => $date->format('Y-m-d'),
-                            'price_per_night' => $pricePerNight,
-                        ]);
-                    }
-
                 // Generate unique transaction ID
                 $transactionId = 'TXN_' . strtoupper(Str::random(8)) . '_' . time();
 
@@ -121,7 +108,7 @@ class BookingController extends Controller
                         'booking_id' => $booking->id,
                         'transaction_id' => $transactionId,
                         'amount' => $totalAmount,
-                        'payment_method' => $request->payment_method,
+                        'payment_method' => $this->normalizePaymentMethod($request->payment_method),
                         'payment_reference' => $request->payment_reference,
                         'status' => $paymentSuccess ? 'completed' : 'failed',
                         'processed_at' => $paymentSuccess ? now() : null,
@@ -132,9 +119,17 @@ class BookingController extends Controller
                     'status' => $paymentSuccess ? 'confirmed' : 'pending'
                 ]);
 
-                // Update room status if payment successful
+                // If payment is successful, create per-day booking records.
+                // These rows, together with the DB trigger, will drive room availability.
                 if ($paymentSuccess) {
-                    $room->update(['status' => 'booked']);
+                    for ($date = $checkInDate->copy(); $date->lt($checkOutDate); $date->addDay()) {
+                        BnbBookingDate::create([
+                            'booking_id' => $booking->id,
+                            'bnb_room_id' => $room->id,
+                            'booked_date' => $date->format('Y-m-d'),
+                            'price_per_night' => $pricePerNight,
+                        ]);
+                    }
                 }
 
                 DB::commit();
@@ -178,6 +173,168 @@ class BookingController extends Controller
                 'success' => false,
                 'message' => 'An error occurred while processing your booking',
                 'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Create multiple bookings (one per date) for "Pick Dates" mode.
+     * Flutter: POST /create-multiple-bookings
+     * Body: room_id, customer_id, selected_dates (array of Y-m-d), contact_number, payment_method, payment_reference?, special_requests?
+     */
+    public function createMultipleBookings(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'room_id' => 'required|exists:bnbrooms,id',
+                'customer_id' => 'required|exists:customers,id',
+                'selected_dates' => 'required|array|min:1',
+                'selected_dates.*' => 'required|date|after_or_equal:today',
+                'contact_number' => 'required|string|min:10',
+                'payment_method' => 'required|in:mobile_money,bank_transfer,cash,card',
+                'payment_reference' => 'nullable|string|max:255',
+                'special_requests' => 'nullable|string|max:500',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed',
+                    'errors' => $validator->errors(),
+                ], 422);
+            }
+
+            $room = BnbRoom::with(['motel', 'roomType'])->find($request->room_id);
+            if (!$room) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Room not found',
+                ], 404);
+            }
+
+            $selectedDates = collect($request->selected_dates)
+                ->map(fn ($d) => \Carbon\Carbon::parse($d)->startOfDay()->format('Y-m-d'))
+                ->unique()
+                ->sort()
+                ->values()
+                ->all();
+
+            if (empty($selectedDates)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No valid dates selected.',
+                ], 422);
+            }
+
+            $alreadyBooked = BnbBookingDate::where('bnb_room_id', $room->id)
+                ->whereIn('booked_date', $selectedDates)
+                ->pluck('booked_date')
+                ->map(fn ($d) => \Carbon\Carbon::parse($d)->format('Y-m-d'))
+                ->all();
+
+            if (!empty($alreadyBooked)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Room is not available for some selected dates.',
+                    'booked_dates' => array_values($alreadyBooked),
+                ], 400);
+            }
+
+            $pricePerNight = (float) $room->price_per_night;
+            $totalAmount = $pricePerNight * count($selectedDates);
+
+            DB::beginTransaction();
+            try {
+                $bookings = [];
+                foreach ($selectedDates as $dateStr) {
+                    $checkIn = \Carbon\Carbon::parse($dateStr)->startOfDay();
+                    $checkOut = $checkIn->copy()->addDay();
+
+                    $booking = BnbBooking::create([
+                        'customer_id' => $request->customer_id,
+                        'bnb_room_id' => $room->id,
+                        'bnb_motels_id' => $room->motelid,
+                        'check_in_date' => $checkIn,
+                        'check_out_date' => $checkOut,
+                        'number_of_nights' => 1,
+                        'price_per_night' => $pricePerNight,
+                        'total_amount' => $pricePerNight,
+                        'contact_number' => $request->contact_number,
+                        'status' => 'pending',
+                        'special_requests' => $request->special_requests,
+                    ]);
+                    $bookings[] = $booking;
+                }
+
+                $paymentSuccess = $this->processPayment($request->payment_method, $totalAmount);
+                $transactionId = 'TXN_' . strtoupper(Str::random(8)) . '_' . time();
+
+                $transaction = BnbTransaction::create([
+                    'booking_id' => $bookings[0]->id,
+                    'transaction_id' => $transactionId,
+                    'amount' => $totalAmount,
+                    'payment_method' => $this->normalizePaymentMethod($request->payment_method),
+                    'payment_reference' => $request->payment_reference,
+                    'status' => $paymentSuccess ? 'completed' : 'failed',
+                    'processed_at' => $paymentSuccess ? now() : null,
+                ]);
+
+                $newStatus = $paymentSuccess ? 'confirmed' : 'pending';
+                foreach ($bookings as $b) {
+                    $b->update(['status' => $newStatus]);
+                }
+
+                if ($paymentSuccess) {
+                    foreach ($bookings as $booking) {
+                        $checkIn = \Carbon\Carbon::parse($booking->check_in_date)->startOfDay();
+                        BnbBookingDate::create([
+                            'booking_id' => $booking->id,
+                            'bnb_room_id' => $room->id,
+                            'booked_date' => $checkIn->format('Y-m-d'),
+                            'price_per_night' => $pricePerNight,
+                        ]);
+                    }
+                }
+
+                DB::commit();
+
+                return response()->json([
+                    'success' => true,
+                    'message' => $paymentSuccess
+                        ? 'Bookings created successfully.'
+                        : 'Bookings created but payment failed. Please try again.',
+                    'data' => [
+                        'bookings' => collect($bookings)->map(fn ($b) => [
+                            'id' => $b->id,
+                            'booking_reference' => 'BNB_' . $b->id,
+                            'check_in_date' => \Carbon\Carbon::parse($b->check_in_date)->format('Y-m-d'),
+                            'check_out_date' => \Carbon\Carbon::parse($b->check_out_date)->format('Y-m-d'),
+                            'status' => $b->fresh()->status,
+                        ])->all(),
+                        'transaction' => [
+                            'id' => $transaction->id,
+                            'transaction_id' => $transaction->transaction_id,
+                            'amount' => (float) $transaction->amount,
+                            'payment_method' => $transaction->payment_method,
+                            'status' => $transaction->status,
+                        ],
+                        'room' => [
+                            'id' => $room->id,
+                            'room_number' => $room->room_number,
+                            'room_type' => $room->roomType->name ?? null,
+                            'motel_name' => $room->motel->name ?? null,
+                        ],
+                    ],
+                ], $paymentSuccess ? 200 : 402);
+            } catch (\Exception $e) {
+                DB::rollback();
+                throw $e;
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while creating bookings',
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -524,8 +681,18 @@ class BookingController extends Controller
                 // Update booking status
                 $booking->update(['status' => 'cancelled']);
 
-                // Update room status back to free
-                $booking->room->update(['status' => 'free']);
+                // Remove per-day booking records for this booking
+                $room = $booking->room;
+                if ($room) {
+                    $booking->bookingDates()->delete();
+
+                    // Recalculate room status based on remaining future booking dates
+                    $hasFutureBookings = $room->bookingDates()
+                        ->where('booked_date', '>=', now()->toDateString())
+                        ->exists();
+
+                    $room->update(['status' => $hasFutureBookings ? 'booked' : 'free']);
+                }
 
                 // Update transaction status if exists
                 $booking->transactions()->update(['status' => 'refunded']);
@@ -549,6 +716,277 @@ class BookingController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+    /**
+     * Check room availability for a date range (Flutter: POST /check-room-availability).
+     * Returns each date in the range with status "available" or "booked".
+     */
+    public function checkRoomAvailability(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'room_id' => 'required|integer|exists:bnbrooms,id',
+                'check_in_date' => 'required|date|after_or_equal:today',
+                'check_out_date' => 'required|date|after:check_in_date',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed',
+                    'errors' => $validator->errors(),
+                ], 422);
+            }
+
+            $roomId = (int) $request->room_id;
+            $checkInDate = \Carbon\Carbon::parse($request->check_in_date)->startOfDay();
+            $checkOutDate = \Carbon\Carbon::parse($request->check_out_date)->startOfDay();
+
+            $room = BnbRoom::find($roomId);
+            if (!$room) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Room not found',
+                ], 404);
+            }
+
+            // Get all booked dates for this room in the range (nights: check_in inclusive, check_out exclusive)
+            $bookedDateStrings = BnbBookingDate::where('bnb_room_id', $roomId)
+                ->whereBetween('booked_date', [
+                    $checkInDate->format('Y-m-d'),
+                    $checkOutDate->copy()->subDay()->format('Y-m-d'),
+                ])
+                ->pluck('booked_date')
+                ->map(fn ($d) => \Carbon\Carbon::parse($d)->format('Y-m-d'))
+                ->unique()
+                ->values()
+                ->all();
+
+            $dates = [];
+            for ($date = $checkInDate->copy(); $date->lt($checkOutDate); $date->addDay()) {
+                $dateStr = $date->format('Y-m-d');
+                $status = in_array($dateStr, $bookedDateStrings) ? 'booked' : 'available';
+                $dates[] = [
+                    'date' => $dateStr,
+                    'status' => $status,
+                    'message' => $status === 'booked' ? 'Booked on this date' : 'Available',
+                ];
+            }
+
+            $allAvailable = !empty($dates) && collect($dates)->every(fn ($d) => $d['status'] === 'available');
+
+            return response()->json([
+                'success' => true,
+                'available' => $allAvailable,
+                'message' => $allAvailable
+                    ? 'Room is available for all selected dates'
+                    : 'Some dates are already booked',
+                'data' => [
+                    'room_id' => $roomId,
+                    'check_in_date' => $checkInDate->format('Y-m-d'),
+                    'check_out_date' => $checkOutDate->format('Y-m-d'),
+                    'dates' => $dates,
+                ],
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to check room availability: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Get a single booking by ID (Flutter: GET /booking/{bookingId})
+     */
+    public function getBookingDetails(Request $request, $bookingId)
+    {
+        try {
+            $booking = BnbBooking::with([
+                'customer',
+                'room.roomType',
+                'room.motel.district',
+                'transactions',
+            ])->find($bookingId);
+
+            if (!$booking) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Booking not found',
+                ], 404);
+            }
+
+            $room = $booking->room;
+            $motel = $room?->motel;
+            $customer = $booking->customer;
+
+            $data = [
+                'id' => $booking->id,
+                'customer_id' => $booking->customer_id,
+                'customer' => $customer ? [
+                    'id' => $customer->id,
+                    'username' => $customer->username,
+                    'useremail' => $customer->useremail,
+                    'userimage' => $customer->userimage ?? null,
+                    'phonenumber' => $customer->phonenumber ?? null,
+                ] : null,
+                'room_id' => $booking->bnb_room_id,
+                'booking_reference' => 'BNB_' . $booking->id,
+                'status' => $booking->status,
+                'check_in_date' => optional($booking->check_in_date)->format('Y-m-d'),
+                'check_out_date' => optional($booking->check_out_date)->format('Y-m-d'),
+                'number_of_nights' => $booking->number_of_nights,
+                'price_per_night' => (float) $booking->price_per_night,
+                'total_amount' => (float) $booking->total_amount,
+                'contact_number' => $booking->contact_number,
+                'special_requests' => $booking->special_requests,
+                'created_at' => optional($booking->created_at)->toIso8601String(),
+                'room' => [
+                    'id' => $room?->id,
+                    'room_number' => $room?->room_number,
+                    'room_type' => $room?->roomType?->name,
+                    'price_per_night' => $room ? (float) $room->price_per_night : null,
+                ],
+                'motel' => [
+                    'id' => $motel?->id,
+                    'name' => $motel?->name,
+                    'address' => $motel?->street_address,
+                    'district' => $motel?->district?->name,
+                ],
+                'transactions' => $booking->transactions->map(function ($t) {
+                    return [
+                        'id' => $t->id,
+                        'transaction_id' => $t->transaction_id,
+                        'amount' => (float) $t->amount,
+                        'payment_method' => $t->payment_method,
+                        'status' => $t->status,
+                        'processed_at' => optional($t->processed_at)->format('Y-m-d H:i:s'),
+                        'payment_reference' => $t->payment_reference,
+                    ];
+                })->values(),
+            ];
+
+            return response()->json([
+                'success' => true,
+                'data' => $data,
+                'message' => 'Booking details retrieved successfully',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to get booking details: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Retry payment for a failed/pending booking (Flutter: POST /retry-payment/{bookingId})
+     */
+    public function retryPayment(Request $request, $bookingId)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'payment_method' => 'required|in:mobile_money,bank_transfer,cash,card',
+                'payment_reference' => 'nullable|string|max:255',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed',
+                    'errors' => $validator->errors(),
+                ], 422);
+            }
+
+            $booking = BnbBooking::with(['room'])->find($bookingId);
+            if (!$booking) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Booking not found',
+                ], 404);
+            }
+
+            if ($booking->status !== 'pending') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Only pending bookings can be retried',
+                ], 400);
+            }
+
+            $room = $booking->room;
+            if (!$room) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Room not found for this booking',
+                ], 404);
+            }
+
+            DB::beginTransaction();
+            try {
+                $transactionId = 'TXN_' . strtoupper(Str::random(8)) . '_' . time();
+                $totalAmount = (float) $booking->total_amount;
+                $paymentSuccess = $this->processPayment($request->payment_method, $totalAmount);
+
+                BnbTransaction::create([
+                    'booking_id' => $booking->id,
+                    'transaction_id' => $transactionId,
+                    'amount' => $totalAmount,
+                    'payment_method' => $this->normalizePaymentMethod($request->payment_method),
+                    'payment_reference' => $request->payment_reference,
+                    'status' => $paymentSuccess ? 'completed' : 'failed',
+                    'processed_at' => $paymentSuccess ? now() : null,
+                ]);
+
+                $booking->update(['status' => $paymentSuccess ? 'confirmed' : 'pending']);
+
+                if ($paymentSuccess) {
+                    $checkIn = \Carbon\Carbon::parse($booking->check_in_date)->startOfDay();
+                    $checkOut = \Carbon\Carbon::parse($booking->check_out_date)->startOfDay();
+                    $pricePerNight = (float) $booking->price_per_night;
+                    for ($date = $checkIn->copy(); $date->lt($checkOut); $date->addDay()) {
+                        BnbBookingDate::create([
+                            'booking_id' => $booking->id,
+                            'bnb_room_id' => $room->id,
+                            'booked_date' => $date->format('Y-m-d'),
+                            'price_per_night' => $pricePerNight,
+                        ]);
+                    }
+                }
+
+                DB::commit();
+
+                return response()->json([
+                    'success' => $paymentSuccess,
+                    'message' => $paymentSuccess ? 'Payment completed successfully' : 'Payment failed. Please try again.',
+                    'data' => [
+                        'booking_id' => $booking->id,
+                        'status' => $booking->fresh()->status,
+                    ],
+                ], $paymentSuccess ? 200 : 402);
+            } catch (\Exception $e) {
+                DB::rollback();
+                throw $e;
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while retrying payment: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Map Flutter payment_method to DB enum (mobile, bank_card, cash)
+     */
+    private function normalizePaymentMethod(string $method): string
+    {
+        return match (strtolower($method)) {
+            'mobile_money' => 'mobile',
+            'bank_transfer', 'card' => 'bank_card',
+            'cash' => 'cash',
+            default => 'cash',
+        };
     }
 
     /**
