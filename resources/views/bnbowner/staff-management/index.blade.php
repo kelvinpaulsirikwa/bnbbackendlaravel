@@ -68,21 +68,11 @@
                                             <td>{{ $member->useremail }}</td>
                                             <td>{{ $member->telephone ?? 'N/A' }}</td>
                                             <td>
-                                                <span class="badge 
-                                                    {{ $member->role === 'bnbreceiptionist' ? 'bg-info' : '' }}
-                                                    {{ $member->role === 'bnbsecurity' ? 'bg-warning' : '' }}
-                                                    {{ $member->role === 'bnbchef' ? 'bg-success' : '' }}
-                                                ">
-                                                    @if($member->role === 'bnbreceiptionist')
-                                                        <i class="fas fa-user-tie"></i> Receptionist
-                                                    @elseif($member->role === 'bnbsecurity')
-                                                        <i class="fas fa-shield-alt"></i> Security
-                                                    @elseif($member->role === 'bnbchef')
-                                                        <i class="fas fa-utensils"></i> Chef
-                                                    @else
-                                                        {{ ucfirst($member->role) }}
-                                                    @endif
-                                                </span>
+                                                @if($member->motelRole)
+                                                    <span class="badge bg-primary">{{ $member->motelRole->name }}</span>
+                                                @else
+                                                    <span class="text-muted">—</span>
+                                                @endif
                                             </td>
                                             <td>
                                                 <span class="badge bg-{{ $member->status === 'active' ? 'success' : 'danger' }}">

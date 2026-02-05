@@ -79,8 +79,22 @@
                                                    value="{{ old('telephone', $staff->telephone) }}">
                                         </div>
                                     </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="motel_role_id" class="form-label">Role (from Role Management)</label>
+                                            <select class="form-select" id="motel_role_id" name="motel_role_id">
+                                                <option value="">— No role —</option>
+                                                @foreach($motelRoles ?? [] as $r)
+                                                    <option value="{{ $r->id }}" {{ old('motel_role_id', $staff->motel_role_id) == $r->id ? 'selected' : '' }}>{{ $r->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            @if(empty($motelRoles) || $motelRoles->isEmpty())
+                                                <small class="text-muted">Create roles in <a href="{{ route('bnbowner.role-management.index') }}">Role Management</a> first.</small>
+                                            @endif
+                                        </div>
+                                    </div>
                                 </div>
-                                
+
                                 <div class="mb-3">
                                     <label for="profileimage" class="form-label">Profile Image</label>
                                     <input type="file" class="form-control" id="profileimage" name="profileimage" 

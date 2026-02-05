@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Models\Motel;
+use App\Models\MotelRole;
 use App\Models\BnbUser;
 
 class StaffManagementController extends Controller
@@ -33,6 +34,7 @@ class StaffManagementController extends Controller
         // Get all staff members for this motel (staff with motel_id set to this motel)
         $staff = BnbUser::where('motel_id', $motel->id)
                        ->whereIn('role', ['bnbreceiptionist', 'bnbsecurity', 'bnbchef'])
+                       ->with('motelRole')
                        ->get();
         
         return view('bnbowner.staff-management.index', compact('motel', 'staff'))->with('selectedMotel', $motel);
@@ -51,7 +53,8 @@ class StaffManagementController extends Controller
             return redirect()->route('bnbowner.motel-selection');
         }
         
-        return view('bnbowner.staff-management.create', compact('motel'))->with('selectedMotel', $motel);
+        $motelRoles = MotelRole::where('motel_id', $motel->id)->orderBy('name')->get();
+        return view('bnbowner.staff-management.create', compact('motel', 'motelRoles'))->with('selectedMotel', $motel);
     }
     
     public function store(Request $request)
@@ -72,22 +75,30 @@ class StaffManagementController extends Controller
             'useremail' => 'required|email|unique:bnb_users,useremail|max:255',
             'password' => 'required|string|min:6|confirmed',
             'telephone' => 'nullable|string|max:20',
+            'motel_role_id' => 'nullable|exists:motel_roles,id',
             'profileimage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
-        
-        $data = $request->only(['username', 'useremail', 'telephone']);
-        $data['role'] = 'bnbreceiptionist'; // default; assign via Role Management
+
+        $data = $request->only(['username', 'useremail', 'telephone', 'motel_role_id']);
+        if (!empty($data['motel_role_id'])) {
+            $roleBelongsToMotel = MotelRole::where('id', $data['motel_role_id'])->where('motel_id', $motel->id)->exists();
+            if (!$roleBelongsToMotel) {
+                return redirect()->back()->withInput()->with('error', 'Selected role is not valid for this motel.');
+            }
+        } else {
+            $data['motel_role_id'] = null;
+        }
+        $data['role'] = 'bnbreceiptionist';
         $data['password'] = Hash::make($request->password);
         $data['motel_id'] = $motel->id;
         $data['createdby'] = $user->id;
         $data['status'] = 'active';
-        
-        // Handle profile image upload
+
         if ($request->hasFile('profileimage')) {
             $imagePath = $request->file('profileimage')->store('users', 'public');
             $data['profileimage'] = $imagePath;
         }
-        
+
         BnbUser::create($data);
         
         return redirect()->route('bnbowner.staff-management.index')
@@ -114,8 +125,9 @@ class StaffManagementController extends Controller
         if (!$staff) {
             return redirect()->back()->with('error', 'Staff member not found.');
         }
-        
-        return view('bnbowner.staff-management.edit', compact('motel', 'staff'))->with('selectedMotel', $motel);
+
+        $motelRoles = MotelRole::where('motel_id', $motel->id)->orderBy('name')->get();
+        return view('bnbowner.staff-management.edit', compact('motel', 'staff', 'motelRoles'))->with('selectedMotel', $motel);
     }
     
     public function update(Request $request, $id)
@@ -143,22 +155,28 @@ class StaffManagementController extends Controller
             'username' => 'required|string|max:255',
             'useremail' => 'required|email|unique:bnb_users,useremail,' . $id . ',id|max:255',
             'telephone' => 'nullable|string|max:20',
+            'motel_role_id' => 'nullable|exists:motel_roles,id',
             'profileimage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
-        
-        $data = $request->only(['username', 'useremail', 'telephone']);
-        
-        // Handle profile image upload
+
+        $data = $request->only(['username', 'useremail', 'telephone', 'motel_role_id']);
+        if (array_key_exists('motel_role_id', $data) && $data['motel_role_id'] !== null && $data['motel_role_id'] !== '') {
+            $roleBelongsToMotel = MotelRole::where('id', $data['motel_role_id'])->where('motel_id', $motel->id)->exists();
+            if (!$roleBelongsToMotel) {
+                return redirect()->back()->withInput()->with('error', 'Selected role is not valid for this motel.');
+            }
+        } else {
+            $data['motel_role_id'] = null;
+        }
+
         if ($request->hasFile('profileimage')) {
-            // Delete old image if exists
             if ($staff->profileimage && Storage::exists('public/' . $staff->profileimage)) {
                 Storage::delete('public/' . $staff->profileimage);
             }
-            
             $imagePath = $request->file('profileimage')->store('users', 'public');
             $data['profileimage'] = $imagePath;
         }
-        
+
         $staff->update($data);
         
         return redirect()->route('bnbowner.staff-management.index')

@@ -78,23 +78,6 @@
                                                    value="<?php echo e(old('telephone', $staff->telephone)); ?>">
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="role" class="form-label">Role</label>
-                                            <select class="form-select" id="role" name="role" required>
-                                                <option value="">Select Role</option>
-                                                <option value="bnbreceiptionist" <?php echo e(old('role', $staff->role) == 'bnbreceiptionist' ? 'selected' : ''); ?>>
-                                                    Receptionist
-                                                </option>
-                                                <option value="bnbsecurity" <?php echo e(old('role', $staff->role) == 'bnbsecurity' ? 'selected' : ''); ?>>
-                                                    Security
-                                                </option>
-                                                <option value="bnbchef" <?php echo e(old('role', $staff->role) == 'bnbchef' ? 'selected' : ''); ?>>
-                                                    Chef
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
                                 </div>
                                 
                                 <div class="mb-3">

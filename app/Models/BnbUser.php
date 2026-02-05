@@ -14,7 +14,7 @@ class BnbUser extends Authenticatable
     protected $table = 'bnb_users';
 
     protected $fillable = [
-        'username','useremail','profileimage','password','telephone','status','role','createdby','motel_id','admin_permissions'
+        'username','useremail','profileimage','password','telephone','status','role','createdby','motel_id','motel_role_id','admin_permissions'
     ];
 
     protected $hidden = ['password'];
@@ -51,5 +51,11 @@ class BnbUser extends Authenticatable
     public function motel()
     {
         return $this->belongsTo(\App\Models\Motel::class, 'motel_id');
+    }
+
+    // Role from Role Management (motel-specific)
+    public function motelRole()
+    {
+        return $this->belongsTo(\App\Models\MotelRole::class, 'motel_role_id');
     }
 }

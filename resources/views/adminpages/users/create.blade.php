@@ -141,13 +141,13 @@
                                     @enderror
                                 </div>
 
-                                <!-- Admin Permissions (shown when Admin is selected) -->
-                                <div class="col-12" id="admin-permissions-wrap">
+                                <!-- Admin Permissions (shown only when Admin is selected) -->
+                                <div class="col-12" id="admin-permissions-wrap" style="display: {{ old('user_type') === 'admin' ? 'block' : 'none' }};">
                                     <label class="form-label">Admin Permissions – choose which admin areas this user can access</label>
                                     <div class="border rounded p-3 bg-light">
                                         @foreach(config('admin_permissions', []) as $key => $label)
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="admin_permissions[]" value="{{ $key }}" id="admin_perm_{{ $key }}" {{ in_array($key, old('admin_permissions', [])) ? 'checked' : '' }}>
+                                                <input class="form-check-input admin-permission-cb" type="checkbox" name="admin_permissions[]" value="{{ $key }}" id="admin_perm_{{ $key }}" {{ in_array($key, old('admin_permissions', [])) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="admin_perm_{{ $key }}">{{ $label }}</label>
                                             </div>
                                         @endforeach
@@ -215,4 +215,25 @@
             </div>
         </div>
     </div>
+
+    <script>
+        (function () {
+            var wrap = document.getElementById('admin-permissions-wrap');
+            var adminRadio = document.getElementById('user_type_admin');
+            var ownerRadio = document.getElementById('user_type_owner');
+            if (!wrap || !adminRadio || !ownerRadio) return;
+
+            function togglePermissions() {
+                if (adminRadio.checked) {
+                    wrap.style.display = 'block';
+                } else {
+                    wrap.style.display = 'none';
+                    document.querySelectorAll('.admin-permission-cb').forEach(function (cb) { cb.checked = false; });
+                }
+            }
+
+            adminRadio.addEventListener('change', togglePermissions);
+            ownerRadio.addEventListener('change', togglePermissions);
+        })();
+    </script>
 @endsection

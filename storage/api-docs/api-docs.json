@@ -1,0 +1,1321 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "User API (BnB)",
+        "version": "1.0.0",
+        "description": "API for BnB app: login, regions, motels, rooms, booking, chat. Protected routes require Bearer token (Sanctum)."
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api",
+            "description": "Local"
+        },
+        {
+            "url": "https://bnb.co.tz/api",
+            "description": "Production"
+        }
+    ],
+    "paths": {
+        "/userlogin": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login (Google / email)",
+                "operationId": "d95c14812d6caac782aefa21a7ecd8c3",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    },
+                                    "username": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "userimage": {
+                                        "type": "string",
+                                        "example": "https://..."
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "+255..."
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login successful"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer"
+                                                        },
+                                                        "username": {
+                                                            "type": "string"
+                                                        },
+                                                        "useremail": {
+                                                            "type": "string"
+                                                        },
+                                                        "userimage": {
+                                                            "type": "string",
+                                                            "nullable": true
+                                                        },
+                                                        "phonenumber": {
+                                                            "type": "string",
+                                                            "nullable": true
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "token": {
+                                                    "type": "string"
+                                                },
+                                                "token_type": {
+                                                    "type": "string",
+                                                    "example": "Bearer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Validation error"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": []
+            }
+        },
+        "/user": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Get authenticated user",
+                "operationId": "21ae9b1aadb27aece9380a9b054f26f4",
+                "responses": {
+                    "200": {
+                        "description": "Authenticated user object"
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout (invalidate token)",
+                "operationId": "38ef41989e8cda82ad431c58c6f56c91",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/regions": {
+            "get": {
+                "tags": [
+                    "Location"
+                ],
+                "summary": "List regions",
+                "operationId": "fe282d0ceb4fdca5c5c36cdc403fc5a4",
+                "parameters": [
+                    {
+                        "name": "country_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/districts": {
+            "get": {
+                "tags": [
+                    "Location"
+                ],
+                "summary": "List districts",
+                "operationId": "6c11c00e487fcb80cfda4152f60466c2",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/motel-types": {
+            "get": {
+                "tags": [
+                    "Motels"
+                ],
+                "summary": "List motel types",
+                "operationId": "a754ddeb7922731a0271e8f0d0ac4e9e",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/motels": {
+            "get": {
+                "tags": [
+                    "Motels"
+                ],
+                "summary": "List motels",
+                "operationId": "ae8cd8b7a8512de10474c64225279104",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/motels/featured": {
+            "get": {
+                "tags": [
+                    "Motels"
+                ],
+                "summary": "Featured motels",
+                "operationId": "51edc045df2a733fc82ad33671027bb8",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/motels/{id}/details": {
+            "get": {
+                "tags": [
+                    "Motels"
+                ],
+                "summary": "Motel details",
+                "operationId": "0fd28507a3d9e00cf294b0bdde18b1fc",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/motels/{id}/images": {
+            "get": {
+                "tags": [
+                    "Motels"
+                ],
+                "summary": "Motel images",
+                "operationId": "b20fe5e349cc10ebbefaba08f950649a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/user/motels/{motelId}/images": {
+            "get": {
+                "tags": [
+                    "Motels"
+                ],
+                "summary": "Motel images (paged)",
+                "operationId": "50ffbc2f31b02ecd001e3464321eabb7",
+                "parameters": [
+                    {
+                        "name": "motelId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/motels/{id}/amenities": {
+            "get": {
+                "tags": [
+                    "Motels"
+                ],
+                "summary": "Motel amenities",
+                "operationId": "0e92ae5432786269a541eb0ef8bd22bf",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/amenities/{bnbamenitiesid}/amenitiesimage": {
+            "get": {
+                "tags": [
+                    "Motels"
+                ],
+                "summary": "Amenity images",
+                "operationId": "4bc930ccb0b017bbd27b125e102a5106",
+                "parameters": [
+                    {
+                        "name": "bnbamenitiesid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/motels/{id}/rules": {
+            "get": {
+                "tags": [
+                    "Motels"
+                ],
+                "summary": "Motel rules (BnB rules)",
+                "operationId": "7b3f0b9edb10592a95bb507c648523ed",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/motels/{id}/rooms": {
+            "get": {
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "Motel rooms",
+                "operationId": "b58f659d997e2860c015ad501ebb136a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/motels/{id}/room-types": {
+            "get": {
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "Motel room types",
+                "operationId": "8b7746e372c20b5a70483e7bc158d45f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/rooms/{id}/details": {
+            "get": {
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "Room details",
+                "operationId": "c166f5f17125fb305892b3cf82197d45",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/rooms/{id}/images": {
+            "get": {
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "Room images",
+                "operationId": "4c1020231e430ed290a284852e4b2507",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/rooms/{id}/items": {
+            "get": {
+                "tags": [
+                    "Rooms"
+                ],
+                "summary": "Room items",
+                "operationId": "dcc2e43f41da9be37d9f5d4dd8c02cd2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/search/regions": {
+            "get": {
+                "tags": [
+                    "Search"
+                ],
+                "summary": "Search regions",
+                "operationId": "47666f0faf343c074c2dc0e376af85c9",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/search/amenities": {
+            "get": {
+                "tags": [
+                    "Search"
+                ],
+                "summary": "Search amenities",
+                "operationId": "35a43905481e3bbc58e5776437ff56e6",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/search/motels": {
+            "get": {
+                "tags": [
+                    "Search"
+                ],
+                "summary": "Search motels",
+                "operationId": "3ff88f44c2d5cc8631104a509f066f9d",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/search/motels/{id}/images": {
+            "get": {
+                "tags": [
+                    "Search"
+                ],
+                "summary": "Motel images (search)",
+                "operationId": "280fe55583fe996996d0388eec5230e4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/search/track": {
+            "post": {
+                "tags": [
+                    "Search"
+                ],
+                "summary": "Track search",
+                "operationId": "5b5b08040928ca3ad307ede34d4f7804",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/near-me/motels": {
+            "get": {
+                "tags": [
+                    "Near Me"
+                ],
+                "summary": "Motels near me",
+                "operationId": "1936222a10089e6047f46b267125da5b",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/top-searched/motels": {
+            "get": {
+                "tags": [
+                    "Near Me"
+                ],
+                "summary": "Top searched motels",
+                "operationId": "ace0756ade68991fb59687ae43c6fe15",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/newest/motels": {
+            "get": {
+                "tags": [
+                    "Near Me"
+                ],
+                "summary": "Newest motels",
+                "operationId": "a8e88c0682c4d032e419756462ecfd50",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/check-room-availability": {
+            "post": {
+                "tags": [
+                    "Booking"
+                ],
+                "summary": "Check room availability",
+                "operationId": "e32fef3b309626e3efbbf7167bab1402",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "room_id",
+                                    "check_in_date",
+                                    "check_out_date"
+                                ],
+                                "properties": {
+                                    "room_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "check_in_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-02-10"
+                                    },
+                                    "check_out_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-02-12"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "available": {
+                                                    "type": "boolean"
+                                                },
+                                                "message": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/create-booking": {
+            "post": {
+                "tags": [
+                    "Booking"
+                ],
+                "summary": "Create booking and process payment",
+                "operationId": "f5d4117494833ac485959ac393359844",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "room_id",
+                                    "customer_id",
+                                    "check_in_date",
+                                    "check_out_date",
+                                    "contact_number"
+                                ],
+                                "properties": {
+                                    "room_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "customer_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "check_in_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-02-10"
+                                    },
+                                    "check_out_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-02-12"
+                                    },
+                                    "contact_number": {
+                                        "type": "string",
+                                        "example": "+255670000000"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "booking_id": {
+                                                    "type": "integer"
+                                                },
+                                                "total_amount": {
+                                                    "type": "number"
+                                                },
+                                                "payment_status": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation / conflict",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/retry-payment/{bookingId}": {
+            "post": {
+                "tags": [
+                    "Booking"
+                ],
+                "summary": "Retry payment for booking",
+                "operationId": "9067cb55b0911b35e9c0bf8490f07adc",
+                "parameters": [
+                    {
+                        "name": "bookingId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/booking/{bookingId}": {
+            "get": {
+                "tags": [
+                    "Booking"
+                ],
+                "summary": "Get booking details",
+                "operationId": "f7bd1c9a40ce99bfd9728cb092522887",
+                "parameters": [
+                    {
+                        "name": "bookingId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cancel-booking/{bookingId}": {
+            "post": {
+                "tags": [
+                    "Booking"
+                ],
+                "summary": "Cancel booking",
+                "operationId": "5418e92881ac422760ab94babd22c464",
+                "parameters": [
+                    {
+                        "name": "bookingId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/booking/create": {
+            "post": {
+                "tags": [
+                    "Booking (Legacy)"
+                ],
+                "summary": "Create booking (legacy)",
+                "operationId": "1701a8b8f3a4177f8409ee91bfac6357",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/booking/customer/{customer_id}": {
+            "get": {
+                "tags": [
+                    "Booking (Legacy)"
+                ],
+                "summary": "Customer bookings",
+                "operationId": "73d9fb63eb9cc8adc53c3a3583583835",
+                "parameters": [
+                    {
+                        "name": "customer_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/booking/customer/{customer_id}/transactions": {
+            "get": {
+                "tags": [
+                    "Booking (Legacy)"
+                ],
+                "summary": "Customer transactions",
+                "operationId": "c719680ca5aabac293736573ceeab078",
+                "parameters": [
+                    {
+                        "name": "customer_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/booking/cancel": {
+            "post": {
+                "tags": [
+                    "Booking (Legacy)"
+                ],
+                "summary": "Cancel booking (legacy)",
+                "operationId": "da06d21d47770b673fffae743577d1f5",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/about/statistics": {
+            "get": {
+                "tags": [
+                    "About"
+                ],
+                "summary": "BnB statistics",
+                "operationId": "9055983577d0193a16c287dce891ae37",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/about/amenities": {
+            "get": {
+                "tags": [
+                    "About"
+                ],
+                "summary": "About amenities",
+                "operationId": "cd109226c322b6aebe8606a96e27a4ee",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/customer/chats": {
+            "get": {
+                "tags": [
+                    "Chat"
+                ],
+                "summary": "Customer chats",
+                "operationId": "89272aabe1a626ba09a8f84e2d1284bb",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/chat/{chatId}/messages": {
+            "get": {
+                "tags": [
+                    "Chat"
+                ],
+                "summary": "Chat messages",
+                "operationId": "42e84d9965aaf344a0ece2fa76e089b5",
+                "parameters": [
+                    {
+                        "name": "chatId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/chat/send-message": {
+            "post": {
+                "tags": [
+                    "Chat"
+                ],
+                "summary": "Send message",
+                "operationId": "c40567e3417d3edd5007d9f29db57bf4",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "chat_id",
+                                    "message"
+                                ],
+                                "properties": {
+                                    "chat_id": {
+                                        "type": "integer"
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/chat/create-or-get": {
+            "post": {
+                "tags": [
+                    "Chat"
+                ],
+                "summary": "Create or get chat",
+                "operationId": "64e8859cb17053e1b8cfdbce6806b756",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "motel_id": {
+                                        "type": "integer"
+                                    },
+                                    "customer_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "apiKey",
+                "description": "Enter token in format: Bearer {token}",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    },
+    "security": [
+        {
+            "sanctum": []
+        }
+    ],
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Location",
+            "description": "Location"
+        },
+        {
+            "name": "Motels",
+            "description": "Motels"
+        },
+        {
+            "name": "Rooms",
+            "description": "Rooms"
+        },
+        {
+            "name": "Search",
+            "description": "Search"
+        },
+        {
+            "name": "Near Me",
+            "description": "Near Me"
+        },
+        {
+            "name": "Booking",
+            "description": "Booking"
+        },
+        {
+            "name": "Booking (Legacy)",
+            "description": "Booking (Legacy)"
+        },
+        {
+            "name": "About",
+            "description": "About"
+        },
+        {
+            "name": "Chat",
+            "description": "Chat"
+        }
+    ]
+}

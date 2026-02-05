@@ -21,4 +21,9 @@ class MotelRole extends Model
     {
         return $this->belongsTo(Motel::class, 'motel_id');
     }
+
+    public function staff()
+    {
+        return $this->hasMany(\App\Models\BnbUser::class, 'motel_role_id');
+    }
 }

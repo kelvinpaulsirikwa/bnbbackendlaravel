@@ -208,13 +208,13 @@ endif;
 unset($__errorArgs, $__bag); ?>
                                 </div>
 
-                                <!-- Admin Permissions (shown when Admin is selected) -->
-                                <div class="col-12" id="admin-permissions-wrap">
+                                <!-- Admin Permissions (shown only when Admin is selected) -->
+                                <div class="col-12" id="admin-permissions-wrap" style="display: <?php echo e(old('user_type') === 'admin' ? 'block' : 'none'); ?>;">
                                     <label class="form-label">Admin Permissions – choose which admin areas this user can access</label>
                                     <div class="border rounded p-3 bg-light">
                                         <?php $__currentLoopData = config('admin_permissions', []); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $label): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="admin_permissions[]" value="<?php echo e($key); ?>" id="admin_perm_<?php echo e($key); ?>" <?php echo e(in_array($key, old('admin_permissions', [])) ? 'checked' : ''); ?>>
+                                                <input class="form-check-input admin-permission-cb" type="checkbox" name="admin_permissions[]" value="<?php echo e($key); ?>" id="admin_perm_<?php echo e($key); ?>" <?php echo e(in_array($key, old('admin_permissions', [])) ? 'checked' : ''); ?>>
                                                 <label class="form-check-label" for="admin_perm_<?php echo e($key); ?>"><?php echo e($label); ?></label>
                                             </div>
                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -312,6 +312,27 @@ unset($__errorArgs, $__bag); ?>
             </div>
         </div>
     </div>
+
+    <script>
+        (function () {
+            var wrap = document.getElementById('admin-permissions-wrap');
+            var adminRadio = document.getElementById('user_type_admin');
+            var ownerRadio = document.getElementById('user_type_owner');
+            if (!wrap || !adminRadio || !ownerRadio) return;
+
+            function togglePermissions() {
+                if (adminRadio.checked) {
+                    wrap.style.display = 'block';
+                } else {
+                    wrap.style.display = 'none';
+                    document.querySelectorAll('.admin-permission-cb').forEach(function (cb) { cb.checked = false; });
+                }
+            }
+
+            adminRadio.addEventListener('change', togglePermissions);
+            ownerRadio.addEventListener('change', togglePermissions);
+        })();
+    </script>
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('adminpages.layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\Users\iuser\Desktop\PROJECTS\BNB PROJECT\bnbbackendlaravel\resources\views/adminpages/users/create.blade.php ENDPATH**/ ?>
