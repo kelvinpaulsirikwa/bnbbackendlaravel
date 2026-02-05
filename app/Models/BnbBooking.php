@@ -21,13 +21,13 @@ class BnbBooking extends Model
         'total_amount',
         'contact_number',
         'status',
-        'special_requests'
+        'special_requests',
     ];
 
     protected $casts = [
         'check_in_date' => 'date',
         'check_out_date' => 'date',
-        'total_amount' => 'decimal:2'
+        'total_amount' => 'decimal:2',
     ];
 
     // Relationship with Customer
@@ -52,6 +52,11 @@ class BnbBooking extends Model
     public function transactions()
     {
         return $this->hasMany(BnbTransaction::class, 'booking_id');
+    }
+
+    public function bookingDates()
+    {
+        return $this->hasMany(BnbBookingDate::class, 'booking_id');
     }
 
     // Relationship with BnbChat

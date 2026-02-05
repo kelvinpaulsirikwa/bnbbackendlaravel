@@ -100,6 +100,16 @@ class BookingController extends Controller
                         'special_requests' => $request->special_requests,
                     ]);
 
+                    // Create per-day booking records so availability can be tracked by date
+                    for ($date = $checkInDate->copy(); $date->lt($checkOutDate); $date->addDay()) {
+                        \App\Models\BnbBookingDate::create([
+                            'booking_id' => $booking->id,
+                            'bnb_room_id' => $room->id,
+                            'booked_date' => $date->format('Y-m-d'),
+                            'price_per_night' => $pricePerNight,
+                        ]);
+                    }
+
                 // Generate unique transaction ID
                 $transactionId = 'TXN_' . strtoupper(Str::random(8)) . '_' . time();
 

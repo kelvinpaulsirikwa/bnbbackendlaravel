@@ -239,8 +239,8 @@ class StaffManagementController extends Controller
             return redirect()->back()->with('error', 'Staff member not found.');
         }
         
-        // Toggle status between active and inactive
-        $newStatus = $staff->status === 'active' ? 'inactive' : 'active';
+        // Toggle status between active and unactive (matches enum in bnb_users table)
+        $newStatus = $staff->status === 'active' ? 'unactive' : 'active';
         $staff->update(['status' => $newStatus]);
         
         $action = $newStatus === 'active' ? 'unblocked' : 'blocked';

@@ -18,8 +18,10 @@ class BnbRoom extends Model
         'price_per_night',
         'office_price_per_night',
         'frontimage',
+        'description',
         'status',
-        'created_by'
+        'is_active',
+        'created_by',
     ];
 
     public function motel()
@@ -45,5 +47,10 @@ class BnbRoom extends Model
     public function images()
     {
         return $this->hasMany(BnbRoomImage::class, 'bnbroomid');
+    }
+
+    public function bookingDates()
+    {
+        return $this->hasMany(BnbBookingDate::class, 'bnb_room_id');
     }
 }
