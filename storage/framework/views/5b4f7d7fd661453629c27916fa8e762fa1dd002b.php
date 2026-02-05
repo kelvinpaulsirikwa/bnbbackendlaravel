@@ -80,8 +80,22 @@
                                                    value="<?php echo e(old('telephone')); ?>">
                                         </div>
                                     </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="motel_role_id" class="form-label">Role (from Role Management)</label>
+                                            <select class="form-select" id="motel_role_id" name="motel_role_id">
+                                                <option value="">— No role —</option>
+                                                <?php $__currentLoopData = $motelRoles ?? []; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $r): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <option value="<?php echo e($r->id); ?>" <?php echo e(old('motel_role_id') == $r->id ? 'selected' : ''); ?>><?php echo e($r->name); ?></option>
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                            </select>
+                                            <?php if(empty($motelRoles) || $motelRoles->isEmpty()): ?>
+                                                <small class="text-muted">Create roles in <a href="<?php echo e(route('bnbowner.role-management.index')); ?>">Role Management</a> first.</small>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
                                 </div>
-                                
+
                                 <div class="mb-3">
                                     <label for="profileimage" class="form-label">Profile Image (Optional)</label>
                                     <input type="file" class="form-control" id="profileimage" name="profileimage" 

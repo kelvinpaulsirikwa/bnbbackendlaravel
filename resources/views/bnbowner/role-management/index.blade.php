@@ -61,6 +61,9 @@
                                                 @endif
                                             </td>
                                             <td>
+                                                <a href="{{ route('bnbowner.role-management.show', $role->id) }}" class="btn btn-sm btn-outline-info">
+                                                    <i class="fas fa-eye"></i> View
+                                                </a>
                                                 <a href="{{ route('bnbowner.role-management.edit', $role->id) }}" class="btn btn-sm btn-outline-warning">
                                                     <i class="fas fa-edit"></i> Edit
                                                 </a>

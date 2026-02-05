@@ -104,6 +104,26 @@ class RoleManagementController extends Controller
             ->with('selectedMotel', $motel);
     }
 
+    public function show($id)
+    {
+        $user = Auth::user();
+        $selectedMotelId = session('selected_motel_id');
+
+        $motel = Motel::where('id', $selectedMotelId)
+            ->where('owner_id', $user->id)
+            ->first();
+
+        if (!$motel) {
+            return redirect()->route('bnbowner.motel-selection');
+        }
+
+        $role = MotelRole::where('id', $id)->where('motel_id', $motel->id)->firstOrFail();
+        $staff = $role->staff()->orderBy('username')->get();
+
+        return view('bnbowner.role-management.show', compact('motel', 'role', 'staff'))
+            ->with('selectedMotel', $motel);
+    }
+
     public function update(Request $request, $id)
     {
         $user = Auth::user();

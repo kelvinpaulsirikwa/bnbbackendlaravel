@@ -100,6 +100,7 @@ Route::middleware(['auth', 'role:bnbowner,bnbonwner'])->group(function () {
     Route::get('/bnbowner/role-management/create', [RoleManagementController::class, 'create'])->name('bnbowner.role-management.create');
     Route::post('/bnbowner/role-management', [RoleManagementController::class, 'store'])->name('bnbowner.role-management.store');
     Route::get('/bnbowner/role-management/{id}/edit', [RoleManagementController::class, 'edit'])->name('bnbowner.role-management.edit');
+    Route::get('/bnbowner/role-management/{id}', [RoleManagementController::class, 'show'])->name('bnbowner.role-management.show');
     Route::put('/bnbowner/role-management/{id}', [RoleManagementController::class, 'update'])->name('bnbowner.role-management.update');
     Route::delete('/bnbowner/role-management/{id}', [RoleManagementController::class, 'destroy'])->name('bnbowner.role-management.destroy');
 });
