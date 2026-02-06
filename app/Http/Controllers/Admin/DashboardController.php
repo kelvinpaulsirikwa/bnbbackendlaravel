@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\AdminBaseController;
+use App\Models\AdminLog;
 use App\Models\BnbUser;
 use App\Models\Customer;
 use App\Models\Country;
@@ -14,6 +15,56 @@ use Carbon\Carbon;
 
 class DashboardController extends AdminBaseController
 {
+    /**
+     * My Dashboard – summary of THIS admin's contributions (from admin logs).
+     */
+    public function authenticatedUsersSummary()
+    {
+        $user = auth()->user();
+
+        $baseQuery = AdminLog::where('admin_user_id', $user->id);
+
+        $totalActions = (clone $baseQuery)->count();
+        $created = (clone $baseQuery)->where('method', 'POST')->count();
+        $updated = (clone $baseQuery)->whereIn('method', ['PUT', 'PATCH'])->count();
+        $deleted = (clone $baseQuery)->where('method', 'DELETE')->count();
+
+        $last30 = Carbon::now()->subDays(30);
+        $last30Actions = (clone $baseQuery)->where('created_at', '>=', $last30)->count();
+
+        $topAreas = (clone $baseQuery)
+            ->selectRaw("COALESCE(subject_type, route_name, 'other') as area, COUNT(*) as count")
+            ->groupBy('area')
+            ->orderByDesc('count')
+            ->take(5)
+            ->get();
+
+        $recentLogs = (clone $baseQuery)
+            ->latest('created_at')
+            ->take(10)
+            ->get([
+                'id',
+                'description',
+                'action',
+                'method',
+                'route_name',
+                'subject_type',
+                'subject_id',
+                'created_at',
+            ]);
+
+        return view('adminpages.authenticated-users-summary', compact(
+            'user',
+            'totalActions',
+            'created',
+            'updated',
+            'deleted',
+            'last30Actions',
+            'topAreas',
+            'recentLogs'
+        ));
+    }
+
     public function index()
     {
         $today = Carbon::today();

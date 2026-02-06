@@ -14,4 +14,6 @@ return [
     'manage_contact_messages' => 'Manage Contact Messages',
     'manage_chats' => 'Manage Chats',
     'manage_terms_of_service' => 'Manage Terms of Service',
+    'view_admin_logs' => 'View Admin Logs',
+    'view_hotel_owner_logs' => 'View Hotel Owner Logs',
 ];

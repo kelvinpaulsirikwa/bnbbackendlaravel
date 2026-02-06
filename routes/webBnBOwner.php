@@ -15,10 +15,11 @@ use App\Http\Controllers\BnBOwner\BnbRuleController;
 use App\Http\Controllers\BnBOwner\RoleManagementController;
 
 // BnB Owner Routes
-Route::middleware(['auth', 'role:bnbowner,bnbonwner'])->group(function () {
+Route::middleware(['auth', 'role:bnbowner,bnbonwner', 'owner.log'])->group(function () {
     // Dashboard Routes
     Route::get('/bnbowner/motel-selection', [DashboardController::class, 'motelSelection'])->name('bnbowner.motel-selection');
     Route::get('/bnbowner/dashboard', [DashboardController::class, 'index'])->name('bnbowner.dashboard');
+    Route::get('/bnbowner/my-activity', [DashboardController::class, 'authenticatedUsersSummary'])->name('bnbowner.my-activity');
     Route::post('/bnbowner/select-motel', [DashboardController::class, 'selectMotel'])->name('bnbowner.select-motel');
     Route::get('/bnbowner/switch-account', [DashboardController::class, 'switchAccount'])->name('bnbowner.switch-account');
     

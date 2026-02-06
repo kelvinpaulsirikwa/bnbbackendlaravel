@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\BnBOwner;
 
 use App\Http\Controllers\Controller;
+use App\Support\OwnerLogMeta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -52,20 +53,27 @@ class HotelManagementController extends Controller
         ]);
         
         $data = $request->only(['name', 'description']);
-        
+        $oldValues = $motel->only(['name', 'description', 'front_image']);
+
         // Handle image upload
         if ($request->hasFile('front_image')) {
             // Delete old image if exists
             if ($motel->front_image && Storage::exists('public/' . $motel->front_image)) {
                 Storage::delete('public/' . $motel->front_image);
             }
-            
             $imagePath = $request->file('front_image')->store('motels', 'public');
             $data['front_image'] = $imagePath;
         }
-        
+
         $motel->update($data);
-        
+        OwnerLogMeta::describe(
+            "Updated hotel: {$motel->name}",
+            'motel',
+            $motel->id,
+            $oldValues,
+            array_merge($data, ['front_image' => $data['front_image'] ?? $motel->front_image])
+        );
+
         return redirect()->back()->with('success', 'Motel information updated successfully.');
     }
     
@@ -99,12 +107,20 @@ class HotelManagementController extends Controller
                 'status' => 'active'
             ]);
         } else {
+            $oldValues = $motelDetail->only(['contact_phone', 'contact_email']);
             $motelDetail->update([
                 'contact_phone' => $request->contact_phone,
                 'contact_email' => $request->contact_email
             ]);
+            OwnerLogMeta::describe(
+                'Updated hotel contact details',
+                'motel_detail',
+                $motelDetail->id,
+                $oldValues,
+                ['contact_phone' => $request->contact_phone, 'contact_email' => $request->contact_email]
+            );
         }
-        
+
         return redirect()->back()->with('success', 'Contact information updated successfully.');
     }
 }

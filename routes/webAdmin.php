@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\AdminLogController;
+use App\Http\Controllers\Admin\HotelOwnerLogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +21,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::prefix('adminpages')->name('adminpages.')->middleware(['auth', 'role:bnbadmin', 'admin.permission'])->group(function () {
+Route::prefix('adminpages')->name('adminpages.')->middleware(['auth', 'role:bnbadmin', 'admin.permission', 'admin.log'])->group(function () {
     Route::resource('users', App\Http\Controllers\Admin\BnbUserController::class);
     Route::resource('countries', App\Http\Controllers\Admin\CountryController::class);
     Route::resource('regions', App\Http\Controllers\Admin\RegionController::class);
@@ -35,9 +37,18 @@ Route::prefix('adminpages')->name('adminpages.')->middleware(['auth', 'role:bnba
     Route::resource('bnb-rules', App\Http\Controllers\Admin\BnbRuleController::class)->only(['index', 'show']);
     Route::resource('terms-of-service', App\Http\Controllers\Admin\TermsOfServiceController::class);
     Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/my-activity', [App\Http\Controllers\Admin\DashboardController::class, 'authenticatedUsersSummary'])->name('my-activity');
     Route::get('/chats', [App\Http\Controllers\Admin\ChatController::class, 'index'])->name('chats.index');
     Route::get('/chats/{chat}', [App\Http\Controllers\Admin\ChatController::class, 'show'])->name('chats.show');
     Route::post('/chats/{chat}/send', [App\Http\Controllers\Admin\ChatController::class, 'sendMessage'])->name('chats.send');
+
+    // Admin activity logs (admin only)
+    Route::get('/admin-logs', [AdminLogController::class, 'index'])->name('admin-logs.index');
+    Route::get('/admin-logs/{admin_log}', [AdminLogController::class, 'show'])->name('admin-logs.show');
+
+    // Hotel owner activity logs (admin views owner actions)
+    Route::get('/hotel-owner-logs', [HotelOwnerLogController::class, 'index'])->name('hotel-owner-logs.index');
+    Route::get('/hotel-owner-logs/{hotel_owner_log}', [HotelOwnerLogController::class, 'show'])->name('hotel-owner-logs.show');
 
     // Profile Management
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

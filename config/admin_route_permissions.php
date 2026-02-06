@@ -19,4 +19,6 @@ return [
     'adminpages.contact-messages' => 'manage_contact_messages',
     'adminpages.chats' => 'manage_chats',
     'adminpages.terms-of-service' => 'manage_terms_of_service',
+    'adminpages.admin-logs' => 'view_admin_logs',
+    'adminpages.hotel-owner-logs' => 'view_hotel_owner_logs',
 ];

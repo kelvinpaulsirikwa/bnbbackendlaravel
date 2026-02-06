@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\AdminBaseController;
+use App\Support\AdminLogMeta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Country;
@@ -55,11 +56,19 @@ class CountryController extends AdminBaseController
             'name' => 'required|string|max:255',
         ]);
 
+        $oldValues = $country->only(['name']);
         $country->update($data);
-        
+        AdminLogMeta::describe(
+            "Updated country: {$country->name}",
+            'country',
+            $country->id,
+            $oldValues,
+            $data
+        );
+
         // Clear statistics cache
         HomeController::clearStatisticsCache();
-        
+
         return redirect()->route('adminpages.countries.index')->with('success', 'Country updated');
     }
 
@@ -73,8 +82,10 @@ class CountryController extends AdminBaseController
                 ->with('error', 'Country cannot be deleted while regions are associated with it.');
         }
 
+        $oldValues = $country->only(['id', 'name']);
         $country->delete();
-        
+        AdminLogMeta::describe("Deleted country: {$oldValues['name']}", 'country', $id, $oldValues, null);
+
         // Clear statistics cache
         HomeController::clearStatisticsCache();
 

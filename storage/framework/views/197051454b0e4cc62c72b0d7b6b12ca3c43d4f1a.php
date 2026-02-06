@@ -51,6 +51,12 @@
             </a>
         </li>
         <li>
+            <a href="<?php echo e(route('adminpages.authenticated-users-summary')); ?>">
+                <i class="bx bx-group icon"></i>
+                My dashboard
+            </a>
+        </li>
+        <li>
             <a href="<?php echo e(route('website.home')); ?>">
                 <i class="bx bxs-home icon"></i>
                 Website Home
@@ -169,12 +175,30 @@
             </a>
         </li>
         <?php endif; ?>
-        <?php if($admin_can('manage_terms_of_service')): ?>
+        <?php if($admin_can('manage_terms_of_service') || $admin_can('view_admin_logs') || $admin_can('view_hotel_owner_logs')): ?>
         <li class="divider" data-text="System"></li>
+        <?php endif; ?>
+        <?php if($admin_can('manage_terms_of_service')): ?>
         <li>
             <a href="<?php echo e(route('adminpages.terms-of-service.index')); ?>">
                 <i class="bx bx-file-blank icon"></i>
                 Terms of Service
+            </a>
+        </li>
+        <?php endif; ?>
+        <?php if($admin_can('view_admin_logs')): ?>
+        <li>
+            <a href="<?php echo e(route('adminpages.admin-logs.index')); ?>">
+                <i class="bx bx-history icon"></i>
+                Admin Logs
+            </a>
+        </li>
+        <?php endif; ?>
+        <?php if($admin_can('view_hotel_owner_logs')): ?>
+        <li>
+            <a href="<?php echo e(route('adminpages.hotel-owner-logs.index')); ?>">
+                <i class="bx bx-hotel icon"></i>
+                Hotel Owner Logs
             </a>
         </li>
         <?php endif; ?>

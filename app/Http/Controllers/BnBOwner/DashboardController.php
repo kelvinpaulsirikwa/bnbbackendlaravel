@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\BnBOwner;
 
 use App\Http\Controllers\Controller;
+use App\Models\HotelOwnerLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -65,7 +66,57 @@ class DashboardController extends Controller
         
         return view('bnbowner.dashboard', compact('selectedMotel', 'allMotels', 'user', 'motelStats'));
     }
-    
+
+    /**
+     * My Dashboard – summary of THIS owner's contributions (from hotel owner logs).
+     */
+    public function authenticatedUsersSummary()
+    {
+        $user = Auth::user();
+
+        $baseQuery = HotelOwnerLog::where('owner_user_id', $user->id);
+
+        $totalActions = (clone $baseQuery)->count();
+        $created = (clone $baseQuery)->where('method', 'POST')->count();
+        $updated = (clone $baseQuery)->whereIn('method', ['PUT', 'PATCH'])->count();
+        $deleted = (clone $baseQuery)->where('method', 'DELETE')->count();
+
+        $last30 = now()->subDays(30);
+        $last30Actions = (clone $baseQuery)->where('created_at', '>=', $last30)->count();
+
+        $topAreas = (clone $baseQuery)
+            ->selectRaw("COALESCE(subject_type, route_name, 'other') as area, COUNT(*) as count")
+            ->groupBy('area')
+            ->orderByDesc('count')
+            ->take(5)
+            ->get();
+
+        $recentLogs = (clone $baseQuery)
+            ->latest('created_at')
+            ->take(10)
+            ->get([
+                'id',
+                'description',
+                'action',
+                'method',
+                'route_name',
+                'subject_type',
+                'subject_id',
+                'created_at',
+            ]);
+
+        return view('bnbowner.authenticated-users-summary', compact(
+            'user',
+            'totalActions',
+            'created',
+            'updated',
+            'deleted',
+            'last30Actions',
+            'topAreas',
+            'recentLogs'
+        ));
+    }
+
     public function selectMotel(Request $request)
     {
         $motelId = $request->input('motel_id');

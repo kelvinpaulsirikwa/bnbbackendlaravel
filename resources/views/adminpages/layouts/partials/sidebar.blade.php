@@ -169,12 +169,30 @@
             </a>
         </li>
         @endif
-        @if($admin_can('manage_terms_of_service'))
+        @if($admin_can('manage_terms_of_service') || $admin_can('view_admin_logs') || $admin_can('view_hotel_owner_logs'))
         <li class="divider" data-text="System"></li>
+        @endif
+        @if($admin_can('manage_terms_of_service'))
         <li>
             <a href="{{ route('adminpages.terms-of-service.index') }}">
                 <i class="bx bx-file-blank icon"></i>
                 Terms of Service
+            </a>
+        </li>
+        @endif
+        @if($admin_can('view_admin_logs'))
+        <li>
+            <a href="{{ route('adminpages.admin-logs.index') }}">
+                <i class="bx bx-history icon"></i>
+                Admin Logs
+            </a>
+        </li>
+        @endif
+        @if($admin_can('view_hotel_owner_logs'))
+        <li>
+            <a href="{{ route('adminpages.hotel-owner-logs.index') }}">
+                <i class="bx bx-hotel icon"></i>
+                Hotel Owner Logs
             </a>
         </li>
         @endif
@@ -192,6 +210,12 @@
             <a href="{{ route('adminpages.profile.edit') }}">
                 <i class="bx bxs-user-circle icon"></i>
                 Profile Management
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('adminpages.my-activity') }}">
+                <i class="bx bx-history icon"></i>
+                My activity
             </a>
         </li>
 

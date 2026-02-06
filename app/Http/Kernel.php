@@ -61,6 +61,8 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'role' => \App\Http\Middleware\EnsureRole::class,
         'admin.permission' => \App\Http\Middleware\CheckAdminPermission::class,
+        'admin.log' => \App\Http\Middleware\LogAdminActivity::class,
+        'owner.log' => \App\Http\Middleware\LogHotelOwnerActivity::class,
         'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,

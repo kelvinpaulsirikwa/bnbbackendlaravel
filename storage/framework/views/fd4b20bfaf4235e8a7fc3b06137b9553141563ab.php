@@ -134,10 +134,16 @@
                 <i class="bx bx-transfer icon"></i>
                 Switch Account
             </a>
-        </li>  <li>
+        </li>          <li>
             <a href="<?php echo e(route('bnbowner.profile.edit')); ?>">
                 <i class="bx bxs-user-detail icon"></i>
                 Profile Management
+            </a>
+        </li>
+        <li>
+            <a href="<?php echo e(route('bnbowner.my-activity')); ?>">
+                <i class="bx bx-history icon"></i>
+                My activity
             </a>
         </li>
 
