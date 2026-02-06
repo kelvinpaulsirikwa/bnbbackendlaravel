@@ -451,6 +451,7 @@ class BookingController extends Controller
                         'name' => $motel?->name,
                         'address' => $motel?->street_address,
                         'district' => $motel?->district?->name,
+                        'image' => $motel?->front_image ? url('storage/' . $motel->front_image) : null,
                     ],
                     'transactions' => $booking->transactions->map(function ($transaction) {
                         return [
@@ -591,6 +592,7 @@ class BookingController extends Controller
                             'name' => $motel->name,
                             'address' => $motel->street_address,
                             'district' => $motel->district?->name,
+                            'image' => $motel->front_image ? url('storage/' . $motel->front_image) : null,
                         ] : null,
                     ] : null,
                 ];
@@ -840,6 +842,7 @@ class BookingController extends Controller
                     'name' => $motel?->name,
                     'address' => $motel?->street_address,
                     'district' => $motel?->district?->name,
+                    'image' => $motel?->front_image ? url('storage/' . $motel->front_image) : null,
                 ],
                 'transactions' => $booking->transactions->map(function ($t) {
                     return [

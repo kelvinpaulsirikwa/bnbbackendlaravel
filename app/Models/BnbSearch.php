@@ -29,9 +29,12 @@ class BnbSearch extends Model
     // Method to increment search count
     public static function incrementSearchCount($motelId)
     {
-        return static::updateOrCreate(
+        $motelId = (int) $motelId;
+        $record = static::firstOrCreate(
             ['bnb_motels_id' => $motelId],
-            ['count' => \DB::raw('count + 1')]
+            ['count' => 0]
         );
+        $record->increment('count');
+        return $record->fresh();
     }
 }
