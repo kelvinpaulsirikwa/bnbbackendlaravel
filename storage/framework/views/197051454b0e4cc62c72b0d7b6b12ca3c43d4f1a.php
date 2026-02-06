@@ -169,6 +169,15 @@
             </a>
         </li>
         <?php endif; ?>
+        <?php if($admin_can('manage_terms_of_service')): ?>
+        <li class="divider" data-text="System"></li>
+        <li>
+            <a href="<?php echo e(route('adminpages.terms-of-service.index')); ?>">
+                <i class="bx bx-file-blank icon"></i>
+                Terms of Service
+            </a>
+        </li>
+        <?php endif; ?>
         <?php if($admin_can('manage_users')): ?>
         <li class="divider" data-text="User Management"></li>
         <li>

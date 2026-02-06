@@ -12,6 +12,7 @@ use App\Http\Controllers\UserApi\NearMeApiController;
 use App\Http\Controllers\UserApi\BookingController;
 use App\Http\Controllers\UserApi\AboutApiController;
 use App\Http\Controllers\UserApi\UserChattingController;
+use App\Http\Controllers\UserApi\TermsOfServiceApiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Public route - Login only (no authentication required)
+// Public routes (no authentication required)
 Route::post('/userlogin', [LoginUserByGoogleController::class, 'login']);
 
 // All protected routes - require Sanctum authentication
@@ -90,4 +91,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/chat/{chatId}/messages', [UserChattingController::class, 'getChatMessages']);
     Route::post('/chat/send-message', [UserChattingController::class, 'sendMessage']);
     Route::post('/chat/create-or-get', [UserChattingController::class, 'createOrGetChat']);
+
+    //Terms of Service routes
+    Route::get('/terms-of-service', [TermsOfServiceApiController::class, 'getActive']);
+
 });

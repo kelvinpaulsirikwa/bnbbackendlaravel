@@ -18,4 +18,5 @@ return [
     'adminpages.customers' => 'manage_customers',
     'adminpages.contact-messages' => 'manage_contact_messages',
     'adminpages.chats' => 'manage_chats',
+    'adminpages.terms-of-service' => 'manage_terms_of_service',
 ];

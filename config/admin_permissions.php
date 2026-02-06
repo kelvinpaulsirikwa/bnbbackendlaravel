@@ -13,4 +13,5 @@ return [
     'manage_customers' => 'Manage Customers',
     'manage_contact_messages' => 'Manage Contact Messages',
     'manage_chats' => 'Manage Chats',
+    'manage_terms_of_service' => 'Manage Terms of Service',
 ];
