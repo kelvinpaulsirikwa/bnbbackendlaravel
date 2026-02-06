@@ -119,7 +119,7 @@
                     
                     <!-- Pagination -->
                     <div class="card-footer bg-white border-0 py-3">
-                        {{ $rules->links('adminpages.layouts.partials.pagination') }}
+                        {{ $rules->links() }}
                     </div>
                 @else
                     <div class="text-center py-5">

@@ -7,8 +7,10 @@ use App\Models\Country;
 use App\Models\MotelType;
 use App\Models\Region;
 use App\Models\RoomType;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -31,6 +33,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Use vendor pagination view for all admin (adminpages) routes
+        if (Request::is('adminpages*')) {
+            Paginator::defaultView('layouts.vendor.pagination.bootstrap-5');
+        }
+
         View::share('admin_can', function (string $permission): bool {
             $user = Auth::user();
             if (!$user || $user->role !== 'bnbadmin') {

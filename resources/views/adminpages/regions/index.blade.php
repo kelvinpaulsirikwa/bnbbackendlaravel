@@ -158,7 +158,7 @@
                 <div class="card-footer bg-white border-top">
                     <div class="d-flex flex-column align-items-center">
                         <div class="mb-3">
-                            {{ $regions->appends(request()->query())->links('adminpages.layouts.partials.pagination') }}
+                            {{ $regions->appends(request()->query())->links() }}
                         </div>
                         <div class="text-center">
                             <small class="text-muted">

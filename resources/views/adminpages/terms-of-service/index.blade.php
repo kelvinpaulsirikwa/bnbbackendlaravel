@@ -108,7 +108,7 @@
                     </div>
                     @if($terms->hasPages())
                         <div class="card-footer bg-white border-0 py-3">
-                            {{ $terms->links('adminpages.layouts.partials.pagination') }}
+                            {{ $terms->links() }}
                         </div>
                     @endif
                 @else

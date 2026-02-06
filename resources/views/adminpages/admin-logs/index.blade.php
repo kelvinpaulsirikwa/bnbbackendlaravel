@@ -130,7 +130,7 @@
                     </div>
                     @if($logs->hasPages())
                         <div class="card-footer bg-white border-0 py-3">
-                            {{ $logs->links('adminpages.layouts.partials.pagination') }}
+                            {{ $logs->links() }}
                         </div>
                     @endif
                 @else
