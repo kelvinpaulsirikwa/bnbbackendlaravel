@@ -68,5 +68,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'website.locale' => \App\Http\Middleware\SetWebsiteLocale::class,
+        'prevent_swagger_in_production' => \App\Http\Middleware\PreventSwaggerInProduction::class,
     ];
 }

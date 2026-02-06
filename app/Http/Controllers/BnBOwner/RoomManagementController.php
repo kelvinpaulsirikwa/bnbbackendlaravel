@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Motel;
 use App\Models\BnbRoom;
+use App\Models\BnbRoomImage;
 use App\Models\RoomType;
 
 class RoomManagementController extends Controller
@@ -156,14 +157,20 @@ class RoomManagementController extends Controller
         
         $room = BnbRoom::where('id', $id)
                       ->where('motelid', $motel->id)
-                      ->with(['roomType', 'items', 'images'])
+                      ->with(['roomType', 'creator', 'items' => fn($q) => $q->with('creator')])
                       ->first();
         
         if (!$room) {
             return redirect()->back()->with('error', 'Room not found.');
         }
         
-        return view('bnbowner.room-management.show', compact('motel', 'room'))->with('selectedMotel', $motel);
+        $roomImages = BnbRoomImage::where('bnbroomid', $room->id)
+            ->with('creator')
+            ->orderBy('id', 'desc')
+            ->paginate(12)
+            ->withQueryString();
+        
+        return view('bnbowner.room-management.show', compact('motel', 'room', 'roomImages'))->with('selectedMotel', $motel);
     }
     
     public function update(Request $request, $id)

@@ -56,6 +56,10 @@
                                         </span>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <th>Created by</th>
+                                    <td>{{ $room->creator ? $room->creator->username : '—' }}@if($room->creator) <span class="text-muted">({{ $room->creator->useremail }})</span>@endif</td>
+                                </tr>
                             </table>
                         </div>
                     </div>
@@ -75,6 +79,7 @@
                                     <tr>
                                         <th>Name</th>
                                         <th>Description</th>
+                                        <th>Created by</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -82,6 +87,7 @@
                                         <tr>
                                             <td>{{ $item->name }}</td>
                                             <td>{{ $item->description ?? '—' }}</td>
+                                            <td>{{ $item->creator ? $item->creator->username : '—' }}@if($item->creator) <span class="text-muted small">({{ $item->creator->useremail }})</span>@endif</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -93,26 +99,30 @@
                 </div>
             </div>
 
-            {{-- Room images (read-only) --}}
+            {{-- Room images (read-only, paginated) --}}
             <div class="card mb-4">
                 <div class="card-header bg-light">
-                    <h5 class="mb-0"><i class="fas fa-images"></i> Room Images ({{ $room->images->count() }})</h5>
+                    <h5 class="mb-0"><i class="fas fa-images"></i> Room Images ({{ $roomImages->total() }})</h5>
                 </div>
                 <div class="card-body">
-                    @if($room->images->count() > 0)
+                    @if($roomImages->count() > 0)
                         <div class="row g-3">
-                            @foreach($room->images as $image)
+                            @foreach($roomImages as $image)
                                 <div class="col-lg-3 col-md-4 col-sm-6">
                                     <div class="card h-100">
                                         <img src="{{ asset('storage/' . $image->imagepath) }}" class="card-img-top" alt="Room image" style="height: 180px; object-fit: cover;">
-                                        @if($image->description)
-                                            <div class="card-body py-2">
-                                                <p class="card-text small text-muted mb-0">{{ $image->description }}</p>
-                                            </div>
-                                        @endif
+                                        <div class="card-body py-2">
+                                            @if($image->description)
+                                                <p class="card-text small text-muted mb-1">{{ $image->description }}</p>
+                                            @endif
+                                            <p class="card-text small mb-0"><strong>Created by:</strong> {{ $image->creator ? $image->creator->username : '—' }}@if($image->creator) <span class="text-muted">({{ $image->creator->useremail }})</span>@endif</p>
+                                        </div>
                                     </div>
                                 </div>
                             @endforeach
+                        </div>
+                        <div class="d-flex justify-content-center mt-4">
+                            {{ $roomImages->links() }}
                         </div>
                     @else
                         <p class="text-muted mb-0">No images for this room.</p>
