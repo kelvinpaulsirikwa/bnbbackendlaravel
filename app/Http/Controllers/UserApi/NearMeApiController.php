@@ -10,6 +10,53 @@ use Illuminate\Support\Facades\DB;
 
 class NearMeApiController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/near-me/motels",
+     *     tags={"Near me"},
+     *     summary="Get motels near me",
+     *     description="Motels within radius (km) of user latitude/longitude. Latitude and longitude required. Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(name="latitude", in="query", required=true, @OA\Schema(type="number")),
+     *     @OA\Parameter(name="longitude", in="query", required=true, @OA\Schema(type="number")),
+     *     @OA\Parameter(name="radius", in="query", description="km", @OA\Schema(type="number", default=10)),
+     *     @OA\Parameter(name="page", in="query", @OA\Schema(type="integer", default=1)),
+     *     @OA\Parameter(name="limit", in="query", @OA\Schema(type="integer", default=10)),
+     *     @OA\Response(response=200, description="OK",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean"),
+     *             @OA\Property(property="data", type="array", @OA\Items(
+     *                 @OA\Property(property="id", type="integer"),
+     *                 @OA\Property(property="name", type="string"),
+     *                 @OA\Property(property="description", type="string"),
+     *                 @OA\Property(property="front_image", type="string", nullable=true),
+     *                 @OA\Property(property="street_address", type="string", nullable=true),
+     *                 @OA\Property(property="motel_type", type="string"),
+     *                 @OA\Property(property="district", type="string"),
+     *                 @OA\Property(property="longitude", type="number"),
+     *                 @OA\Property(property="latitude", type="number"),
+     *                 @OA\Property(property="distance", type="number"),
+     *                 @OA\Property(property="created_at", type="string", nullable=true),
+     *                 @OA\Property(property="updated_at", type="string", nullable=true),
+     *                 @OA\Property(property="location", type="string"),
+     *                 @OA\Property(property="region", type="string"),
+     *                 @OA\Property(property="rating", type="number"),
+     *                 @OA\Property(property="reviews", type="integer"),
+     *                 @OA\Property(property="badge", type="string"),
+     *                 @OA\Property(property="amenities", type="array", @OA\Items(type="string")),
+     *                 @OA\Property(property="type", type="string"),
+     *                 @OA\Property(property="isNew", type="boolean"),
+     *                 @OA\Property(property="owner", type="object", nullable=true),
+     *                 @OA\Property(property="details", type="object", nullable=true)
+     *             )),
+     *             @OA\Property(property="pagination", type="object"),
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(response=400, description="Latitude and longitude required"),
+     *     @OA\Response(response=500, description="Server error")
+     * )
+     */
     public function getNearMeMotels(Request $request)
     {
         try {
@@ -104,6 +151,49 @@ class NearMeApiController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/top-searched/motels",
+     *     tags={"Near me"},
+     *     summary="Get top searched motels",
+     *     description="Motels ordered by search count. Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(name="page", in="query", @OA\Schema(type="integer", default=1)),
+     *     @OA\Parameter(name="limit", in="query", @OA\Schema(type="integer", default=10)),
+     *     @OA\Response(response=200, description="OK",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean"),
+     *             @OA\Property(property="data", type="array", @OA\Items(
+     *                 @OA\Property(property="id", type="integer"),
+     *                 @OA\Property(property="name", type="string"),
+     *                 @OA\Property(property="description", type="string"),
+     *                 @OA\Property(property="front_image", type="string", nullable=true),
+     *                 @OA\Property(property="street_address", type="string", nullable=true),
+     *                 @OA\Property(property="motel_type", type="string"),
+     *                 @OA\Property(property="district", type="string"),
+     *                 @OA\Property(property="longitude", type="number"),
+     *                 @OA\Property(property="latitude", type="number"),
+     *                 @OA\Property(property="search_count", type="integer"),
+     *                 @OA\Property(property="created_at", type="string", nullable=true),
+     *                 @OA\Property(property="updated_at", type="string", nullable=true),
+     *                 @OA\Property(property="location", type="string"),
+     *                 @OA\Property(property="region", type="string"),
+     *                 @OA\Property(property="rating", type="number"),
+     *                 @OA\Property(property="reviews", type="integer"),
+     *                 @OA\Property(property="badge", type="string"),
+     *                 @OA\Property(property="amenities", type="array", @OA\Items(type="string")),
+     *                 @OA\Property(property="type", type="string"),
+     *                 @OA\Property(property="isNew", type="boolean"),
+     *                 @OA\Property(property="owner", type="object", nullable=true),
+     *                 @OA\Property(property="details", type="object", nullable=true)
+     *             )),
+     *             @OA\Property(property="pagination", type="object"),
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(response=500, description="Server error")
+     * )
+     */
     public function getTopSearchedMotels(Request $request)
     {
         try {
@@ -186,6 +276,48 @@ class NearMeApiController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/newest/motels",
+     *     tags={"Near me"},
+     *     summary="Get newest motels",
+     *     description="Motels ordered by created_at desc. Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(name="page", in="query", @OA\Schema(type="integer", default=1)),
+     *     @OA\Parameter(name="limit", in="query", @OA\Schema(type="integer", default=10)),
+     *     @OA\Response(response=200, description="OK",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean"),
+     *             @OA\Property(property="data", type="array", @OA\Items(
+     *                 @OA\Property(property="id", type="integer"),
+     *                 @OA\Property(property="name", type="string"),
+     *                 @OA\Property(property="description", type="string"),
+     *                 @OA\Property(property="front_image", type="string", nullable=true),
+     *                 @OA\Property(property="street_address", type="string", nullable=true),
+     *                 @OA\Property(property="motel_type", type="string"),
+     *                 @OA\Property(property="district", type="string"),
+     *                 @OA\Property(property="longitude", type="number"),
+     *                 @OA\Property(property="latitude", type="number"),
+     *                 @OA\Property(property="created_at", type="string", nullable=true),
+     *                 @OA\Property(property="updated_at", type="string", nullable=true),
+     *                 @OA\Property(property="location", type="string"),
+     *                 @OA\Property(property="region", type="string"),
+     *                 @OA\Property(property="rating", type="number"),
+     *                 @OA\Property(property="reviews", type="integer"),
+     *                 @OA\Property(property="badge", type="string"),
+     *                 @OA\Property(property="amenities", type="array", @OA\Items(type="string")),
+     *                 @OA\Property(property="type", type="string"),
+     *                 @OA\Property(property="isNew", type="boolean"),
+     *                 @OA\Property(property="owner", type="object", nullable=true),
+     *                 @OA\Property(property="details", type="object", nullable=true)
+     *             )),
+     *             @OA\Property(property="pagination", type="object"),
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(response=500, description="Server error")
+     * )
+     */
     public function getNewestMotels(Request $request)
     {
         try {

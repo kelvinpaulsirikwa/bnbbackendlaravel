@@ -14,6 +14,30 @@ use Carbon\Carbon;
 
 class UserChattingController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/customer/chats",
+     *     tags={"Chat"},
+     *     summary="Get customer chats",
+     *     description="Chats for authenticated customer with motel and last_message (id, message, sender_type, sender_id, sender, created_at). Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Response(response=200, description="OK", @OA\JsonContent(
+     *         @OA\Property(property="success", type="boolean"),
+     *         @OA\Property(property="data", type="array", @OA\Items(
+     *             @OA\Property(property="id", type="integer"),
+     *             @OA\Property(property="motel_id", type="integer"),
+     *             @OA\Property(property="booking_id", type="integer", nullable=true),
+     *             @OA\Property(property="status", type="string"),
+     *             @OA\Property(property="created_at", type="string"),
+     *             @OA\Property(property="updated_at", type="string"),
+     *             @OA\Property(property="motel", type="object"),
+     *             @OA\Property(property="last_message", type="object", nullable=true)
+     *         )),
+     *         @OA\Property(property="message", type="string")
+     *     )),
+     *     @OA\Response(response=500, description="Server error")
+     * )
+     */
     public function getCustomerChats(Request $request)
     {
         try {
@@ -106,6 +130,23 @@ class UserChattingController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/chat/{chatId}/messages",
+     *     tags={"Chat"},
+     *     summary="Get chat messages",
+     *     description="Paginated or all (query: page, limit, all=true). Response: data (id, chat_id, sender_type, sender_id, message, read_status, created_at, sender, attachments). Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(name="chatId", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="page", in="query", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="limit", in="query", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="all", in="query", description="true to get all messages", @OA\Schema(type="boolean")),
+     *     @OA\Response(response=200, description="OK"),
+     *     @OA\Response(response=403, description="Unauthorized"),
+     *     @OA\Response(response=404, description="Chat not found"),
+     *     @OA\Response(response=500, description="Server error")
+     * )
+     */
     public function getChatMessages($chatId, Request $request)
     {
         try {
@@ -221,6 +262,21 @@ class UserChattingController extends Controller
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/chat/send-message",
+     *     tags={"Chat"},
+     *     summary="Send message",
+     *     description="Body: chat_id, message. Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\RequestBody(required=true, @OA\JsonContent(required={"chat_id","message"}, @OA\Property(property="chat_id", type="integer"), @OA\Property(property="message", type="string"))),
+     *     @OA\Response(response=201, description="Message sent"),
+     *     @OA\Response(response=403, description="Unauthorized or booking expired"),
+     *     @OA\Response(response=404, description="Chat not found"),
+     *     @OA\Response(response=422, description="Validation failed"),
+     *     @OA\Response(response=500, description="Server error")
+     * )
+     */
     public function sendMessage(Request $request)
     {
         try {
@@ -348,6 +404,27 @@ class UserChattingController extends Controller
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/chat/create-or-get",
+     *     tags={"Chat"},
+     *     summary="Create or get chat",
+     *     description="Body: motel_id (required), booking_id?, started_by? (customer|bnbuser). Returns existing chat or creates new. Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\RequestBody(required=true, @OA\JsonContent(
+     *         required={"motel_id"},
+     *         @OA\Property(property="motel_id", type="integer"),
+     *         @OA\Property(property="booking_id", type="integer", nullable=true),
+     *         @OA\Property(property="started_by", type="string", enum={"customer","bnbuser"}, nullable=true)
+     *     )),
+     *     @OA\Response(response=200, description="Existing chat", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="data", type="object"), @OA\Property(property="message", type="string"))),
+     *     @OA\Response(response=201, description="Chat created", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="data", type="object", @OA\Property(property="id", type="integer"), @OA\Property(property="chat_id", type="integer"), @OA\Property(property="motel_id", type="integer"), @OA\Property(property="booking_id", type="integer", nullable=true), @OA\Property(property="customer_id", type="integer"), @OA\Property(property="status", type="string")), @OA\Property(property="message", type="string"))),
+     *     @OA\Response(response=403, description="Unauthorized or booking expired"),
+     *     @OA\Response(response=404, description="Booking not found"),
+     *     @OA\Response(response=422, description="Validation failed"),
+     *     @OA\Response(response=500, description="Server error")
+     * )
+     */
     public function createOrGetChat(Request $request)
     {
         try {

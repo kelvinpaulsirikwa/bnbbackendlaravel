@@ -13,7 +13,10 @@ use Illuminate\Support\Str;
 class AdminProfileApiController extends Controller
 {
     /**
-     * Get admin profile information
+     * @OA\Get(path="/admin/profile", tags={"Admin API"}, summary="Get admin profile",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Response(response=200, description="OK", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="object", @OA\Property(property="user", type="object", @OA\Property(property="id", type="integer"), @OA\Property(property="name", type="string"), @OA\Property(property="email", type="string"), @OA\Property(property="phone", type="string", nullable=true), @OA\Property(property="role", type="string"), @OA\Property(property="profile_image", type="string", nullable=true), @OA\Property(property="motel_id", type="integer", nullable=true), @OA\Property(property="motel_name", type="string", nullable=true), @OA\Property(property="created_at", type="string"), @OA\Property(property="updated_at", type="string"))))),
+     *     @OA\Response(response=401, description="Unauthorized"), @OA\Response(response=500, description="Server error"))
      */
     public function getProfile(Request $request)
     {
@@ -60,7 +63,11 @@ class AdminProfileApiController extends Controller
     }
 
     /**
-     * Update admin profile information
+     * @OA\Put(path="/admin/profile", tags={"Admin API"}, summary="Update admin profile",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\RequestBody(@OA\JsonContent(@OA\Property(property="name", type="string"), @OA\Property(property="phone", type="string"), @OA\Property(property="profile_image", type="string", description="multipart image"))),
+     *     @OA\Response(response=200, description="Profile updated", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="object"))),
+     *     @OA\Response(response=401, description="Unauthorized"), @OA\Response(response=500, description="Server error"))
      */
     public function updateProfile(Request $request)
     {
@@ -188,7 +195,10 @@ class AdminProfileApiController extends Controller
     }
 
     /**
-     * Get admin statistics/counts
+     * @OA\Get(path="/admin/profile/counts", tags={"Admin API"}, summary="Get profile counts",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Response(response=200, description="OK", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="object", @OA\Property(property="motel_id", type="integer", nullable=true), @OA\Property(property="amenities_count", type="integer"), @OA\Property(property="images_count", type="integer"), @OA\Property(property="rooms_count", type="integer"), @OA\Property(property="bookings_count", type="integer")))),
+     *     @OA\Response(response=401, description="Unauthorized"), @OA\Response(response=500, description="Server error"))
      */
     public function getProfileCounts(Request $request)
     {

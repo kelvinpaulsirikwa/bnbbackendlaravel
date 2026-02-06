@@ -222,6 +222,56 @@
                     </div>
                 </div>
 
+                <!-- Rooms Card -->
+                <div class="card shadow-sm mt-4">
+                    <div class="card-header bg-white border-0 py-3">
+                        <h5 class="card-title mb-0">
+                            <i class="bx bx-bed me-2"></i>
+                            Rooms (<?php echo e($motel->rooms->count()); ?>)
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <?php if($motel->rooms->count() > 0): ?>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Room #</th>
+                                            <th>Type</th>
+                                            <th>Price/night</th>
+                                            <th>Status</th>
+                                            <th class="text-end">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php $__currentLoopData = $motel->rooms; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $room): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <tr>
+                                                <td class="fw-semibold"><?php echo e($room->room_number); ?></td>
+                                                <td><?php echo e($room->roomType->name ?? '—'); ?></td>
+                                                <td><?php echo e($room->price_per_night ? number_format($room->price_per_night, 0) . ' ' . (config('app.currency', 'USD')) : '—'); ?></td>
+                                                <td>
+                                                    <?php
+                                                        $roomStatus = $room->status ?? ($room->is_active ? 'active' : 'inactive');
+                                                        $statusClass = ($roomStatus === 'active' || $room->is_active) ? 'bg-success' : 'bg-warning text-dark';
+                                                    ?>
+                                                    <span class="badge <?php echo e($statusClass); ?>"><?php echo e(ucfirst($roomStatus)); ?></span>
+                                                </td>
+                                                <td class="text-end">
+                                                    <a href="<?php echo e(route('adminpages.motels.rooms.show', [$motel->id, $room->id])); ?>" class="btn btn-sm btn-outline-primary">
+                                                        <i class="bx bx-show me-1"></i> View
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php else: ?>
+                            <p class="text-muted mb-0">No rooms added yet for this motel.</p>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
                 <!-- Actions Card -->
                 <div class="card shadow-sm mt-4">
                     <div class="card-header bg-white border-0 py-3">

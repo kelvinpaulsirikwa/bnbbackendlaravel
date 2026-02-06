@@ -13,11 +13,12 @@ use Illuminate\Support\Facades\Storage;
 class AmenityImageApiController extends Controller
 {
     /**
-     * Get all images for a specific amenity
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $amenityId
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Get(path="/admin/amenities/{amenityId}/images", tags={"Admin API"}, summary="Get amenity images",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(in="path", name="amenityId", required=true, @OA\Schema(type="integer")),
+     *     @OA\Parameter(in="query", name="page", @OA\Schema(type="integer")), @OA\Parameter(in="query", name="limit", @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="OK", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="array", @OA\Items(type="object", @OA\Property(property="id", type="integer"), @OA\Property(property="bnb_amenities_id", type="integer"), @OA\Property(property="imagepath", type="string"), @OA\Property(property="description", type="string", nullable=true), @OA\Property(property="created_at", type="string"), @OA\Property(property="full_image_url", type="string", nullable=true))), @OA\Property(property="pagination", type="object"))),
+     *     @OA\Response(response=401, description="Unauthorized"), @OA\Response(response=422, description="Invalid amenity ID"), @OA\Response(response=500, description="Server error"))
      */
     public function getAmenityImages(Request $request, $amenityId)
     {
@@ -75,10 +76,11 @@ class AmenityImageApiController extends Controller
     }
 
     /**
-     * Upload and create a new amenity image
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Post(path="/admin/amenity-images", tags={"Admin API"}, summary="Create amenity image",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\RequestBody(required=true, @OA\JsonContent(required={"bnb_amenities_id"}, @OA\Property(property="bnb_amenities_id", type="integer"), @OA\Property(property="image", type="string", format="binary"), @OA\Property(property="description", type="string"))),
+     *     @OA\Response(response=201, description="Created", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="object", @OA\Property(property="id", type="integer"), @OA\Property(property="bnb_amenities_id", type="integer"), @OA\Property(property="imagepath", type="string"), @OA\Property(property="description", type="string", nullable=true), @OA\Property(property="created_at", type="string"), @OA\Property(property="full_image_url", type="string")))),
+     *     @OA\Response(response=400, description="No image provided"), @OA\Response(response=401, description="Unauthorized"), @OA\Response(response=422, description="Validation failed"), @OA\Response(response=500, description="Server error"))
      */
     public function createAmenityImage(Request $request)
     {
@@ -140,11 +142,12 @@ class AmenityImageApiController extends Controller
     }
 
     /**
-     * Update an existing amenity image
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Put(path="/admin/amenity-images/{id}", tags={"Admin API"}, summary="Update amenity image",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(in="path", name="id", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(@OA\JsonContent(@OA\Property(property="image", type="string", format="binary"), @OA\Property(property="description", type="string"))),
+     *     @OA\Response(response=200, description="Updated", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="object"))),
+     *     @OA\Response(response=401, description="Unauthorized"), @OA\Response(response=404, description="Not found"), @OA\Response(response=422, description="Validation failed"), @OA\Response(response=500, description="Server error"))
      */
     public function updateAmenityImage(Request $request, $id)
     {
@@ -217,10 +220,11 @@ class AmenityImageApiController extends Controller
     }
 
     /**
-     * Delete an amenity image
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Delete(path="/admin/amenity-images/{id}", tags={"Admin API"}, summary="Delete amenity image",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(in="path", name="id", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Deleted", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"))),
+     *     @OA\Response(response=401, description="Unauthorized"), @OA\Response(response=404, description="Not found"), @OA\Response(response=500, description="Server error"))
      */
     public function deleteAmenityImage($id)
     {

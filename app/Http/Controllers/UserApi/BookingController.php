@@ -15,6 +15,38 @@ use Illuminate\Support\Str;
 
 class BookingController extends Controller
 {
+    /**
+     * @OA\Post(
+     *     path="/create-booking",
+     *     tags={"Booking"},
+     *     summary="Create a booking",
+     *     description="Create single booking. Body: customer_id, room_id, check_in_date, check_out_date, contact_number, payment_method (mobile_money|bank_transfer|cash|card), payment_reference?, special_requests?. Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\RequestBody(required=true, @OA\JsonContent(
+     *         required={"customer_id","room_id","check_in_date","check_out_date","contact_number","payment_method"},
+     *         @OA\Property(property="customer_id", type="integer"),
+     *         @OA\Property(property="room_id", type="integer"),
+     *         @OA\Property(property="check_in_date", type="string", format="date"),
+     *         @OA\Property(property="check_out_date", type="string", format="date"),
+     *         @OA\Property(property="contact_number", type="string"),
+     *         @OA\Property(property="payment_method", type="string", enum={"mobile_money","bank_transfer","cash","card"}),
+     *         @OA\Property(property="payment_reference", type="string", nullable=true),
+     *         @OA\Property(property="special_requests", type="string", nullable=true)
+     *     )),
+     *     @OA\Response(response=200, description="Booking confirmed", @OA\JsonContent(
+     *         @OA\Property(property="success", type="boolean"),
+     *         @OA\Property(property="message", type="string"),
+     *         @OA\Property(property="data", type="object",
+     *             @OA\Property(property="booking", type="object", @OA\Property(property="id", type="integer"), @OA\Property(property="booking_reference", type="string"), @OA\Property(property="status", type="string"), @OA\Property(property="check_in_date", type="string"), @OA\Property(property="check_out_date", type="string"), @OA\Property(property="number_of_nights", type="integer"), @OA\Property(property="total_amount", type="number"), @OA\Property(property="room", type="object")),
+     *             @OA\Property(property="transaction", type="object", @OA\Property(property="id", type="integer"), @OA\Property(property="transaction_id", type="string"), @OA\Property(property="status", type="string"), @OA\Property(property="amount", type="number"), @OA\Property(property="payment_method", type="string"))
+     *         )
+     *     )),
+     *     @OA\Response(response=402, description="Payment failed"),
+     *     @OA\Response(response=404, description="Room not found"),
+     *     @OA\Response(response=422, description="Validation failed"),
+     *     @OA\Response(response=500, description="Server error")
+     * )
+     */
     public function createBooking(Request $request)
     {
         try {
@@ -166,9 +198,29 @@ class BookingController extends Controller
     }
 
     /**
-     * Create multiple bookings (one per date) for "Pick Dates" mode.
-     * Flutter: POST /create-multiple-bookings
-     * Body: room_id, customer_id, selected_dates (array of Y-m-d), contact_number, payment_method, payment_reference?, special_requests?
+     * @OA\Post(
+     *     path="/create-multiple-bookings",
+     *     tags={"Booking"},
+     *     summary="Create multiple bookings (pick dates)",
+     *     description="One booking per selected date. Body: room_id, customer_id, selected_dates (array of Y-m-d), contact_number, payment_method, payment_reference?, special_requests?. Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\RequestBody(required=true, @OA\JsonContent(
+     *         required={"room_id","customer_id","selected_dates","contact_number","payment_method"},
+     *         @OA\Property(property="room_id", type="integer"),
+     *         @OA\Property(property="customer_id", type="integer"),
+     *         @OA\Property(property="selected_dates", type="array", @OA\Items(type="string", format="date")),
+     *         @OA\Property(property="contact_number", type="string"),
+     *         @OA\Property(property="payment_method", type="string", enum={"mobile_money","bank_transfer","cash","card"}),
+     *         @OA\Property(property="payment_reference", type="string", nullable=true),
+     *         @OA\Property(property="special_requests", type="string", nullable=true)
+     *     )),
+     *     @OA\Response(response=200, description="OK", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="object"))),
+     *     @OA\Response(response=400, description="Some dates already booked"),
+     *     @OA\Response(response=402, description="Payment failed"),
+     *     @OA\Response(response=404, description="Room not found"),
+     *     @OA\Response(response=422, description="Validation failed"),
+     *     @OA\Response(response=500, description="Server error")
+     * )
      */
     public function createMultipleBookings(Request $request)
     {
@@ -326,6 +378,22 @@ class BookingController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/booking/customer/{customer_id}",
+     *     tags={"Booking"},
+     *     summary="Get customer bookings",
+     *     description="Paginated. Query: page, limit, filter (upcoming|past|current|active). Response: data (id, customer_id, customer, room_id, booking_reference, status, check_in_date, check_out_date, number_of_nights, price_per_night, total_amount, contact_number, special_requests, created_at, room, motel, transactions). Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(name="customer_id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="page", in="query", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="limit", in="query", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="filter", in="query", description="upcoming|past|current|active", @OA\Schema(type="string")),
+     *     @OA\Response(response=200, description="OK"),
+     *     @OA\Response(response=422, description="Validation failed"),
+     *     @OA\Response(response=500, description="Server error")
+     * )
+     */
     public function getCustomerBookings(Request $request, $customerId)
     {
         try {
@@ -505,7 +573,20 @@ class BookingController extends Controller
     }
 
     /**
-     * Get customer transactions
+     * @OA\Get(
+     *     path="/booking/customer/{customer_id}/transactions",
+     *     tags={"Booking"},
+     *     summary="Get customer transactions",
+     *     description="Paginated. Query: page, limit, status (pending|completed|failed|refunded). Response: data (id, booking_id, transaction_id, amount, payment_method, payment_reference, status, processed_at, created_at, booking with room/motel/customer). Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(name="customer_id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="page", in="query", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="limit", in="query", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="status", in="query", description="pending|completed|failed|refunded", @OA\Schema(type="string")),
+     *     @OA\Response(response=200, description="OK"),
+     *     @OA\Response(response=422, description="Validation failed"),
+     *     @OA\Response(response=500, description="Server error")
+     * )
      */
     public function getCustomerTransactions(Request $request, $customerId)
     {
@@ -623,6 +704,21 @@ class BookingController extends Controller
 
     
     
+    /**
+     * @OA\Post(
+     *     path="/booking/cancel",
+     *     tags={"Booking"},
+     *     summary="Cancel booking",
+     *     description="Body: booking_id, customer_id. Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\RequestBody(required=true, @OA\JsonContent(required={"booking_id","customer_id"}, @OA\Property(property="booking_id", type="integer"), @OA\Property(property="customer_id", type="integer"))),
+     *     @OA\Response(response=200, description="Cancelled"),
+     *     @OA\Response(response=400, description="Already cancelled or completed"),
+     *     @OA\Response(response=404, description="Booking not found"),
+     *     @OA\Response(response=422, description="Validation failed"),
+     *     @OA\Response(response=500, description="Server error")
+     * )
+     */
     public function cancelBooking(Request $request)
     {
         try {
@@ -708,8 +804,37 @@ class BookingController extends Controller
     }
 
     /**
-     * Check room availability for a date range (Flutter: POST /check-room-availability).
-     * Returns each date in the range with status "available" or "booked".
+     * @OA\Post(
+     *     path="/check-room-availability",
+     *     tags={"Booking"},
+     *     summary="Check room availability",
+     *     description="Returns each date in range with status available/booked. Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\RequestBody(required=true, @OA\JsonContent(
+     *         required={"room_id","check_in_date","check_out_date"},
+     *         @OA\Property(property="room_id", type="integer"),
+     *         @OA\Property(property="check_in_date", type="string", format="date"),
+     *         @OA\Property(property="check_out_date", type="string", format="date")
+     *     )),
+     *     @OA\Response(response=200, description="OK", @OA\JsonContent(
+     *         @OA\Property(property="success", type="boolean"),
+     *         @OA\Property(property="available", type="boolean"),
+     *         @OA\Property(property="message", type="string"),
+     *         @OA\Property(property="data", type="object",
+     *             @OA\Property(property="room_id", type="integer"),
+     *             @OA\Property(property="check_in_date", type="string"),
+     *             @OA\Property(property="check_out_date", type="string"),
+     *             @OA\Property(property="dates", type="array", @OA\Items(
+     *                 @OA\Property(property="date", type="string"),
+     *                 @OA\Property(property="status", type="string", enum={"available","booked"}),
+     *                 @OA\Property(property="message", type="string")
+     *             ))
+     *         )
+     *     )),
+     *     @OA\Response(response=404, description="Room not found"),
+     *     @OA\Response(response=422, description="Validation failed"),
+     *     @OA\Response(response=500, description="Server error")
+     * )
      */
     public function checkRoomAvailability(Request $request)
     {
@@ -787,7 +912,21 @@ class BookingController extends Controller
     }
 
     /**
-     * Get a single booking by ID (Flutter: GET /booking/{bookingId})
+     * @OA\Get(
+     *     path="/booking/{bookingId}",
+     *     tags={"Booking"},
+     *     summary="Get booking details",
+     *     description="Single booking with customer, room, motel, transactions. Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(name="bookingId", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="OK", @OA\JsonContent(
+     *         @OA\Property(property="success", type="boolean"),
+     *         @OA\Property(property="data", type="object", description="id, customer_id, customer, room_id, booking_reference, status, check_in_date, check_out_date, number_of_nights, price_per_night, total_amount, contact_number, special_requests, created_at, room, motel, transactions"),
+     *         @OA\Property(property="message", type="string")
+     *     )),
+     *     @OA\Response(response=404, description="Booking not found"),
+     *     @OA\Response(response=500, description="Server error")
+     * )
      */
     public function getBookingDetails(Request $request, $bookingId)
     {
@@ -871,7 +1010,21 @@ class BookingController extends Controller
     }
 
     /**
-     * Retry payment for a failed/pending booking (Flutter: POST /retry-payment/{bookingId})
+     * @OA\Post(
+     *     path="/retry-payment/{bookingId}",
+     *     tags={"Booking"},
+     *     summary="Retry payment",
+     *     description="Body: payment_method (mobile_money|bank_transfer|cash|card), payment_reference?. Only pending bookings. Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(name="bookingId", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(required=true, @OA\JsonContent(required={"payment_method"}, @OA\Property(property="payment_method", type="string", enum={"mobile_money","bank_transfer","cash","card"}), @OA\Property(property="payment_reference", type="string", nullable=true))),
+     *     @OA\Response(response=200, description="Payment completed"),
+     *     @OA\Response(response=400, description="Only pending bookings can be retried"),
+     *     @OA\Response(response=402, description="Payment failed"),
+     *     @OA\Response(response=404, description="Booking not found"),
+     *     @OA\Response(response=422, description="Validation failed"),
+     *     @OA\Response(response=500, description="Server error")
+     * )
      */
     public function retryPayment(Request $request, $bookingId)
     {

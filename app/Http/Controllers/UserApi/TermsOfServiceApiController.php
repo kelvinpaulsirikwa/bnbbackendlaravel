@@ -8,8 +8,24 @@ use App\Models\TermsOfService;
 class TermsOfServiceApiController extends Controller
 {
     /**
-     * Get the currently active Terms of Service (for app display).
-     * Public so the app can show terms before login (e.g. signup screen).
+     * @OA\Get(
+     *     path="/terms-of-service",
+     *     tags={"Terms of Service"},
+     *     summary="Get active terms of service",
+     *     description="Returns the currently active terms (id, title, content, updated_at, created_by). Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Response(response=200, description="OK", @OA\JsonContent(
+     *         @OA\Property(property="success", type="boolean"),
+     *         @OA\Property(property="message", type="string"),
+     *         @OA\Property(property="data", type="object", nullable=true,
+     *             @OA\Property(property="id", type="integer"),
+     *             @OA\Property(property="title", type="string"),
+     *             @OA\Property(property="content", type="string"),
+     *             @OA\Property(property="updated_at", type="string", format="date-time"),
+     *             @OA\Property(property="created_by", type="object", nullable=true, @OA\Property(property="id", type="integer"), @OA\Property(property="username", type="string"))
+     *         )
+     *     ))
+     * )
      */
     public function getActive()
     {

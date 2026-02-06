@@ -14,10 +14,11 @@ use Illuminate\Support\Str;
 class MotelDetailsApiController extends Controller
 {
     /**
-     * Get motel details for a specific motel
-     *
-     * @param  int  $motelId
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Get(path="/admin/motels/{motelId}/details", tags={"Admin API"}, summary="Get motel details",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(in="path", name="motelId", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="OK", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="object", @OA\Property(property="motel", type="object", @OA\Property(property="id", type="integer"), @OA\Property(property="name", type="string"), @OA\Property(property="description", type="string", nullable=true), @OA\Property(property="frontimage", type="string", nullable=true), @OA\Property(property="street_address", type="string", nullable=true), @OA\Property(property="district", type="object"), @OA\Property(property="motel_type", type="object"), @OA\Property(property="owner", type="object")), @OA\Property(property="details", type="object", nullable=true, @OA\Property(property="id", type="integer"), @OA\Property(property="contact_phone", type="string"), @OA\Property(property="total_rooms", type="integer"), @OA\Property(property="available_rooms", type="integer"), @OA\Property(property="check_in_time", type="string"), @OA\Property(property="check_out_time", type="string"), @OA\Property(property="amenities", type="string", nullable=true), @OA\Property(property="policies", type="string", nullable=true))))),
+     *     @OA\Response(response=404, description="Motel not found"), @OA\Response(response=422, description="Invalid motel ID"), @OA\Response(response=500, description="Server error"))
      */
     public function getMotelDetails($motelId)
     {
@@ -96,11 +97,12 @@ class MotelDetailsApiController extends Controller
     }
 
     /**
-     * Update motel basic information (name, description, front image)
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $motelId
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Put(path="/admin/motels/{motelId}/info", tags={"Admin API"}, summary="Update motel info",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(in="path", name="motelId", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(@OA\JsonContent(@OA\Property(property="name", type="string"), @OA\Property(property="description", type="string"), @OA\Property(property="front_image", type="string", format="binary"))),
+     *     @OA\Response(response=200, description="Updated", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="object", @OA\Property(property="id", type="integer"), @OA\Property(property="name", type="string"), @OA\Property(property="description", type="string", nullable=true), @OA\Property(property="frontimage", type="string", nullable=true), @OA\Property(property="front_image_url", type="string", nullable=true), @OA\Property(property="street_address", type="string", nullable=true), @OA\Property(property="updated_at", type="string")))),
+     *     @OA\Response(response=404, description="Motel not found"), @OA\Response(response=422, description="Validation failed"), @OA\Response(response=500, description="Server error"))
      */
     public function updateMotelInfo(Request $request, $motelId)
     {
@@ -188,11 +190,12 @@ class MotelDetailsApiController extends Controller
     }
 
     /**
-     * Create or update motel details
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $motelId
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Put(path="/admin/motels/{motelId}/details", tags={"Admin API"}, summary="Update motel details",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(in="path", name="motelId", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(@OA\JsonContent(@OA\Property(property="contact_phone", type="string"), @OA\Property(property="total_rooms", type="integer"), @OA\Property(property="available_rooms", type="integer"), @OA\Property(property="check_in_time", type="string"), @OA\Property(property="check_out_time", type="string"), @OA\Property(property="amenities", type="string"), @OA\Property(property="policies", type="string"))),
+     *     @OA\Response(response=200, description="Updated", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="object", @OA\Property(property="id", type="integer"), @OA\Property(property="bnb_motels_id", type="integer"), @OA\Property(property="contact_phone", type="string"), @OA\Property(property="total_rooms", type="integer"), @OA\Property(property="available_rooms", type="integer"), @OA\Property(property="check_in_time", type="string"), @OA\Property(property="check_out_time", type="string"), @OA\Property(property="amenities", type="string", nullable=true), @OA\Property(property="policies", type="string", nullable=true))))),
+     *     @OA\Response(response=404, description="Motel not found"), @OA\Response(response=422, description="Validation failed"))
      */
     public function updateMotelDetails(Request $request, $motelId)
     {
@@ -282,10 +285,11 @@ class MotelDetailsApiController extends Controller
     }
 
     /**
-     * Delete motel details
-     *
-     * @param  int  $motelId
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Delete(path="/admin/motels/{motelId}/details", tags={"Admin API"}, summary="Delete motel details",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(in="path", name="motelId", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Deleted", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"))),
+     *     @OA\Response(response=404, description="Motel details not found"), @OA\Response(response=500, description="Server error"))
      */
     public function deleteMotelDetails($motelId)
     {
@@ -317,10 +321,11 @@ class MotelDetailsApiController extends Controller
     }
 
     /**
-     * Get all motels with basic information
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Get(path="/admin/motels", tags={"Admin API"}, summary="Get all motels",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(in="query", name="page", @OA\Schema(type="integer")), @OA\Parameter(in="query", name="limit", @OA\Schema(type="integer")), @OA\Parameter(in="query", name="search", @OA\Schema(type="string")),
+     *     @OA\Response(response=200, description="OK", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="array", @OA\Items(type="object", @OA\Property(property="id", type="integer"), @OA\Property(property="name", type="string"), @OA\Property(property="description", type="string", nullable=true), @OA\Property(property="frontimage", type="string", nullable=true), @OA\Property(property="street_address", type="string", nullable=true), @OA\Property(property="district", type="object"), @OA\Property(property="motel_type", type="object"))), @OA\Property(property="pagination", type="object"))),
+     *     @OA\Response(response=500, description="Server error"))
      */
     public function getAllMotels(Request $request)
     {

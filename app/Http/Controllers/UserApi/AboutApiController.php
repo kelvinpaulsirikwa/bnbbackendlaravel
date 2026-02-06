@@ -15,6 +15,30 @@ use Illuminate\Support\Facades\Log;
 
 class AboutApiController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/about/statistics",
+     *     tags={"About BnB"},
+     *     summary="Get BnB statistics",
+     *     description="Platform stats: total_motels, total_amenities, total_regions, total_districts, total_countries, featured_amenities (id, name, icon, usage_count), regions (id, name, country, total_districts, total_motels), countries (id, name, total_regions). Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Response(response=200, description="OK", @OA\JsonContent(
+     *         @OA\Property(property="success", type="boolean"),
+     *         @OA\Property(property="message", type="string"),
+     *         @OA\Property(property="data", type="object",
+     *             @OA\Property(property="total_motels", type="integer"),
+     *             @OA\Property(property="total_amenities", type="integer"),
+     *             @OA\Property(property="total_regions", type="integer"),
+     *             @OA\Property(property="total_districts", type="integer"),
+     *             @OA\Property(property="total_countries", type="integer"),
+     *             @OA\Property(property="featured_amenities", type="array", @OA\Items(type="object")),
+     *             @OA\Property(property="regions", type="array", @OA\Items(type="object")),
+     *             @OA\Property(property="countries", type="array", @OA\Items(type="object"))
+     *         )
+     *     )),
+     *     @OA\Response(response=500, description="Server error")
+     * )
+     */
     public function getBnBStatistics()
     {
         try {
@@ -105,6 +129,27 @@ class AboutApiController extends Controller
         }
     }
     
+    /**
+     * @OA\Get(
+     *     path="/about/amenities",
+     *     tags={"About BnB"},
+     *     summary="Get about amenities",
+     *     description="All amenities with id, name, icon, description, usage_count. Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Response(response=200, description="OK", @OA\JsonContent(
+     *         @OA\Property(property="success", type="boolean"),
+     *         @OA\Property(property="message", type="string"),
+     *         @OA\Property(property="data", type="array", @OA\Items(
+     *             @OA\Property(property="id", type="integer"),
+     *             @OA\Property(property="name", type="string"),
+     *             @OA\Property(property="icon", type="string", nullable=true),
+     *             @OA\Property(property="description", type="string"),
+     *             @OA\Property(property="usage_count", type="integer")
+     *         ))
+     *     )),
+     *     @OA\Response(response=500, description="Server error")
+     * )
+     */
     public function getAmenities()
     {
         try {

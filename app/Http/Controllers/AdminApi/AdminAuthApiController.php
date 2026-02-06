@@ -10,9 +10,18 @@ use Illuminate\Validation\ValidationException;
 use App\Models\BnbUser;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * @OA\Tag(name="Admin API")
+ */
 class AdminAuthApiController extends Controller
 {
-    
+    /**
+     * @OA\Post(path="/admin/login", tags={"Admin API"}, summary="Admin login",
+     *     description="Public. Body: email, password. Returns user (id, name, email, phone, role, profile_image, motel_id, motel_name) + token.",
+     *     @OA\RequestBody(required=true, @OA\JsonContent(required={"email","password"}, @OA\Property(property="email", type="string", format="email"), @OA\Property(property="password", type="string"))),
+     *     @OA\Response(response=200, description="OK", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="object", @OA\Property(property="user", type="object"), @OA\Property(property="token", type="string"), @OA\Property(property="token_type", type="string", example="Bearer")))),
+     *     @OA\Response(response=401, description="Invalid credentials"), @OA\Response(response=422, description="Validation failed"), @OA\Response(response=500, description="Server error"))
+     */
     public function login(Request $request)
     {
         try {
@@ -105,10 +114,14 @@ class AdminAuthApiController extends Controller
     }
 
     /**
-     * Get current admin user details
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Get(path="/admin/me", tags={"Admin API"}, summary="Get current admin",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Response(response=200, description="OK", @OA\JsonContent(
+     *         @OA\Property(property="success", type="boolean"),
+     *         @OA\Property(property="message", type="string"),
+     *         @OA\Property(property="data", type="object", @OA\Property(property="user", type="object",
+     *             @OA\Property(property="id", type="integer"), @OA\Property(property="name", type="string"), @OA\Property(property="email", type="string"), @OA\Property(property="phone", type="string", nullable=true), @OA\Property(property="role", type="string"), @OA\Property(property="profile_image", type="string", nullable=true), @OA\Property(property="motel_id", type="integer", nullable=true), @OA\Property(property="motel_name", type="string", nullable=true))))
+     *     ))
      */
     public function me(Request $request)
     {

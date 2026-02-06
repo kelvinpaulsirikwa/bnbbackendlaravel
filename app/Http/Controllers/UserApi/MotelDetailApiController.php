@@ -15,6 +15,25 @@ use Illuminate\Support\Facades\Validator;
 
 class MotelDetailApiController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/motels/{id}/details",
+     *     tags={"Motel details"},
+     *     summary="Get motel details",
+     *     description="Returns full motel with motelType, district, owner, details. Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(name="id", in="path", required=true, description="Motel ID", @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Motel details",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="data", type="object", description="Motel with relations"),
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(response=404, description="Motel not found"),
+     *     @OA\Response(response=500, description="Server error")
+     * )
+     */
     public function getMotelDetails($id)
     {
         try {
@@ -43,6 +62,32 @@ class MotelDetailApiController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/motels/{id}/images",
+     *     tags={"Motel details"},
+     *     summary="Get motel images",
+     *     description="Paginated motel images. Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="page", in="query", @OA\Schema(type="integer", default=1)),
+     *     @OA\Parameter(name="limit", in="query", @OA\Schema(type="integer", default=5)),
+     *     @OA\Response(response=200, description="OK",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean"),
+     *             @OA\Property(property="data", type="array", @OA\Items(
+     *                 @OA\Property(property="id", type="integer"),
+     *                 @OA\Property(property="bnb_motels_id", type="integer"),
+     *                 @OA\Property(property="filepath", type="string"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time")
+     *             )),
+     *             @OA\Property(property="pagination", type="object", @OA\Property(property="current_page", type="integer"), @OA\Property(property="per_page", type="integer"), @OA\Property(property="total", type="integer"), @OA\Property(property="has_more", type="boolean")),
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(response=500, description="Server error")
+     * )
+     */
     public function getMotelImages($id, Request $request)
     {
         try {
@@ -89,6 +134,34 @@ class MotelDetailApiController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/user/motels/{motelId}/images",
+     *     tags={"Motel details"},
+     *     summary="Get motel images (paged)",
+     *     description="Paginated motel images with full_image_url. Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(name="motelId", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="page", in="query", @OA\Schema(type="integer", default=1)),
+     *     @OA\Parameter(name="limit", in="query", @OA\Schema(type="integer", default=10)),
+     *     @OA\Response(response=200, description="OK",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean"),
+     *             @OA\Property(property="data", type="array", @OA\Items(
+     *                 @OA\Property(property="id", type="integer"),
+     *                 @OA\Property(property="bnb_motels_id", type="integer"),
+     *                 @OA\Property(property="filepath", type="string"),
+     *                 @OA\Property(property="created_at", type="string"),
+     *                 @OA\Property(property="full_image_url", type="string", nullable=true)
+     *             )),
+     *             @OA\Property(property="pagination", type="object", @OA\Property(property="current_page", type="integer"), @OA\Property(property="last_page", type="integer"), @OA\Property(property="per_page", type="integer"), @OA\Property(property="total", type="integer")),
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(response=422, description="Invalid motel ID"),
+     *     @OA\Response(response=500, description="Server error")
+     * )
+     */
     public function getMotelImagesPaging(Request $request, $motelId)
     {
         try {
@@ -145,6 +218,34 @@ class MotelDetailApiController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/motels/{id}/amenities",
+     *     tags={"Motel details"},
+     *     summary="Get motel amenities",
+     *     description="Paginated amenities with amenity (id, name, icon) and images. Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="page", in="query", @OA\Schema(type="integer", default=1)),
+     *     @OA\Parameter(name="limit", in="query", @OA\Schema(type="integer", default=10)),
+     *     @OA\Response(response=200, description="OK",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean"),
+     *             @OA\Property(property="data", type="array", @OA\Items(
+     *                 @OA\Property(property="id", type="integer"),
+     *                 @OA\Property(property="bnb_motels_id", type="integer"),
+     *                 @OA\Property(property="description", type="string"),
+     *                 @OA\Property(property="created_at", type="string"),
+     *                 @OA\Property(property="amenity", type="object", @OA\Property(property="id", type="integer"), @OA\Property(property="name", type="string"), @OA\Property(property="icon", type="string")),
+     *                 @OA\Property(property="images", type="array", @OA\Items(type="object"))
+     *             )),
+     *             @OA\Property(property="pagination", type="object"),
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(response=500, description="Server error")
+     * )
+     */
     public function getMotelAmenities($id, Request $request)
     {
         try {
@@ -206,6 +307,32 @@ class MotelDetailApiController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/amenities/{bnbamenitiesid}/amenitiesimage",
+     *     tags={"Motel details"},
+     *     summary="Get amenity images",
+     *     description="Paginated images for a motel amenity. Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(name="bnbamenitiesid", in="path", required=true, description="Bnb amenity ID", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="page", in="query", @OA\Schema(type="integer", default=1)),
+     *     @OA\Parameter(name="limit", in="query", @OA\Schema(type="integer", default=10)),
+     *     @OA\Response(response=200, description="OK",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean"),
+     *             @OA\Property(property="data", type="array", @OA\Items(
+     *                 @OA\Property(property="filepath", type="string"),
+     *                 @OA\Property(property="description", type="string", nullable=true),
+     *                 @OA\Property(property="updated_at", type="string", nullable=true)
+     *             )),
+     *             @OA\Property(property="pagination", type="object"),
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(response=422, description="Invalid amenity ID"),
+     *     @OA\Response(response=500, description="Server error")
+     * )
+     */
     public function getamenitiesimage(Request $request, $bnbamenitiesid)
     {
         try {
@@ -259,6 +386,32 @@ class MotelDetailApiController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/motels/{id}/rules",
+     *     tags={"Motel details"},
+     *     summary="Get motel BnB rules",
+     *     description="Returns BnB rules for the motel or null if none. Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="OK",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean"),
+     *             @OA\Property(property="data", type="object", nullable=true,
+     *                 @OA\Property(property="id", type="integer"),
+     *                 @OA\Property(property="motel_id", type="integer"),
+     *                 @OA\Property(property="rules", type="string"),
+     *                 @OA\Property(property="created_at", type="string", nullable=true),
+     *                 @OA\Property(property="updated_at", type="string", nullable=true)
+     *             ),
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(response=404, description="Motel not found"),
+     *     @OA\Response(response=422, description="Invalid motel ID"),
+     *     @OA\Response(response=500, description="Server error")
+     * )
+     */
     public function getMotelRules($id)
     {
         try {

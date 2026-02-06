@@ -8,6 +8,58 @@ use Illuminate\Http\Request;
 
 class MotelApiController extends Controller
 {
+    /**
+     * List motels (paginated)
+     *
+     * @OA\Get(
+     *     path="/motels",
+     *     tags={"Motels"},
+     *     summary="Get motels",
+     *     description="Returns active motels with optional filters, sorting, and pagination. Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(name="district_id", in="query", required=false, description="Filter by district ID", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="region_id", in="query", required=false, description="Filter by region ID", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="motel_type_id", in="query", required=false, description="Filter by motel type ID", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="search", in="query", required=false, description="Search in name and description", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="latitude", in="query", required=false, description="User latitude for distance sorting", @OA\Schema(type="number")),
+     *     @OA\Parameter(name="longitude", in="query", required=false, description="User longitude for distance sorting", @OA\Schema(type="number")),
+     *     @OA\Parameter(name="sort_by", in="query", required=false, description="motel_type|name|district|price|created_at|updated_at", @OA\Schema(type="string", default="motel_type")),
+     *     @OA\Parameter(name="sort_order", in="query", required=false, description="asc or desc", @OA\Schema(type="string", default="asc")),
+     *     @OA\Parameter(name="page", in="query", required=false, description="Page number", @OA\Schema(type="integer", default=1)),
+     *     @OA\Parameter(name="limit", in="query", required=false, description="Items per page", @OA\Schema(type="integer", default=10)),
+     *     @OA\Response(response=200, description="Motels retrieved successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="data", type="array", @OA\Items(
+     *                 @OA\Property(property="id", type="integer"),
+     *                 @OA\Property(property="name", type="string"),
+     *                 @OA\Property(property="front_image", type="string", nullable=true),
+     *                 @OA\Property(property="street_address", type="string", nullable=true),
+     *                 @OA\Property(property="motel_type", type="string"),
+     *                 @OA\Property(property="district", type="string"),
+     *                 @OA\Property(property="longitude", type="number", nullable=true),
+     *                 @OA\Property(property="latitude", type="number", nullable=true),
+     *                 @OA\Property(property="distance", type="number", nullable=true, description="km when latitude/longitude provided")
+     *             )),
+     *             @OA\Property(property="pagination", type="object",
+     *                 @OA\Property(property="current_page", type="integer"),
+     *                 @OA\Property(property="per_page", type="integer"),
+     *                 @OA\Property(property="total", type="integer"),
+     *                 @OA\Property(property="last_page", type="integer"),
+     *                 @OA\Property(property="has_more", type="boolean")
+     *             ),
+     *             @OA\Property(property="message", type="string", example="Motels retrieved successfully")
+     *         )
+     *     ),
+     *     @OA\Response(response=500, description="Server error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="error", type="string")
+     *         )
+     *     )
+     * )
+     */
     public function index(Request $request)
     {
         try {
@@ -143,6 +195,43 @@ class MotelApiController extends Controller
         }
     }
 
+    /**
+     * List featured motels (limit 10)
+     *
+     * @OA\Get(
+     *     path="/motels/featured",
+     *     tags={"Motels"},
+     *     summary="Get featured motels",
+     *     description="Returns up to 10 featured (active) motels. Optional latitude/longitude for distance-based order. Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(name="latitude", in="query", required=false, description="User latitude for distance sorting", @OA\Schema(type="number")),
+     *     @OA\Parameter(name="longitude", in="query", required=false, description="User longitude for distance sorting", @OA\Schema(type="number")),
+     *     @OA\Response(response=200, description="Featured motels retrieved successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="data", type="array", @OA\Items(
+     *                 @OA\Property(property="id", type="integer"),
+     *                 @OA\Property(property="name", type="string"),
+     *                 @OA\Property(property="front_image", type="string", nullable=true),
+     *                 @OA\Property(property="street_address", type="string", nullable=true),
+     *                 @OA\Property(property="motel_type", type="string"),
+     *                 @OA\Property(property="district", type="string"),
+     *                 @OA\Property(property="longitude", type="number", nullable=true),
+     *                 @OA\Property(property="latitude", type="number", nullable=true),
+     *                 @OA\Property(property="distance", type="number", nullable=true, description="km when latitude/longitude provided")
+     *             )),
+     *             @OA\Property(property="message", type="string", example="Featured motels retrieved successfully")
+     *         )
+     *     ),
+     *     @OA\Response(response=500, description="Server error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="error", type="string")
+     *         )
+     *     )
+     * )
+     */
     public function featured(Request $request)
     {
         try {

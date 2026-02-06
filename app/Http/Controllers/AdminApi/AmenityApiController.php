@@ -13,11 +13,12 @@ use Illuminate\Support\Facades\Validator;
 class AmenityApiController extends Controller
 {
     /**
-     * Get all amenities for a specific motel
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $motelId
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Get(path="/admin/motels/{motelId}/amenities", tags={"Admin API"}, summary="Get motel amenities",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(in="path", name="motelId", required=true, @OA\Schema(type="integer")),
+     *     @OA\Parameter(in="query", name="page", @OA\Schema(type="integer")), @OA\Parameter(in="query", name="limit", @OA\Schema(type="integer")), @OA\Parameter(in="query", name="search", @OA\Schema(type="string")),
+     *     @OA\Response(response=200, description="OK", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="array", @OA\Items(type="object", @OA\Property(property="id", type="integer"), @OA\Property(property="bnb_motels_id", type="integer"), @OA\Property(property="description", type="string", nullable=true), @OA\Property(property="created_at", type="string"), @OA\Property(property="amenity", type="object", @OA\Property(property="id", type="integer"), @OA\Property(property="name", type="string"), @OA\Property(property="icon", type="string", nullable=true)), @OA\Property(property="images_count", type="integer"))), @OA\Property(property="pagination", type="object"))),
+     *     @OA\Response(response=401, description="Unauthorized"), @OA\Response(response=422, description="Invalid motel ID"), @OA\Response(response=500, description="Server error"))
      */
     public function getMotelAmenities(Request $request, $motelId)
     {
@@ -87,10 +88,11 @@ class AmenityApiController extends Controller
     }
 
     /**
-     * Create a new amenity for a motel
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Post(path="/admin/amenities", tags={"Admin API"}, summary="Create amenity",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\RequestBody(required=true, @OA\JsonContent(required={"bnb_motels_id","amenity_id"}, @OA\Property(property="bnb_motels_id", type="integer"), @OA\Property(property="amenity_id", type="integer"), @OA\Property(property="description", type="string"))),
+     *     @OA\Response(response=200, description="Created", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="object"))),
+     *     @OA\Response(response=401, description="Unauthorized"), @OA\Response(response=422, description="Validation failed / Already exists"), @OA\Response(response=500, description="Server error"))
      */
     public function createAmenity(Request $request)
     {
@@ -157,11 +159,12 @@ class AmenityApiController extends Controller
     }
 
     /**
-     * Update an existing amenity
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Put(path="/admin/amenities/{id}", tags={"Admin API"}, summary="Update amenity",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(in="path", name="id", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(@OA\JsonContent(@OA\Property(property="description", type="string"), @OA\Property(property="amenity_id", type="integer"))),
+     *     @OA\Response(response=200, description="Updated", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="object"))),
+     *     @OA\Response(response=401, description="Unauthorized"), @OA\Response(response=404, description="Not found"), @OA\Response(response=422, description="Validation failed"), @OA\Response(response=500, description="Server error"))
      */
     public function updateAmenity(Request $request, $id)
     {
@@ -249,10 +252,11 @@ class AmenityApiController extends Controller
     }
 
     /**
-     * Get a single amenity by ID
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Get(path="/admin/amenities/{id}", tags={"Admin API"}, summary="Get amenity by ID",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(in="path", name="id", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="OK", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="object", @OA\Property(property="id", type="integer"), @OA\Property(property="bnb_motels_id", type="integer"), @OA\Property(property="description", type="string", nullable=true), @OA\Property(property="amenity", type="object"), @OA\Property(property="images", type="array", @OA\Items(type="object"))))),
+     *     @OA\Response(response=401, description="Unauthorized"), @OA\Response(response=404, description="Not found"), @OA\Response(response=500, description="Server error"))
      */
     public function getAmenity($id)
     {
@@ -302,10 +306,11 @@ class AmenityApiController extends Controller
     }
 
     /**
-     * Delete an amenity
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Delete(path="/admin/amenities/{id}", tags={"Admin API"}, summary="Delete amenity",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(in="path", name="id", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Deleted", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"))),
+     *     @OA\Response(response=401, description="Unauthorized"), @OA\Response(response=404, description="Not found"), @OA\Response(response=500, description="Server error"))
      */
     public function deleteAmenity($id)
     {
@@ -341,9 +346,10 @@ class AmenityApiController extends Controller
     }
 
     /**
-     * Get all available amenities (for dropdown)
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Get(path="/admin/amenities/available", tags={"Admin API"}, summary="Get available amenities (dropdown)",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Response(response=200, description="OK", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="array", @OA\Items(type="object", @OA\Property(property="id", type="integer"), @OA\Property(property="name", type="string"), @OA\Property(property="icon", type="string", nullable=true))))),
+     *     @OA\Response(response=401, description="Unauthorized"), @OA\Response(response=500, description="Server error"))
      */
     public function getAvailableAmenities()
     {

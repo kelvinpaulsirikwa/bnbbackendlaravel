@@ -12,6 +12,23 @@ use Illuminate\Support\Facades\DB;
 
 class SearchApiController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/search/regions",
+     *     tags={"Search"},
+     *     summary="Get regions for search",
+     *     description="Returns id and name of all regions. Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Response(response=200, description="OK",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean"),
+     *             @OA\Property(property="data", type="array", @OA\Items(@OA\Property(property="id", type="integer"), @OA\Property(property="name", type="string"))),
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(response=500, description="Server error")
+     * )
+     */
     public function getRegions()
     {
         try {
@@ -33,6 +50,23 @@ class SearchApiController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/search/amenities",
+     *     tags={"Search"},
+     *     summary="Get amenities for search",
+     *     description="Returns id and name of all amenities. Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Response(response=200, description="OK",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean"),
+     *             @OA\Property(property="data", type="array", @OA\Items(@OA\Property(property="id", type="integer"), @OA\Property(property="name", type="string"))),
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(response=500, description="Server error")
+     * )
+     */
     public function getAmenities()
     {
         try {
@@ -54,6 +88,45 @@ class SearchApiController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/search/motels",
+     *     tags={"Search"},
+     *     summary="Search motels",
+     *     description="Search/filter motels by search term, regions, amenities; sort_by: all|top_searched|new_listings|highest_rated|most_popular. Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(name="search", in="query", description="Search term", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="regions", in="query", description="Comma-separated or array of region names", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="amenities", in="query", description="Comma-separated or array of amenity names", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="sort_by", in="query", @OA\Schema(type="string", enum={"all","top_searched","new_listings","highest_rated","most_popular"}, default="all")),
+     *     @OA\Parameter(name="page", in="query", @OA\Schema(type="integer", default=1)),
+     *     @OA\Parameter(name="limit", in="query", @OA\Schema(type="integer", default=10)),
+     *     @OA\Response(response=200, description="OK",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean"),
+     *             @OA\Property(property="data", type="array", @OA\Items(
+     *                 @OA\Property(property="id", type="integer"),
+     *                 @OA\Property(property="name", type="string"),
+     *                 @OA\Property(property="front_image", type="string", nullable=true),
+     *                 @OA\Property(property="street_address", type="string", nullable=true),
+     *                 @OA\Property(property="motel_type", type="string"),
+     *                 @OA\Property(property="district", type="string"),
+     *                 @OA\Property(property="longitude", type="number", nullable=true),
+     *                 @OA\Property(property="latitude", type="number", nullable=true),
+     *                 @OA\Property(property="region", type="string"),
+     *                 @OA\Property(property="badge", type="string"),
+     *                 @OA\Property(property="amenities", type="array", @OA\Items(type="string")),
+     *                 @OA\Property(property="type", type="string"),
+     *                 @OA\Property(property="isNew", type="boolean"),
+     *                 @OA\Property(property="searchRank", type="integer")
+     *             )),
+     *             @OA\Property(property="pagination", type="object"),
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(response=500, description="Server error")
+     * )
+     */
     public function searchMotels(Request $request)
     {
         try {
@@ -162,6 +235,33 @@ class SearchApiController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/search/motels/{id}/images",
+     *     tags={"Search"},
+     *     summary="Get motel images (search)",
+     *     description="Paginated motel images with full URL. Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(name="id", in="path", required=true, description="Motel ID", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="page", in="query", @OA\Schema(type="integer", default=1)),
+     *     @OA\Parameter(name="limit", in="query", @OA\Schema(type="integer", default=5)),
+     *     @OA\Response(response=200, description="OK",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean"),
+     *             @OA\Property(property="data", type="array", @OA\Items(
+     *                 @OA\Property(property="id", type="integer"),
+     *                 @OA\Property(property="bnb_motels_id", type="integer"),
+     *                 @OA\Property(property="filepath", type="string"),
+     *                 @OA\Property(property="description", type="string", nullable=true),
+     *                 @OA\Property(property="created_at", type="string")
+     *             )),
+     *             @OA\Property(property="pagination", type="object"),
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(response=500, description="Server error")
+     * )
+     */
     public function getMotelImages($motelId, Request $request)
     {
         try {
@@ -205,6 +305,29 @@ class SearchApiController extends Controller
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/search/track",
+     *     tags={"Search"},
+     *     summary="Track search",
+     *     description="Increment search count for given motel IDs. Body: motel_ids (array of integers). Requires Bearer token.",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\RequestBody(required=true,
+     *         @OA\JsonContent(
+     *             required={"motel_ids"},
+     *             @OA\Property(property="motel_ids", type="array", @OA\Items(type="integer"), example={1, 2, 3})
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="OK",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean"),
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(response=400, description="Invalid motel IDs"),
+     *     @OA\Response(response=500, description="Server error")
+     * )
+     */
     public function trackSearch(Request $request)
     {
         try {

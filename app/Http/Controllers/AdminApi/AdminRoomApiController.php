@@ -17,7 +17,12 @@ use App\Models\Motel;
 class AdminRoomApiController extends Controller
 {
     /**
-     * Get all rooms for a specific motel
+     * @OA\Get(path="/admin/motels/{motelId}/rooms", tags={"Admin API"}, summary="Get motel rooms",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(in="path", name="motelId", required=true, @OA\Schema(type="integer")),
+     *     @OA\Parameter(in="query", name="page", @OA\Schema(type="integer")), @OA\Parameter(in="query", name="limit", @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="OK", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="array", @OA\Items(type="object", @OA\Property(property="id", type="integer"), @OA\Property(property="roomnumber", type="string"), @OA\Property(property="price_per_night", type="number"), @OA\Property(property="office_price_per_night", type="number", nullable=true), @OA\Property(property="frontimage", type="string", nullable=true), @OA\Property(property="status", type="string"), @OA\Property(property="room_type", type="object"), @OA\Property(property="motel", type="object"))), @OA\Property(property="pagination", type="object"))),
+     *     @OA\Response(response=401, description="Unauthorized"), @OA\Response(response=422, description="Validation failed"), @OA\Response(response=500, description="Server error"))
      */
     public function getMotelRooms(Request $request, $motelId)
     {
@@ -155,7 +160,12 @@ class AdminRoomApiController extends Controller
     }
 
     /**
-     * Update room basic information
+     * @OA\Put(path="/admin/rooms/{roomId}", tags={"Admin API"}, summary="Update room",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(in="path", name="roomId", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(@OA\JsonContent(@OA\Property(property="room_number", type="string"), @OA\Property(property="price_per_night", type="number"), @OA\Property(property="office_price_per_night", type="number"), @OA\Property(property="status", type="string"), @OA\Property(property="room_type_id", type="integer"), @OA\Property(property="front_image", type="string", format="binary"))),
+     *     @OA\Response(response=200, description="Updated", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="object"))),
+     *     @OA\Response(response=401, description="Unauthorized"), @OA\Response(response=404, description="Room not found"), @OA\Response(response=422, description="Validation failed"), @OA\Response(response=500, description="Server error"))
      */
     public function updateRoom(Request $request, $roomId)
     {
@@ -247,7 +257,12 @@ class AdminRoomApiController extends Controller
     }
 
     /**
-     * Get room images
+     * @OA\Get(path="/admin/rooms/{roomId}/images", tags={"Admin API"}, summary="Get room images",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(in="path", name="roomId", required=true, @OA\Schema(type="integer")),
+     *     @OA\Parameter(in="query", name="page", @OA\Schema(type="integer")), @OA\Parameter(in="query", name="limit", @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="OK", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="array", @OA\Items(type="object", @OA\Property(property="id", type="integer"), @OA\Property(property="bnb_rooms_id", type="integer"), @OA\Property(property="filepath", type="string"), @OA\Property(property="full_image_url", type="string", nullable=true))), @OA\Property(property="pagination", type="object"))),
+     *     @OA\Response(response=401, description="Unauthorized"), @OA\Response(response=404, description="Room not found"), @OA\Response(response=500, description="Server error"))
      */
     public function getRoomImages(Request $request, $roomId)
     {
@@ -306,7 +321,11 @@ class AdminRoomApiController extends Controller
     }
 
     /**
-     * Create room image
+     * @OA\Post(path="/admin/room-images", tags={"Admin API"}, summary="Create room image",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\RequestBody(required=true, @OA\JsonContent(required={"bnb_rooms_id"}, @OA\Property(property="bnb_rooms_id", type="integer"), @OA\Property(property="image", type="string", format="binary"), @OA\Property(property="description", type="string"))),
+     *     @OA\Response(response=201, description="Created", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="object"))),
+     *     @OA\Response(response=401, description="Unauthorized"), @OA\Response(response=404, description="Room not found"), @OA\Response(response=422, description="Validation failed"), @OA\Response(response=500, description="Server error"))
      */
     public function createRoomImage(Request $request)
     {
@@ -384,7 +403,12 @@ class AdminRoomApiController extends Controller
     }
 
     /**
-     * Update room image
+     * @OA\Put(path="/admin/room-images/{id}", tags={"Admin API"}, summary="Update room image",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(in="path", name="id", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(@OA\JsonContent(@OA\Property(property="image", type="string", format="binary"), @OA\Property(property="description", type="string"))),
+     *     @OA\Response(response=200, description="Updated", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="object"))),
+     *     @OA\Response(response=401, description="Unauthorized"), @OA\Response(response=404, description="Not found"), @OA\Response(response=422, description="Validation failed"), @OA\Response(response=500, description="Server error"))
      */
     public function updateRoomImage(Request $request, $imageId)
     {
@@ -467,7 +491,11 @@ class AdminRoomApiController extends Controller
     }
 
     /**
-     * Delete room image
+     * @OA\Delete(path="/admin/room-images/{id}", tags={"Admin API"}, summary="Delete room image",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(in="path", name="id", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Deleted", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"))),
+     *     @OA\Response(response=401, description="Unauthorized"), @OA\Response(response=404, description="Not found"), @OA\Response(response=500, description="Server error"))
      */
     public function deleteRoomImage($imageId)
     {
@@ -503,7 +531,12 @@ class AdminRoomApiController extends Controller
     }
 
     /**
-     * Get room items
+     * @OA\Get(path="/admin/rooms/{roomId}/items", tags={"Admin API"}, summary="Get room items",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(in="path", name="roomId", required=true, @OA\Schema(type="integer")),
+     *     @OA\Parameter(in="query", name="page", @OA\Schema(type="integer")), @OA\Parameter(in="query", name="limit", @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="OK", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="array", @OA\Items(type="object", @OA\Property(property="id", type="integer"), @OA\Property(property="bnb_rooms_id", type="integer"), @OA\Property(property="item_name", type="string"), @OA\Property(property="quantity", type="integer"), @OA\Property(property="description", type="string", nullable=true))), @OA\Property(property="pagination", type="object"))),
+     *     @OA\Response(response=401, description="Unauthorized"), @OA\Response(response=404, description="Room not found"), @OA\Response(response=500, description="Server error"))
      */
     public function getRoomItems(Request $request, $roomId)
     {
@@ -561,7 +594,11 @@ class AdminRoomApiController extends Controller
     }
 
     /**
-     * Create room item
+     * @OA\Post(path="/admin/room-items", tags={"Admin API"}, summary="Create room item",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\RequestBody(required=true, @OA\JsonContent(required={"bnb_rooms_id","item_name","quantity"}, @OA\Property(property="bnb_rooms_id", type="integer"), @OA\Property(property="item_name", type="string"), @OA\Property(property="quantity", type="integer"), @OA\Property(property="description", type="string"))),
+     *     @OA\Response(response=201, description="Created", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="object"))),
+     *     @OA\Response(response=401, description="Unauthorized"), @OA\Response(response=404, description="Room not found"), @OA\Response(response=422, description="Validation failed"), @OA\Response(response=500, description="Server error"))
      */
     public function createRoomItem(Request $request)
     {
@@ -611,7 +648,12 @@ class AdminRoomApiController extends Controller
     }
 
     /**
-     * Update room item
+     * @OA\Put(path="/admin/room-items/{id}", tags={"Admin API"}, summary="Update room item",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(in="path", name="id", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(@OA\JsonContent(@OA\Property(property="item_name", type="string"), @OA\Property(property="quantity", type="integer"), @OA\Property(property="description", type="string"))),
+     *     @OA\Response(response=200, description="Updated", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="object"))),
+     *     @OA\Response(response=401, description="Unauthorized"), @OA\Response(response=404, description="Not found"), @OA\Response(response=422, description="Validation failed"), @OA\Response(response=500, description="Server error"))
      */
     public function updateRoomItem(Request $request, $itemId)
     {
@@ -674,7 +716,11 @@ class AdminRoomApiController extends Controller
     }
 
     /**
-     * Delete room item
+     * @OA\Delete(path="/admin/room-items/{id}", tags={"Admin API"}, summary="Delete room item",
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Parameter(in="path", name="id", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Deleted", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"))),
+     *     @OA\Response(response=401, description="Unauthorized"), @OA\Response(response=404, description="Not found"), @OA\Response(response=500, description="Server error"))
      */
     public function deleteRoomItem($itemId)
     {
