@@ -33,8 +33,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Use vendor pagination view for all admin (adminpages) routes
-        if (Request::is('adminpages*')) {
+        // Use vendor pagination view for admin and owner routes
+        if (Request::is('adminpages*') || Request::is('bnbowner*')) {
             Paginator::defaultView('layouts.vendor.pagination.bootstrap-5');
         }
 

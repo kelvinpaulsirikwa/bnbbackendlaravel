@@ -129,6 +129,7 @@ class RoomManagementController extends Controller
         
         $room = BnbRoom::where('id', $id)
                       ->where('motelid', $motel->id)
+                      ->with(['roomType', 'items', 'images'])
                       ->first();
         
         if (!$room) {
@@ -138,6 +139,31 @@ class RoomManagementController extends Controller
         $roomTypes = RoomType::all();
         
         return view('bnbowner.room-management.edit', compact('motel', 'room', 'roomTypes'))->with('selectedMotel', $motel);
+    }
+    
+    public function show($id)
+    {
+        $user = Auth::user();
+        $selectedMotelId = session('selected_motel_id');
+        
+        $motel = Motel::where('id', $selectedMotelId)
+                     ->where('owner_id', $user->id)
+                     ->first();
+        
+        if (!$motel) {
+            return redirect()->route('bnbowner.motel-selection');
+        }
+        
+        $room = BnbRoom::where('id', $id)
+                      ->where('motelid', $motel->id)
+                      ->with(['roomType', 'items', 'images'])
+                      ->first();
+        
+        if (!$room) {
+            return redirect()->back()->with('error', 'Room not found.');
+        }
+        
+        return view('bnbowner.room-management.show', compact('motel', 'room'))->with('selectedMotel', $motel);
     }
     
     public function update(Request $request, $id)

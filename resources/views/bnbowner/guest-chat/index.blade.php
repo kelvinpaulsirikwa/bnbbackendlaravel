@@ -104,7 +104,7 @@
         </div>
         @if ($chats->hasPages())
             <div class="card-footer">
-                {{ $chats->links('pagination::bootstrap-5') }}
+                {{ $chats->links() }}
             </div>
         @endif
     </div>

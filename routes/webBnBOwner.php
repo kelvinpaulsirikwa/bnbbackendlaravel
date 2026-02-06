@@ -49,6 +49,7 @@ Route::middleware(['auth', 'role:bnbowner,bnbonwner', 'owner.log'])->group(funct
     Route::get('/bnbowner/room-management', [RoomManagementController::class, 'index'])->name('bnbowner.room-management.index');
     Route::get('/bnbowner/room-management/create', [RoomManagementController::class, 'create'])->name('bnbowner.room-management.create');
     Route::post('/bnbowner/room-management', [RoomManagementController::class, 'store'])->name('bnbowner.room-management.store');
+    Route::get('/bnbowner/room-management/{id}', [RoomManagementController::class, 'show'])->name('bnbowner.room-management.show');
     Route::get('/bnbowner/room-management/{id}/edit', [RoomManagementController::class, 'edit'])->name('bnbowner.room-management.edit');
     Route::put('/bnbowner/room-management/{id}', [RoomManagementController::class, 'update'])->name('bnbowner.room-management.update');
     Route::delete('/bnbowner/room-management/{id}', [RoomManagementController::class, 'destroy'])->name('bnbowner.room-management.destroy');
