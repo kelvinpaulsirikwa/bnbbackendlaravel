@@ -30,6 +30,7 @@ Route::prefix('adminpages')->name('adminpages.')->middleware(['auth', 'role:bnba
     Route::resource('customers', App\Http\Controllers\Admin\CustomerController::class);
     Route::resource('motel-types', App\Http\Controllers\Admin\MotelTypeController::class);
     Route::resource('room-types', App\Http\Controllers\Admin\RoomTypeController::class);
+    Route::get('/motels/{motel}/rooms/{room}', [App\Http\Controllers\Admin\MotelController::class, 'showRoom'])->name('motels.rooms.show');
     Route::resource('motels', App\Http\Controllers\Admin\MotelController::class);
     Route::patch('/motels/{motel}/status', [App\Http\Controllers\Admin\MotelController::class, 'updateStatus'])->name('motels.update-status');
     Route::patch('/users/{user}/status', [App\Http\Controllers\Admin\BnbUserController::class, 'updateStatus'])->name('users.update-status');

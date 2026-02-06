@@ -51,12 +51,6 @@
             </a>
         </li>
         <li>
-            <a href="<?php echo e(route('adminpages.authenticated-users-summary')); ?>">
-                <i class="bx bx-group icon"></i>
-                My dashboard
-            </a>
-        </li>
-        <li>
             <a href="<?php echo e(route('website.home')); ?>">
                 <i class="bx bxs-home icon"></i>
                 Website Home
@@ -216,6 +210,12 @@
             <a href="<?php echo e(route('adminpages.profile.edit')); ?>">
                 <i class="bx bxs-user-circle icon"></i>
                 Profile Management
+            </a>
+        </li>
+        <li>
+            <a href="<?php echo e(route('adminpages.my-activity')); ?>">
+                <i class="bx bx-history icon"></i>
+                My activity
             </a>
         </li>
 

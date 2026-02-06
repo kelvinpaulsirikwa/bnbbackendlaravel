@@ -221,6 +221,56 @@
                     </div>
                 </div>
 
+                <!-- Rooms Card -->
+                <div class="card shadow-sm mt-4">
+                    <div class="card-header bg-white border-0 py-3">
+                        <h5 class="card-title mb-0">
+                            <i class="bx bx-bed me-2"></i>
+                            Rooms ({{ $motel->rooms->count() }})
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        @if($motel->rooms->count() > 0)
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Room #</th>
+                                            <th>Type</th>
+                                            <th>Price/night</th>
+                                            <th>Status</th>
+                                            <th class="text-end">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($motel->rooms as $room)
+                                            <tr>
+                                                <td class="fw-semibold">{{ $room->room_number }}</td>
+                                                <td>{{ $room->roomType->name ?? '—' }}</td>
+                                                <td>{{ $room->price_per_night ? number_format($room->price_per_night, 0) . ' ' . (config('app.currency', 'USD')) : '—' }}</td>
+                                                <td>
+                                                    @php
+                                                        $roomStatus = $room->status ?? ($room->is_active ? 'active' : 'inactive');
+                                                        $statusClass = ($roomStatus === 'active' || $room->is_active) ? 'bg-success' : 'bg-warning text-dark';
+                                                    @endphp
+                                                    <span class="badge {{ $statusClass }}">{{ ucfirst($roomStatus) }}</span>
+                                                </td>
+                                                <td class="text-end">
+                                                    <a href="{{ route('adminpages.motels.rooms.show', [$motel->id, $room->id]) }}" class="btn btn-sm btn-outline-primary">
+                                                        <i class="bx bx-show me-1"></i> View
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @else
+                            <p class="text-muted mb-0">No rooms added yet for this motel.</p>
+                        @endif
+                    </div>
+                </div>
+
                 <!-- Actions Card -->
                 <div class="card shadow-sm mt-4">
                     <div class="card-header bg-white border-0 py-3">

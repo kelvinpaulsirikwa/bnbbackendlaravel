@@ -181,56 +181,6 @@
         </div>
     </div>
 
-    <!-- Users by Role -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white border-0 py-3">
-                    <h5 class="mb-0"><i class="fas fa-user-shield text-info me-2"></i>Users by Role</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-2 col-sm-4 col-6 mb-3">
-                            <div class="text-center p-3 bg-primary bg-opacity-10 rounded">
-                                <i class="fas fa-user-cog fa-2x text-primary mb-2"></i>
-                                <h4 class="mb-0 fw-bold">{{ $usersByRole['bnbadmin'] }}</h4>
-                                <small class="text-muted">Admins</small>
-                            </div>
-                        </div>
-                        <div class="col-md-2 col-sm-4 col-6 mb-3">
-                            <div class="text-center p-3 bg-success bg-opacity-10 rounded">
-                                <i class="fas fa-building fa-2x text-success mb-2"></i>
-                                <h4 class="mb-0 fw-bold">{{ $usersByRole['bnbowner'] }}</h4>
-                                <small class="text-muted">Owners</small>
-                            </div>
-                        </div>
-                        <div class="col-md-2 col-sm-4 col-6 mb-3">
-                            <div class="text-center p-3 bg-info bg-opacity-10 rounded">
-                                <i class="fas fa-concierge-bell fa-2x text-info mb-2"></i>
-                                <h4 class="mb-0 fw-bold">{{ $usersByRole['receptionist'] }}</h4>
-                                <small class="text-muted">Receptionists</small>
-                            </div>
-                        </div>
-                        <div class="col-md-2 col-sm-4 col-6 mb-3">
-                            <div class="text-center p-3 bg-warning bg-opacity-10 rounded">
-                                <i class="fas fa-shield-alt fa-2x text-warning mb-2"></i>
-                                <h4 class="mb-0 fw-bold">{{ $usersByRole['security'] }}</h4>
-                                <small class="text-muted">Security</small>
-                            </div>
-                        </div>
-                        <div class="col-md-2 col-sm-4 col-6 mb-3">
-                            <div class="text-center p-3 bg-danger bg-opacity-10 rounded">
-                                <i class="fas fa-utensils fa-2x text-danger mb-2"></i>
-                                <h4 class="mb-0 fw-bold">{{ $usersByRole['chef'] }}</h4>
-                                <small class="text-muted">Chefs</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Pending Approvals & Recent Registrations -->
     <div class="row">
         <!-- Pending Motels -->

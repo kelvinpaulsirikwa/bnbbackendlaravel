@@ -82,15 +82,6 @@ class DashboardController extends AdminBaseController
             'website_registrations' => BnbUser::where('createdby', 'websiteregistration')->count(),
         ];
 
-        // Users by Role
-        $usersByRole = [
-            'bnbadmin' => BnbUser::where('role', 'bnbadmin')->count(),
-            'bnbowner' => BnbUser::whereIn('role', ['bnbowner', 'bnbonwner'])->count(),
-            'receptionist' => BnbUser::where('role', 'receptionist')->count(),
-            'security' => BnbUser::where('role', 'security')->count(),
-            'chef' => BnbUser::where('role', 'chef')->count(),
-        ];
-
         // Customer Statistics
         $customerStats = [
             'total' => Customer::count(),
@@ -130,7 +121,6 @@ class DashboardController extends AdminBaseController
 
         return view('adminpages.dashboard', compact(
             'bnbUserStats',
-            'usersByRole',
             'customerStats',
             'locationStats',
             'motelStats',

@@ -11,6 +11,10 @@ use App\Models\MotelType;
 use App\Models\District;
 use App\Models\Country;
 use App\Models\Region;
+use App\Models\BnbRoom;
+use App\Models\BnbRoomItem;
+use App\Models\BnbRoomImage;
+use App\Models\BnbBooking;
 use App\Http\Controllers\Website\HomeController;
 
 class MotelController extends AdminBaseController
@@ -111,8 +115,33 @@ class MotelController extends AdminBaseController
 
     public function show($id)
     {
-        $motel = Motel::with(['owner', 'motelType', 'creator', 'details', 'district'])->findOrFail($id);
+        $motel = Motel::with(['owner', 'motelType', 'creator', 'details', 'district', 'rooms' => fn ($q) => $q->with('roomType')->orderBy('room_number')])
+            ->findOrFail($id);
         return view('adminpages.motels.show', compact('motel'));
+    }
+
+    /**
+     * View a single room (read-only) with paginated items, images, and bookings.
+     */
+    public function showRoom($motelId, $roomId)
+    {
+        $motel = Motel::findOrFail($motelId);
+        $room = BnbRoom::where('motelid', $motel->id)->where('id', $roomId)->with('roomType')->firstOrFail();
+
+        $roomItems = BnbRoomItem::where('bnbroomid', $room->id)
+            ->orderBy('name')
+            ->paginate(10, ['*'], 'items_page');
+
+        $roomImages = BnbRoomImage::where('bnbroomid', $room->id)
+            ->orderBy('id')
+            ->paginate(12, ['*'], 'images_page');
+
+        $bookings = BnbBooking::where('bnb_room_id', $room->id)
+            ->with('customer')
+            ->latest('check_in_date')
+            ->paginate(10, ['*'], 'bookings_page');
+
+        return view('adminpages.motels.rooms.show', compact('motel', 'room', 'roomItems', 'roomImages', 'bookings'));
     }
 
     public function edit($id)
