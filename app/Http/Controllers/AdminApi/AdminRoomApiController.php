@@ -17,7 +17,7 @@ use App\Models\Motel;
 class AdminRoomApiController extends Controller
 {
     /**
-     * @OA\Get(path="/admin/motels/{motelId}/rooms", tags={"Admin API"}, summary="Get motel rooms",
+     * @OA\Get(path="/admin/motels/{motelId}/rooms", tags={"Admin"}, summary="Get motel rooms",
      *     security={{"bearerAuth": {}}},
      *     @OA\Parameter(in="path", name="motelId", required=true, @OA\Schema(type="integer")),
      *     @OA\Parameter(in="query", name="page", @OA\Schema(type="integer")), @OA\Parameter(in="query", name="limit", @OA\Schema(type="integer")),
@@ -160,7 +160,7 @@ class AdminRoomApiController extends Controller
     }
 
     /**
-     * @OA\Put(path="/admin/rooms/{roomId}", tags={"Admin API"}, summary="Update room",
+     * @OA\Put(path="/admin/rooms/{roomId}", tags={"Admin"}, summary="Update room",
      *     security={{"bearerAuth": {}}},
      *     @OA\Parameter(in="path", name="roomId", required=true, @OA\Schema(type="integer")),
      *     @OA\RequestBody(@OA\JsonContent(@OA\Property(property="room_number", type="string"), @OA\Property(property="price_per_night", type="number"), @OA\Property(property="office_price_per_night", type="number"), @OA\Property(property="status", type="string"), @OA\Property(property="room_type_id", type="integer"), @OA\Property(property="front_image", type="string", format="binary"))),
@@ -257,7 +257,7 @@ class AdminRoomApiController extends Controller
     }
 
     /**
-     * @OA\Get(path="/admin/rooms/{roomId}/images", tags={"Admin API"}, summary="Get room images",
+     * @OA\Get(path="/admin/rooms/{roomId}/images", tags={"Admin"}, summary="Get room images",
      *     security={{"bearerAuth": {}}},
      *     @OA\Parameter(in="path", name="roomId", required=true, @OA\Schema(type="integer")),
      *     @OA\Parameter(in="query", name="page", @OA\Schema(type="integer")), @OA\Parameter(in="query", name="limit", @OA\Schema(type="integer")),
@@ -321,7 +321,7 @@ class AdminRoomApiController extends Controller
     }
 
     /**
-     * @OA\Post(path="/admin/room-images", tags={"Admin API"}, summary="Create room image",
+     * @OA\Post(path="/admin/room-images", tags={"Admin"}, summary="Create room image",
      *     security={{"bearerAuth": {}}},
      *     @OA\RequestBody(required=true, @OA\JsonContent(required={"bnb_rooms_id"}, @OA\Property(property="bnb_rooms_id", type="integer"), @OA\Property(property="image", type="string", format="binary"), @OA\Property(property="description", type="string"))),
      *     @OA\Response(response=201, description="Created", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="object"))),
@@ -403,7 +403,7 @@ class AdminRoomApiController extends Controller
     }
 
     /**
-     * @OA\Put(path="/admin/room-images/{id}", tags={"Admin API"}, summary="Update room image",
+     * @OA\Put(path="/admin/room-images/{id}", tags={"Admin"}, summary="Update room image",
      *     security={{"bearerAuth": {}}},
      *     @OA\Parameter(in="path", name="id", required=true, @OA\Schema(type="integer")),
      *     @OA\RequestBody(@OA\JsonContent(@OA\Property(property="image", type="string", format="binary"), @OA\Property(property="description", type="string"))),
@@ -491,7 +491,7 @@ class AdminRoomApiController extends Controller
     }
 
     /**
-     * @OA\Delete(path="/admin/room-images/{id}", tags={"Admin API"}, summary="Delete room image",
+     * @OA\Delete(path="/admin/room-images/{id}", tags={"Admin"}, summary="Delete room image",
      *     security={{"bearerAuth": {}}},
      *     @OA\Parameter(in="path", name="id", required=true, @OA\Schema(type="integer")),
      *     @OA\Response(response=200, description="Deleted", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"))),
@@ -531,7 +531,7 @@ class AdminRoomApiController extends Controller
     }
 
     /**
-     * @OA\Get(path="/admin/rooms/{roomId}/items", tags={"Admin API"}, summary="Get room items",
+     * @OA\Get(path="/admin/rooms/{roomId}/items", tags={"Admin"}, summary="Get room items",
      *     security={{"bearerAuth": {}}},
      *     @OA\Parameter(in="path", name="roomId", required=true, @OA\Schema(type="integer")),
      *     @OA\Parameter(in="query", name="page", @OA\Schema(type="integer")), @OA\Parameter(in="query", name="limit", @OA\Schema(type="integer")),
@@ -594,7 +594,7 @@ class AdminRoomApiController extends Controller
     }
 
     /**
-     * @OA\Post(path="/admin/room-items", tags={"Admin API"}, summary="Create room item",
+     * @OA\Post(path="/admin/room-items", tags={"Admin"}, summary="Create room item",
      *     security={{"bearerAuth": {}}},
      *     @OA\RequestBody(required=true, @OA\JsonContent(required={"bnb_rooms_id","item_name","quantity"}, @OA\Property(property="bnb_rooms_id", type="integer"), @OA\Property(property="item_name", type="string"), @OA\Property(property="quantity", type="integer"), @OA\Property(property="description", type="string"))),
      *     @OA\Response(response=201, description="Created", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="object"))),
@@ -648,7 +648,7 @@ class AdminRoomApiController extends Controller
     }
 
     /**
-     * @OA\Put(path="/admin/room-items/{id}", tags={"Admin API"}, summary="Update room item",
+     * @OA\Put(path="/admin/room-items/{id}", tags={"Admin"}, summary="Update room item",
      *     security={{"bearerAuth": {}}},
      *     @OA\Parameter(in="path", name="id", required=true, @OA\Schema(type="integer")),
      *     @OA\RequestBody(@OA\JsonContent(@OA\Property(property="item_name", type="string"), @OA\Property(property="quantity", type="integer"), @OA\Property(property="description", type="string"))),
@@ -716,7 +716,7 @@ class AdminRoomApiController extends Controller
     }
 
     /**
-     * @OA\Delete(path="/admin/room-items/{id}", tags={"Admin API"}, summary="Delete room item",
+     * @OA\Delete(path="/admin/room-items/{id}", tags={"Admin"}, summary="Delete room item",
      *     security={{"bearerAuth": {}}},
      *     @OA\Parameter(in="path", name="id", required=true, @OA\Schema(type="integer")),
      *     @OA\Response(response=200, description="Deleted", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"))),

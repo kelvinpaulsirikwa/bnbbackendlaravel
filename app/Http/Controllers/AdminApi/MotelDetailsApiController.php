@@ -14,7 +14,7 @@ use Illuminate\Support\Str;
 class MotelDetailsApiController extends Controller
 {
     /**
-     * @OA\Get(path="/admin/motels/{motelId}/details", tags={"Admin API"}, summary="Get motel details",
+     * @OA\Get(path="/admin/motels/{motelId}/details", tags={"Admin"}, summary="Get motel details",
      *     security={{"bearerAuth": {}}},
      *     @OA\Parameter(in="path", name="motelId", required=true, @OA\Schema(type="integer")),
      *     @OA\Response(response=200, description="OK", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="object", @OA\Property(property="motel", type="object", @OA\Property(property="id", type="integer"), @OA\Property(property="name", type="string"), @OA\Property(property="description", type="string", nullable=true), @OA\Property(property="frontimage", type="string", nullable=true), @OA\Property(property="street_address", type="string", nullable=true), @OA\Property(property="district", type="object"), @OA\Property(property="motel_type", type="object"), @OA\Property(property="owner", type="object")), @OA\Property(property="details", type="object", nullable=true, @OA\Property(property="id", type="integer"), @OA\Property(property="contact_phone", type="string"), @OA\Property(property="total_rooms", type="integer"), @OA\Property(property="available_rooms", type="integer"), @OA\Property(property="check_in_time", type="string"), @OA\Property(property="check_out_time", type="string"), @OA\Property(property="amenities", type="string", nullable=true), @OA\Property(property="policies", type="string", nullable=true))))),
@@ -97,7 +97,7 @@ class MotelDetailsApiController extends Controller
     }
 
     /**
-     * @OA\Put(path="/admin/motels/{motelId}/info", tags={"Admin API"}, summary="Update motel info",
+     * @OA\Put(path="/admin/motels/{motelId}/info", tags={"Admin"}, summary="Update motel info",
      *     security={{"bearerAuth": {}}},
      *     @OA\Parameter(in="path", name="motelId", required=true, @OA\Schema(type="integer")),
      *     @OA\RequestBody(@OA\JsonContent(@OA\Property(property="name", type="string"), @OA\Property(property="description", type="string"), @OA\Property(property="front_image", type="string", format="binary"))),
@@ -190,7 +190,7 @@ class MotelDetailsApiController extends Controller
     }
 
     /**
-     * @OA\Put(path="/admin/motels/{motelId}/details", tags={"Admin API"}, summary="Update motel details",
+     * @OA\Put(path="/admin/motels/{motelId}/details", tags={"Admin"}, summary="Update motel details",
      *     security={{"bearerAuth": {}}},
      *     @OA\Parameter(in="path", name="motelId", required=true, @OA\Schema(type="integer")),
      *     @OA\RequestBody(@OA\JsonContent(@OA\Property(property="contact_phone", type="string"), @OA\Property(property="total_rooms", type="integer"), @OA\Property(property="available_rooms", type="integer"), @OA\Property(property="check_in_time", type="string"), @OA\Property(property="check_out_time", type="string"), @OA\Property(property="amenities", type="string"), @OA\Property(property="policies", type="string"))),
@@ -285,7 +285,7 @@ class MotelDetailsApiController extends Controller
     }
 
     /**
-     * @OA\Delete(path="/admin/motels/{motelId}/details", tags={"Admin API"}, summary="Delete motel details",
+     * @OA\Delete(path="/admin/motels/{motelId}/details", tags={"Admin"}, summary="Delete motel details",
      *     security={{"bearerAuth": {}}},
      *     @OA\Parameter(in="path", name="motelId", required=true, @OA\Schema(type="integer")),
      *     @OA\Response(response=200, description="Deleted", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"))),
@@ -321,7 +321,7 @@ class MotelDetailsApiController extends Controller
     }
 
     /**
-     * @OA\Get(path="/admin/motels", tags={"Admin API"}, summary="Get all motels",
+     * @OA\Get(path="/admin/motels", tags={"Admin"}, summary="Get all motels",
      *     security={{"bearerAuth": {}}},
      *     @OA\Parameter(in="query", name="page", @OA\Schema(type="integer")), @OA\Parameter(in="query", name="limit", @OA\Schema(type="integer")), @OA\Parameter(in="query", name="search", @OA\Schema(type="string")),
      *     @OA\Response(response=200, description="OK", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="array", @OA\Items(type="object", @OA\Property(property="id", type="integer"), @OA\Property(property="name", type="string"), @OA\Property(property="description", type="string", nullable=true), @OA\Property(property="frontimage", type="string", nullable=true), @OA\Property(property="street_address", type="string", nullable=true), @OA\Property(property="district", type="object"), @OA\Property(property="motel_type", type="object"))), @OA\Property(property="pagination", type="object"))),

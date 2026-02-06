@@ -15,7 +15,7 @@
         "/admin/login": {
             "post": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Admin login",
                 "description": "Public. Body: email, password. Returns user (id, name, email, phone, role, profile_image, motel_id, motel_name) + token.",
@@ -92,7 +92,7 @@
         "/admin/me": {
             "get": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Get current admin",
                 "operationId": "dddfe0ca2554791ad854e54f8232b535",
@@ -164,7 +164,7 @@
         "/admin/chats": {
             "get": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Get admin chats",
                 "operationId": "537812a169781187d0d02298b2b8610e",
@@ -242,7 +242,7 @@
         "/admin/chat/send-message": {
             "post": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Send chat message",
                 "operationId": "04f52a225be3035995efe2f2adc22423",
@@ -316,7 +316,7 @@
         "/admin/profile": {
             "get": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Get admin profile",
                 "operationId": "989d7891546c3a004bc23190f6a520b6",
@@ -398,7 +398,7 @@
             },
             "put": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Update admin profile",
                 "operationId": "80330ca838d56f427445cbf48918d19c",
@@ -462,7 +462,7 @@
         "/admin/profile/counts": {
             "get": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Get profile counts",
                 "operationId": "f7e64ea8084baffb60c5503d5b84e209",
@@ -523,7 +523,7 @@
         "/admin/motels/{motelId}/rooms": {
             "get": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Get motel rooms",
                 "operationId": "b5b9c40f2a8d53ac8cc9d9a810fa0fca",
@@ -627,7 +627,7 @@
         "/admin/rooms/{roomId}": {
             "put": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Update room",
                 "operationId": "e6fb1a39ffe7e9f5d834e46e30c4bde4",
@@ -716,7 +716,7 @@
         "/admin/rooms/{roomId}/images": {
             "get": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Get room images",
                 "operationId": "60e4b931e22c5202833e8eaa682df135",
@@ -807,7 +807,7 @@
         "/admin/room-images": {
             "post": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Create room image",
                 "operationId": "48768690b068409051d25cac252ea89d",
@@ -881,7 +881,7 @@
         "/admin/room-images/{id}": {
             "put": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Update room image",
                 "operationId": "b4282a42c360957ea3edb40752d28f9e",
@@ -956,7 +956,7 @@
             },
             "delete": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Delete room image",
                 "operationId": "af3a9758f625b411e3d01216acb98375",
@@ -1009,7 +1009,7 @@
         "/admin/rooms/{roomId}/items": {
             "get": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Get room items",
                 "operationId": "cfe922f0be5ba5e9bddb0fafa9576087",
@@ -1103,7 +1103,7 @@
         "/admin/room-items": {
             "post": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Create room item",
                 "operationId": "da66b29a25b1296bd40cc5e64267150e",
@@ -1181,7 +1181,7 @@
         "/admin/room-items/{id}": {
             "put": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Update room item",
                 "operationId": "1325dceb526616684dfe698db5a19ecc",
@@ -1258,7 +1258,7 @@
             },
             "delete": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Delete room item",
                 "operationId": "93b0af3852d4faf5645c5709558354d9",
@@ -1311,7 +1311,7 @@
         "/admin/motels/{motelId}/amenities": {
             "get": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Get motel amenities",
                 "operationId": "6c7875e80c4996e7f2a20a810982015d",
@@ -1427,7 +1427,7 @@
         "/admin/amenities": {
             "post": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Create amenity",
                 "operationId": "acb417d40e6cea79594e76e156ac900d",
@@ -1498,7 +1498,7 @@
         "/admin/amenities/{id}": {
             "get": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Get amenity by ID",
                 "operationId": "a15f97810261e7868ee6ccd93a393dbe",
@@ -1573,7 +1573,7 @@
             },
             "put": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Update amenity",
                 "operationId": "88596710d2331212689d832d40b80f6b",
@@ -1647,7 +1647,7 @@
             },
             "delete": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Delete amenity",
                 "operationId": "b4cfbe4313ab889f235638f513f2919a",
@@ -1700,7 +1700,7 @@
         "/admin/amenities/available": {
             "get": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Get available amenities (dropdown)",
                 "operationId": "d005a635176b92e8e88d2eaabceb2d68",
@@ -1758,7 +1758,7 @@
         "/admin/amenities/{amenityId}/images": {
             "get": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Get amenity images",
                 "operationId": "a01fde671a6c906eda8b93d9eb8e6938",
@@ -1856,7 +1856,7 @@
         "/admin/amenity-images": {
             "post": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Create amenity image",
                 "operationId": "ca213424abf9340a0a3d76a3f2a9dc8a",
@@ -1951,7 +1951,7 @@
         "/admin/amenity-images/{id}": {
             "put": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Update amenity image",
                 "operationId": "4f7048d5bedffb9f3333eff84492071c",
@@ -2026,7 +2026,7 @@
             },
             "delete": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Delete amenity image",
                 "operationId": "daa33b4371585575cfb7bed58b37ec23",
@@ -2079,7 +2079,7 @@
         "/admin/motels/{motelId}/details": {
             "get": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Get motel details",
                 "operationId": "049bd045f7d391f9601b416157d388ba",
@@ -2199,7 +2199,7 @@
             },
             "put": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Update motel details",
                 "operationId": "f218065ffa2a494c1c537739b1c2d6c2",
@@ -2307,7 +2307,7 @@
             },
             "delete": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Delete motel details",
                 "operationId": "1992ca430766c252c9eaa81cdd7d6017",
@@ -2357,7 +2357,7 @@
         "/admin/motels/{motelId}/info": {
             "get": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Get motel info (for image mgmt)",
                 "operationId": "3caba17e023a609a0fce5069bb901284",
@@ -2423,7 +2423,7 @@
             },
             "put": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Update motel info",
                 "operationId": "3601f0a6bca0c9910ebae98c121cd5e3",
@@ -2527,7 +2527,7 @@
         "/admin/motels": {
             "get": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Get all motels",
                 "operationId": "a0339c91719b4bfaadee66f731adc169",
@@ -2622,7 +2622,7 @@
         "/admin/motels/{motelId}/images": {
             "get": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Get motel images",
                 "operationId": "930c3d19e63dc486a0854e8f7308ce83",
@@ -2724,7 +2724,7 @@
         "/admin/motel-images/{id}": {
             "put": {
                 "tags": [
-                    "Admin API"
+                    "Admin"
                 ],
                 "summary": "Update motel image",
                 "operationId": "c19398e6b61ad2e4b4fb82265557d68a",
@@ -6798,7 +6798,7 @@
     },
     "tags": [
         {
-            "name": "Admin API"
+            "name": "Admin"
         },
         {
             "name": "About BnB",

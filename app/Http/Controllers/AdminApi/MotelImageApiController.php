@@ -14,7 +14,7 @@ use Illuminate\Support\Str;
 class MotelImageApiController extends Controller
 {
     /**
-     * @OA\Get(path="/admin/motels/{motelId}/images", tags={"Admin API"}, summary="Get motel images",
+     * @OA\Get(path="/admin/motels/{motelId}/images", tags={"Admin"}, summary="Get motel images",
      *     security={{"bearerAuth": {}}},
      *     @OA\Parameter(in="path", name="motelId", required=true, @OA\Schema(type="integer")),
      *     @OA\Parameter(in="query", name="page", @OA\Schema(type="integer")), @OA\Parameter(in="query", name="limit", @OA\Schema(type="integer")),
@@ -173,7 +173,7 @@ class MotelImageApiController extends Controller
     }
 
     /**
-     * @OA\Put(path="/admin/motel-images/{id}", tags={"Admin API"}, summary="Update motel image",
+     * @OA\Put(path="/admin/motel-images/{id}", tags={"Admin"}, summary="Update motel image",
      *     security={{"bearerAuth": {}}},
      *     @OA\Parameter(in="path", name="id", required=true, @OA\Schema(type="integer")),
      *     @OA\RequestBody(@OA\JsonContent(@OA\Property(property="image", type="string", format="binary"), @OA\Property(property="description", type="string"))),
@@ -307,7 +307,7 @@ class MotelImageApiController extends Controller
     }
 
     /**
-     * @OA\Get(path="/admin/motels/{motelId}/info", tags={"Admin API"}, summary="Get motel info (for image mgmt)",
+     * @OA\Get(path="/admin/motels/{motelId}/info", tags={"Admin"}, summary="Get motel info (for image mgmt)",
      *     security={{"bearerAuth": {}}},
      *     @OA\Parameter(in="path", name="motelId", required=true, @OA\Schema(type="integer")),
      *     @OA\Response(response=200, description="OK", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="object", @OA\Property(property="id", type="integer"), @OA\Property(property="name", type="string"), @OA\Property(property="address", type="string", nullable=true)))),

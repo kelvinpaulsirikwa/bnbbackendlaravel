@@ -11,12 +11,12 @@ use App\Models\BnbUser;
 use Illuminate\Support\Facades\Log;
 
 /**
- * @OA\Tag(name="Admin API")
+ * @OA\Tag(name="Admin")
  */
 class AdminAuthApiController extends Controller
 {
     /**
-     * @OA\Post(path="/admin/login", tags={"Admin API"}, summary="Admin login",
+     * @OA\Post(path="/admin/login", tags={"Admin"}, summary="Admin login",
      *     description="Public. Body: email, password. Returns user (id, name, email, phone, role, profile_image, motel_id, motel_name) + token.",
      *     @OA\RequestBody(required=true, @OA\JsonContent(required={"email","password"}, @OA\Property(property="email", type="string", format="email"), @OA\Property(property="password", type="string"))),
      *     @OA\Response(response=200, description="OK", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="object", @OA\Property(property="user", type="object"), @OA\Property(property="token", type="string"), @OA\Property(property="token_type", type="string", example="Bearer")))),
@@ -114,7 +114,7 @@ class AdminAuthApiController extends Controller
     }
 
     /**
-     * @OA\Get(path="/admin/me", tags={"Admin API"}, summary="Get current admin",
+     * @OA\Get(path="/admin/me", tags={"Admin"}, summary="Get current admin",
      *     security={{"bearerAuth": {}}},
      *     @OA\Response(response=200, description="OK", @OA\JsonContent(
      *         @OA\Property(property="success", type="boolean"),

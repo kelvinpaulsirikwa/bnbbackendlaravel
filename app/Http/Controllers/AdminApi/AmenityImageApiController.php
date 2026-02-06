@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 class AmenityImageApiController extends Controller
 {
     /**
-     * @OA\Get(path="/admin/amenities/{amenityId}/images", tags={"Admin API"}, summary="Get amenity images",
+     * @OA\Get(path="/admin/amenities/{amenityId}/images", tags={"Admin"}, summary="Get amenity images",
      *     security={{"bearerAuth": {}}},
      *     @OA\Parameter(in="path", name="amenityId", required=true, @OA\Schema(type="integer")),
      *     @OA\Parameter(in="query", name="page", @OA\Schema(type="integer")), @OA\Parameter(in="query", name="limit", @OA\Schema(type="integer")),
@@ -76,7 +76,7 @@ class AmenityImageApiController extends Controller
     }
 
     /**
-     * @OA\Post(path="/admin/amenity-images", tags={"Admin API"}, summary="Create amenity image",
+     * @OA\Post(path="/admin/amenity-images", tags={"Admin"}, summary="Create amenity image",
      *     security={{"bearerAuth": {}}},
      *     @OA\RequestBody(required=true, @OA\JsonContent(required={"bnb_amenities_id"}, @OA\Property(property="bnb_amenities_id", type="integer"), @OA\Property(property="image", type="string", format="binary"), @OA\Property(property="description", type="string"))),
      *     @OA\Response(response=201, description="Created", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="object", @OA\Property(property="id", type="integer"), @OA\Property(property="bnb_amenities_id", type="integer"), @OA\Property(property="imagepath", type="string"), @OA\Property(property="description", type="string", nullable=true), @OA\Property(property="created_at", type="string"), @OA\Property(property="full_image_url", type="string")))),
@@ -142,7 +142,7 @@ class AmenityImageApiController extends Controller
     }
 
     /**
-     * @OA\Put(path="/admin/amenity-images/{id}", tags={"Admin API"}, summary="Update amenity image",
+     * @OA\Put(path="/admin/amenity-images/{id}", tags={"Admin"}, summary="Update amenity image",
      *     security={{"bearerAuth": {}}},
      *     @OA\Parameter(in="path", name="id", required=true, @OA\Schema(type="integer")),
      *     @OA\RequestBody(@OA\JsonContent(@OA\Property(property="image", type="string", format="binary"), @OA\Property(property="description", type="string"))),
@@ -220,7 +220,7 @@ class AmenityImageApiController extends Controller
     }
 
     /**
-     * @OA\Delete(path="/admin/amenity-images/{id}", tags={"Admin API"}, summary="Delete amenity image",
+     * @OA\Delete(path="/admin/amenity-images/{id}", tags={"Admin"}, summary="Delete amenity image",
      *     security={{"bearerAuth": {}}},
      *     @OA\Parameter(in="path", name="id", required=true, @OA\Schema(type="integer")),
      *     @OA\Response(response=200, description="Deleted", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"))),

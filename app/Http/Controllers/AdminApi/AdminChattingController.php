@@ -15,7 +15,7 @@ use Carbon\Carbon;
 class AdminChattingController extends Controller
 {
     /**
-     * @OA\Get(path="/admin/chats", tags={"Admin API"}, summary="Get admin chats",
+     * @OA\Get(path="/admin/chats", tags={"Admin"}, summary="Get admin chats",
      *     security={{"bearerAuth": {}}},
      *     @OA\Response(response=200, description="OK", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="array", @OA\Items(type="object", @OA\Property(property="id", type="integer"), @OA\Property(property="customer", type="object"), @OA\Property(property="booking", type="object"), @OA\Property(property="last_message", type="object", nullable=true))), @OA\Property(property="pagination", type="object", @OA\Property(property="current_page", type="integer"), @OA\Property(property="last_page", type="integer"), @OA\Property(property="per_page", type="integer"), @OA\Property(property="total", type="integer")))),
      *     @OA\Response(response=401, description="Unauthorized"), @OA\Response(response=500, description="Server error"))
@@ -243,7 +243,7 @@ class AdminChattingController extends Controller
     }
 
     /**
-     * @OA\Post(path="/admin/chat/send-message", tags={"Admin API"}, summary="Send chat message",
+     * @OA\Post(path="/admin/chat/send-message", tags={"Admin"}, summary="Send chat message",
      *     security={{"bearerAuth": {}}},
      *     @OA\RequestBody(required=true, @OA\JsonContent(required={"chat_id","message"}, @OA\Property(property="chat_id", type="integer"), @OA\Property(property="message", type="string"), @OA\Property(property="attachments", type="array", @OA\Items(type="string")))),
      *     @OA\Response(response=200, description="Message sent", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="object"))),

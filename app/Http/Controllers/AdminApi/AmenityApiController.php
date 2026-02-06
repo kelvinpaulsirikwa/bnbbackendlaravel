@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Validator;
 class AmenityApiController extends Controller
 {
     /**
-     * @OA\Get(path="/admin/motels/{motelId}/amenities", tags={"Admin API"}, summary="Get motel amenities",
+     * @OA\Get(path="/admin/motels/{motelId}/amenities", tags={"Admin"}, summary="Get motel amenities",
      *     security={{"bearerAuth": {}}},
      *     @OA\Parameter(in="path", name="motelId", required=true, @OA\Schema(type="integer")),
      *     @OA\Parameter(in="query", name="page", @OA\Schema(type="integer")), @OA\Parameter(in="query", name="limit", @OA\Schema(type="integer")), @OA\Parameter(in="query", name="search", @OA\Schema(type="string")),
@@ -88,7 +88,7 @@ class AmenityApiController extends Controller
     }
 
     /**
-     * @OA\Post(path="/admin/amenities", tags={"Admin API"}, summary="Create amenity",
+     * @OA\Post(path="/admin/amenities", tags={"Admin"}, summary="Create amenity",
      *     security={{"bearerAuth": {}}},
      *     @OA\RequestBody(required=true, @OA\JsonContent(required={"bnb_motels_id","amenity_id"}, @OA\Property(property="bnb_motels_id", type="integer"), @OA\Property(property="amenity_id", type="integer"), @OA\Property(property="description", type="string"))),
      *     @OA\Response(response=200, description="Created", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="object"))),
@@ -159,7 +159,7 @@ class AmenityApiController extends Controller
     }
 
     /**
-     * @OA\Put(path="/admin/amenities/{id}", tags={"Admin API"}, summary="Update amenity",
+     * @OA\Put(path="/admin/amenities/{id}", tags={"Admin"}, summary="Update amenity",
      *     security={{"bearerAuth": {}}},
      *     @OA\Parameter(in="path", name="id", required=true, @OA\Schema(type="integer")),
      *     @OA\RequestBody(@OA\JsonContent(@OA\Property(property="description", type="string"), @OA\Property(property="amenity_id", type="integer"))),
@@ -252,7 +252,7 @@ class AmenityApiController extends Controller
     }
 
     /**
-     * @OA\Get(path="/admin/amenities/{id}", tags={"Admin API"}, summary="Get amenity by ID",
+     * @OA\Get(path="/admin/amenities/{id}", tags={"Admin"}, summary="Get amenity by ID",
      *     security={{"bearerAuth": {}}},
      *     @OA\Parameter(in="path", name="id", required=true, @OA\Schema(type="integer")),
      *     @OA\Response(response=200, description="OK", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="object", @OA\Property(property="id", type="integer"), @OA\Property(property="bnb_motels_id", type="integer"), @OA\Property(property="description", type="string", nullable=true), @OA\Property(property="amenity", type="object"), @OA\Property(property="images", type="array", @OA\Items(type="object"))))),
@@ -306,7 +306,7 @@ class AmenityApiController extends Controller
     }
 
     /**
-     * @OA\Delete(path="/admin/amenities/{id}", tags={"Admin API"}, summary="Delete amenity",
+     * @OA\Delete(path="/admin/amenities/{id}", tags={"Admin"}, summary="Delete amenity",
      *     security={{"bearerAuth": {}}},
      *     @OA\Parameter(in="path", name="id", required=true, @OA\Schema(type="integer")),
      *     @OA\Response(response=200, description="Deleted", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"))),
@@ -346,7 +346,7 @@ class AmenityApiController extends Controller
     }
 
     /**
-     * @OA\Get(path="/admin/amenities/available", tags={"Admin API"}, summary="Get available amenities (dropdown)",
+     * @OA\Get(path="/admin/amenities/available", tags={"Admin"}, summary="Get available amenities (dropdown)",
      *     security={{"bearerAuth": {}}},
      *     @OA\Response(response=200, description="OK", @OA\JsonContent(@OA\Property(property="success", type="boolean"), @OA\Property(property="message", type="string"), @OA\Property(property="data", type="array", @OA\Items(type="object", @OA\Property(property="id", type="integer"), @OA\Property(property="name", type="string"), @OA\Property(property="icon", type="string", nullable=true))))),
      *     @OA\Response(response=401, description="Unauthorized"), @OA\Response(response=500, description="Server error"))
