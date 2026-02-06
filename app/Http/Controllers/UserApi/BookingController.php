@@ -47,7 +47,7 @@ class BookingController extends Controller
                 ], 404);
             }
 
-            // Check if room is available
+            // 1. Check if room is free
             if ($room->status !== 'free') {
                 return response()->json([
                     'success' => false,
@@ -55,21 +55,19 @@ class BookingController extends Controller
                 ], 400);
             }
 
-            // Calculate booking details
             $checkInDate = \Carbon\Carbon::parse($request->check_in_date)->startOfDay();
             $checkOutDate = \Carbon\Carbon::parse($request->check_out_date)->startOfDay();
             $numberOfNights = $checkInDate->diffInDays($checkOutDate);
             $pricePerNight = $room->price_per_night;
             $totalAmount = $pricePerNight * $numberOfNights;
 
-                // Check for conflicting bookings using per-day records
-                // We consider nights from check_in (inclusive) to check_out (exclusive)
-                $conflictingBooking = BnbBookingDate::where('bnb_room_id', $request->room_id)
-                    ->whereBetween('booked_date', [
-                        $checkInDate->format('Y-m-d'),
-                        $checkOutDate->copy()->subDay()->format('Y-m-d'),
-                    ])
-                    ->exists();
+            // Check for conflicting bookings (per-day records)
+            $conflictingBooking = BnbBookingDate::where('bnb_room_id', $request->room_id)
+                ->whereBetween('booked_date', [
+                    $checkInDate->format('Y-m-d'),
+                    $checkOutDate->copy()->subDay()->format('Y-m-d'),
+                ])
+                ->exists();
 
             if ($conflictingBooking) {
                 return response()->json([
@@ -78,50 +76,40 @@ class BookingController extends Controller
                 ], 400);
             }
 
-            // Start database transaction
             DB::beginTransaction();
-
             try {
-                    // Create booking
-                    $booking = BnbBooking::create([
-                        'customer_id' => $request->customer_id,
-                        'bnb_room_id' => $request->room_id,
-                        'bnb_motels_id' => $room->motelid,
-                        'check_in_date' => $checkInDate,
-                        'check_out_date' => $checkOutDate,
-                        'number_of_nights' => $numberOfNights,
-                        'price_per_night' => $pricePerNight,
-                        'total_amount' => $totalAmount,
-                        'contact_number' => $request->contact_number,
-                        'status' => 'pending',
-                        'special_requests' => $request->special_requests,
-                    ]);
+                // 2. Hold room (lock row so no one else can book during this request)
+                BnbRoom::where('id', $room->id)->lockForUpdate()->first();
 
-                // Generate unique transaction ID
-                $transactionId = 'TXN_' . strtoupper(Str::random(8)) . '_' . time();
-
-                // Simulate payment processing (random success/failure)
-                $paymentSuccess = $this->processPayment($request->payment_method, $totalAmount);
-
-                    // Create transaction record
-                    $transaction = BnbTransaction::create([
-                        'booking_id' => $booking->id,
-                        'transaction_id' => $transactionId,
-                        'amount' => $totalAmount,
-                        'payment_method' => $this->normalizePaymentMethod($request->payment_method),
-                        'payment_reference' => $request->payment_reference,
-                        'status' => $paymentSuccess ? 'completed' : 'failed',
-                        'processed_at' => $paymentSuccess ? now() : null,
-                    ]);
-
-                // Update booking status based on payment result
-                $booking->update([
-                    'status' => $paymentSuccess ? 'confirmed' : 'pending'
+                // 3. Create booking (pending) – we need booking_id for the transaction
+                $booking = BnbBooking::create([
+                    'customer_id' => $request->customer_id,
+                    'bnb_room_id' => $request->room_id,
+                    'bnb_motels_id' => $room->motelid,
+                    'check_in_date' => $checkInDate,
+                    'check_out_date' => $checkOutDate,
+                    'number_of_nights' => $numberOfNights,
+                    'price_per_night' => $pricePerNight,
+                    'total_amount' => $totalAmount,
+                    'contact_number' => $request->contact_number,
+                    'status' => 'pending',
+                    'special_requests' => $request->special_requests,
                 ]);
 
-                // If payment is successful, create per-day booking records.
-                // These rows, together with the DB trigger, will drive room availability.
+                // 4. Perform transaction (reusable: simulate + fill transaction); then make booking and room status
+                $result = $this->simulateAndRecordTransaction(
+                    $request->contact_number,
+                    (float) $totalAmount,
+                    $booking->id,
+                    $request->payment_method,
+                    $request->payment_reference
+                );
+                $paymentSuccess = $result['success'];
+                $transaction = $result['transaction'];
+
+                // 5. If transaction successful: confirm booking, create per-day records (trigger updates room status)
                 if ($paymentSuccess) {
+                    $booking->update(['status' => 'confirmed']);
                     for ($date = $checkInDate->copy(); $date->lt($checkOutDate); $date->addDay()) {
                         BnbBookingDate::create([
                             'booking_id' => $booking->id,
@@ -226,6 +214,7 @@ class BookingController extends Controller
                 ], 422);
             }
 
+            // 1. Check if room is available for all selected dates
             $alreadyBooked = BnbBookingDate::where('bnb_room_id', $room->id)
                 ->whereIn('booked_date', $selectedDates)
                 ->pluck('booked_date')
@@ -245,6 +234,7 @@ class BookingController extends Controller
 
             DB::beginTransaction();
             try {
+                // 2. Create all bookings (pending) so we have booking ids; then proceed with one transaction
                 $bookings = [];
                 foreach ($selectedDates as $dateStr) {
                     $checkIn = \Carbon\Carbon::parse($dateStr)->startOfDay();
@@ -266,25 +256,22 @@ class BookingController extends Controller
                     $bookings[] = $booking;
                 }
 
-                $paymentSuccess = $this->processPayment($request->payment_method, $totalAmount);
-                $transactionId = 'TXN_' . strtoupper(Str::random(8)) . '_' . time();
+                // 3. Perform transaction (reusable: simulate + fill transaction) for total amount
+                $result = $this->simulateAndRecordTransaction(
+                    $request->contact_number,
+                    $totalAmount,
+                    $bookings[0]->id,
+                    $request->payment_method,
+                    $request->payment_reference
+                );
+                $paymentSuccess = $result['success'];
+                $transaction = $result['transaction'];
 
-                $transaction = BnbTransaction::create([
-                    'booking_id' => $bookings[0]->id,
-                    'transaction_id' => $transactionId,
-                    'amount' => $totalAmount,
-                    'payment_method' => $this->normalizePaymentMethod($request->payment_method),
-                    'payment_reference' => $request->payment_reference,
-                    'status' => $paymentSuccess ? 'completed' : 'failed',
-                    'processed_at' => $paymentSuccess ? now() : null,
-                ]);
-
-                $newStatus = $paymentSuccess ? 'confirmed' : 'pending';
-                foreach ($bookings as $b) {
-                    $b->update(['status' => $newStatus]);
-                }
-
+                // 4. If transaction successful: confirm all bookings and create booking_dates for each date (room status via trigger)
                 if ($paymentSuccess) {
+                    foreach ($bookings as $b) {
+                        $b->update(['status' => 'confirmed']);
+                    }
                     foreach ($bookings as $booking) {
                         $checkIn = \Carbon\Carbon::parse($booking->check_in_date)->startOfDay();
                         BnbBookingDate::create([
@@ -924,19 +911,15 @@ class BookingController extends Controller
 
             DB::beginTransaction();
             try {
-                $transactionId = 'TXN_' . strtoupper(Str::random(8)) . '_' . time();
                 $totalAmount = (float) $booking->total_amount;
-                $paymentSuccess = $this->processPayment($request->payment_method, $totalAmount);
-
-                BnbTransaction::create([
-                    'booking_id' => $booking->id,
-                    'transaction_id' => $transactionId,
-                    'amount' => $totalAmount,
-                    'payment_method' => $this->normalizePaymentMethod($request->payment_method),
-                    'payment_reference' => $request->payment_reference,
-                    'status' => $paymentSuccess ? 'completed' : 'failed',
-                    'processed_at' => $paymentSuccess ? now() : null,
-                ]);
+                $result = $this->simulateAndRecordTransaction(
+                    $booking->contact_number,
+                    $totalAmount,
+                    $booking->id,
+                    $request->payment_method,
+                    $request->payment_reference
+                );
+                $paymentSuccess = $result['success'];
 
                 $booking->update(['status' => $paymentSuccess ? 'confirmed' : 'pending']);
 
@@ -977,6 +960,35 @@ class BookingController extends Controller
     }
 
     /**
+     * Reusable: simulate payment and fill transaction record.
+     * Uses contact number and amount for simulation only; creates BnbTransaction and returns success.
+     *
+     * @return array{success: bool, transaction: BnbTransaction}
+     */
+    private function simulateAndRecordTransaction(
+        string $contactNumber,
+        float $amount,
+        int $bookingId,
+        string $paymentMethod,
+        ?string $paymentReference = null
+    ): array {
+        $success = $this->processPayment($paymentMethod, $amount);
+        $transactionId = 'TXN_' . strtoupper(Str::random(8)) . '_' . time();
+
+        $transaction = BnbTransaction::create([
+            'booking_id' => $bookingId,
+            'transaction_id' => $transactionId,
+            'amount' => $amount,
+            'payment_method' => $this->normalizePaymentMethod($paymentMethod),
+            'payment_reference' => $paymentReference,
+            'status' => $success ? 'completed' : 'failed',
+            'processed_at' => $success ? now() : null,
+        ]);
+
+        return ['success' => $success, 'transaction' => $transaction];
+    }
+
+    /**
      * Map Flutter payment_method to DB enum (mobile, bank_card, cash)
      */
     private function normalizePaymentMethod(string $method): string
@@ -992,7 +1004,7 @@ class BookingController extends Controller
     /**
      * Simulate payment processing (random success/failure)
      */
-    private function processPayment($paymentMethod, $amount)
+    private function processPayment($paymentMethod, $amount): bool
     {
         // Simulate payment processing with 80% success rate
         return rand(1, 100) <= 80;
